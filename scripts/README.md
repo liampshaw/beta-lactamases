@@ -51,7 +51,33 @@ Could call `ncbi-acc-download` from within script
 
 ## Processing
 
-Running pangraph itself: shell script?
+Once the fastas are all downloaded, this is what the pipeline looks like at the moment: something like
+
+```bash
+cat *.fa > all.fa
+# Need to adapt extract-region.py to handle contigs which have more than one copy, and to have the option to store these contigs elsewhere
+python ~/Dropbox/_Projects/pangraph/pangraph-tutorials/scripts/extract-region.py --gene ${gene}.fasta --input all.fa --upstream 5000 --downstream 5000 --complete --output all_u5k_d5k.fa
+# unsure if --circular is appropriate here - depends on whether plasmids and chromosomes can be trusted to be circular  
+
+# Pangraph
+pangraph build all_u5k_d5k.fa > pangraph_all_u5k_d5k.json
+pangraph export pangraph_all_u5k_d5k.json -p pangraph_all_u5k_d5k  -o ./
+
+# Prepare gfa
+python ~/Dropbox/_Projects/pangraph/pangraph-tutorials/scripts/prepare-pangraph-gfa.py pangraph_all_u5k_d5k.gfa
+
+# Find the gene block in pangraph  
+makeblastdb -in pangraph_all_u5k_d5k.fa -dbtype 'nucl'
+blastn -query ${gene}.fasta -db pangraph_all_u5k_d5k.fa -outfmt 6
+
+# Get the gene sequences
+makeblastdb -in all_u5k_d5k.fa -dbtype 'nucl'
+blastn -query ${gene}.fasta -db all.fa -outfmt "6 sseqid sseq" | sed 's/^/>/g' | sed -e 's/\t/\n/g' > gene_sequences.fa                                              
+
+#
+
+
+```
 
 `extract-region.py`
 Within `pangraph-tutorials` (maybe should rename directory - how does this affect links?)
@@ -61,6 +87,7 @@ Within `pangraph-tutorials`
 
 `compute-distances.py`
 _Status_: not adapted yet from `CTX-M-55/true` example
+Could compute SNP distances within python rather than snp-dists. 
 
 
 
