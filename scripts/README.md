@@ -55,7 +55,7 @@ Once the fastas are all downloaded, this is what the pipeline looks like at the 
 
 ```bash
 cat *.fa > all.fa
-# Need to adapt extract-region.py to handle contigs which have more than one copy, and to have the option to store these contigs elsewhere
+# Need to cp extract-region.py across and add: handle contigs which have more than one copy, and to have the option to store these contigs elsewhere
 python ~/Dropbox/_Projects/pangraph/pangraph-tutorials/scripts/extract-region.py --gene ${gene}.fasta --input all.fa --upstream 5000 --downstream 5000 --complete --output all_u5k_d5k.fa
 # unsure if --circular is appropriate here - depends on whether plasmids and chromosomes can be trusted to be circular  
 
@@ -65,8 +65,10 @@ pangraph export pangraph_all_u5k_d5k.json -p pangraph_all_u5k_d5k  -o ./
 
 # Prepare gfa
 python ~/Dropbox/_Projects/pangraph/pangraph-tutorials/scripts/prepare-pangraph-gfa.py pangraph_all_u5k_d5k.gfa
+# Should copy this script across, and change the .colours.csv output
 
 # Find the gene block in pangraph  
+# (could be incorporated into )
 makeblastdb -in pangraph_all_u5k_d5k.fa -dbtype 'nucl'
 blastn -query ${gene}.fasta -db pangraph_all_u5k_d5k.fa -outfmt 6
 
@@ -87,7 +89,7 @@ Within `pangraph-tutorials`
 
 `compute-distances.py`
 _Status_: not adapted yet from `CTX-M-55/true` example
-Could compute SNP distances within python rather than snp-dists. 
+Could compute SNP distances within python rather than snp-dists.
 
 
 
