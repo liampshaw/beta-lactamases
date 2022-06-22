@@ -1,34 +1,17 @@
 
 #
-block_lengths = {}
-with open('pangraph_all_u5k_d5k.gfa.colours.csv', 'r') as f:
-    for i, line in enumerate(f.readlines()):
-        if i>0:
-            line = line.split(',')
-            block_lengths[line[0]] = int(line[2].strip())
-
-path_dict = {}
-with open('pangraph_all_u5k_d5k.gfa.blocks.csv', 'r') as f:
-    for i, line in enumerate(f.readlines()):
-        if i>0:
-            line = line.split(',')
-            if line[0] in path_dict.keys():
-                path_dict[line[0]].append(line[1])
-            else:
-                path_dict[line[0]] = [line[1]]
-
 import itertools as iter
 
-#for a, b in iter.combinations(path_dict.keys(), 2):
-#    shared_blocks = set(path_dict[a]).intersection(set(path_dict[b]))
-#    print(a,b, 1-sum([block_lengths[x] for x in shared_blocks])/sum([block_lengths[x] for x in path_dict[a]]))
+def get_options():
+    parser = argparse.ArgumentParser(description='computes a variety of distances between sequences')
+    parser.add_argument('input_file', help='Input gfa', type=str)
+    parser.add_argument('gene', help='Gene fasta file', type=str)
+    return parser.parse_args()
 
-# Distance until first breakpoint of pairs
-gene_block = "ZZIMKFDWIU"
-def distFirstBreakpoint(a, b, start="ZZIMKFDWIU", upstream=True):
+def distFirstBreakpoint(a, b, starting_block, upstream=True):
     """a, b are lists of blocks"""
-    a_start = a.index(start)
-    b_start = b.index(start)
+    a_start = a.index(starting_block)
+    b_start = b.index(starting_block)
     shared_blocks = []
     if upstream==False:
         i = 0
@@ -55,19 +38,43 @@ def distFirstBreakpoint(a, b, start="ZZIMKFDWIU", upstream=True):
     return(shared_blocks)
 
 
-
-
 def jaccard(a, b):
     """a, b are lists of blocks"""
-    return (1-float(len(set(a).intersection(set(b)))/len(set(a).union(set(b)))))
+    # Needs writing
+    return
 
-with open('output_dists.csv', 'w') as output_file:
-    with open('all_u5k_d5k.CTX-M.snpdists.tsv', 'r') as f: # generated with snp-dists -p from gene seqs
-        for line in f.readlines():
-            line = line.strip().split()
-            a, b, snps = line[0], line[1], int(line[2])
-            upstream_blocks = distFirstBreakpoint(path_dict[a], path_dict[b])
-            upstream_dist = sum([block_lengths[x] for x in upstream_blocks])
-            downstream_blocks = distFirstBreakpoint(path_dict[a], path_dict[b], upstream=False)
-            downstream_dist = sum([block_lengths[x] for x in downstream_blocks])
-            output_file.write('%s,%s,%d,%d,%d\n' % (a, b, upstream_dist, downstream_dist, snps))
+# TO ADD
+# Function to call blast to get the starting block (contains gene) from the pangraph
+
+def main():
+    block_lengths = {}
+    with open('pangraph_all_u5k_d5k.gfa.colours.csv', 'r') as f:
+        for i, line in enumerate(f.readlines()):
+            if i>0:
+                line = line.split(',')
+                block_lengths[line[0]] = int(line[2].strip())
+
+    path_dict = {}
+    with open('pangraph_all_u5k_d5k.gfa.blocks.csv', 'r') as f:
+        for i, line in enumerate(f.readlines()):
+            if i>0:
+                line = line.split(',')
+                if line[0] in path_dict.keys():
+                    path_dict[line[0]].append(line[1])
+                else:
+                    path_dict[line[0]] = [line[1]]
+    # Generate snp-dists?
+
+    with open('output_dists.csv', 'w') as output_file:
+        with open('all_u5k_d5k.CTX-M.snpdists.tsv', 'r') as f: # generated with snp-dists -p from gene seqs
+            for line in f.readlines():
+                line = line.strip().split()
+                a, b, snps = line[0], line[1], int(line[2])
+                upstream_blocks = distFirstBreakpoint(path_dict[a], path_dict[b], starting_block)
+                upstream_dist = sum([block_lengths[x] for x in upstream_blocks])
+                downstream_blocks = distFirstBreakpoint(path_dict[a], path_dict[b], upstream=False)
+                downstream_dist = sum([block_lengths[x] for x in downstream_blocks])
+                output_file.write('%s,%s,%d,%d,%d\n' % (a, b, upstream_dist, downstream_dist, snps))
+
+if __name__ == "__main__":
+    main()
