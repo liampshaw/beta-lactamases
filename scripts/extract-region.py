@@ -23,6 +23,7 @@ def get_options():
     parser.add_argument('--downstream', help='downstream bases', default=2500, required=False)
     parser.add_argument('--complete', help='only keep contigs with all requested region', action='store_true')
     parser.add_argument('--circular', help='whether input contigs are circular', action='store_true')
+    parser.add_argument('--smh', help='extract contigs with multiple hits into separate file', type=str, required=False, default='')
     return parser.parse_args()
 
 def reverse_complement(seq):
@@ -100,9 +101,8 @@ def blast_search(query_fasta, db_fasta):
         results_dict_multiple_hit = {x: 'multiple_hits' for x in contigs_multiple_hits}
         return({**results_dict_one_hit, **results_dict_multiple_hit})
 
-def extract_regions(starting_fasta, blast_hits, gene_length, is_circular=False, upstream_bases=1000, downstream_bases=1000):
+def extract_regions(sequences, blast_hits, gene_length, is_circular=False, upstream_bases=1000, downstream_bases=1000):
     '''extracts the regions from a fasta file'''
-    sequences = read_fasta(starting_fasta)
     # Check for sequences with >1 hit in blast hits
     extracted_seqs = {}
 
@@ -137,9 +137,22 @@ def extract_regions(starting_fasta, blast_hits, gene_length, is_circular=False, 
                         extracted_seqs[seq_id] = reverse_complement(triplicate_seq[limits[0]:limits[1]])
     return extracted_seqs
 
+def store_multiple_hits(sequences, blast_hits, smh_file):
+    """stores multiple hits to file"""
+    N_multiple_hits = 0
+    with open(smh_file, 'w') as output_f:
+        for seq_id, coords in blast_hits.items():
+            if coords=="multiple_hits":
+                N_multiple_hits += 1
+                output_f.write('>%s\n%s\n' % (seq_id, str(sequences[seq_id].seq)))
+    return(N_multiple_hits)
+
+
 def main():
     args = get_options()
     input_fasta = args.input
+    input_sequences = read_fasta(input_fasta)
+
     output_fasta = args.output
     gene_fasta = args.gene
     # Get length of gene
@@ -153,7 +166,7 @@ def main():
 
     results = blast_search(gene_fasta, input_fasta)
     #print(results)
-    extractions = extract_regions(input_fasta, results, gene_length=gene_length, is_circular=args.circular, upstream_bases=int(args.upstream), downstream_bases=int(args.downstream))
+    extractions = extract_regions(input_sequences, results, gene_length=gene_length, is_circular=args.circular, upstream_bases=int(args.upstream), downstream_bases=int(args.downstream))
     N_seqs_written = 0
     with open(output_fasta, 'w') as output_file:
         for k, v in extractions.items():
@@ -167,7 +180,12 @@ def main():
                     #print("...writing to file.")
                     output_file.write('>%s %sbp\n%s\n' % (k, str(len(v)), v))
                     N_seqs_written += 1
-    print("FINISHED: Extracted "+str(N_seqs_written)+" regions (from contigs with one blast hit for gene).")
+    # Write multiple hits if requested
+    if args.smh!='':
+        N_multiple_hits = store_multiple_hits(input_sequences, results, args.smh)
+        print("... Wrote "+str(N_multiple_hits)+" contigs (whole) with multiple blast hits to: "+args.smh)
+
+    print("\nSUMMARY:\n"+str(len(input_sequences))+" contigs in input fasta\n"+str(N_seqs_written)+" regions extracted (from contigs with one blast hit for gene).")
 
 if __name__ == "__main__":
     main()
