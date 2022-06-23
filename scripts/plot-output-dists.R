@@ -1,0 +1,42 @@
+
+library(ggplot2)
+library(ggridges)
+library(cowplot)
+
+args = commandArgs(trailingOnly=TRUE)
+
+d <- read.csv(args[1],
+              header=T, 
+              stringsAsFactors = F)
+
+library(ggplot2)
+library(ggridges)
+library(cowplot)
+
+
+d$snps.categorical <- sapply(d$snps, function(x) 
+  ifelse(x<8, x, "8 or more"))
+
+p.upstream <-  ggplot(d, aes( -dist.up, group=as.factor(snps.categorical), colour=(snps.categorical), y = 1 - ..y..))+
+  stat_ecdf()+
+  theme_bw()+
+  theme(legend.position = "none")+
+  labs(colour="SNPs")+
+  ylab("cdf")+
+  xlab("distance from CTX-M")+
+  theme(panel.grid = element_blank())+
+  scale_color_brewer(palette="RdYlBu")
+
+p.downstream <- ggplot(d, aes( dist.down,group=as.factor(snps.categorical), colour=snps.categorical))+
+  stat_ecdf()+
+  theme_bw()+
+  labs(colour="SNPs")+
+  ylab("cdf")+
+  xlab("distance from CTX-M")+
+  theme(panel.grid = element_blank())+
+  scale_color_brewer(palette="RdYlBu")
+
+pdf(args[2], width=8, height=4)
+p = cowplot::plot_grid(p.upstream, p.downstream, rel_widths = c(0.7, 1))
+p
+dev.off()
