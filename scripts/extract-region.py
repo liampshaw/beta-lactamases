@@ -111,7 +111,7 @@ def extract_regions(sequences, blast_hits, gene_length, is_circular=False, upstr
             print('WARNING: Contig '+seq_id+' has multiple blast hits. Not including in output.')
         else:
             contig_seq = str(sequences[seq_id].seq)
-            # Check the length
+            # Check the length - if shorter, use whole contig sequence
             if len(contig_seq)<(upstream_bases+downstream_bases+gene_length):
                 print('WARNING: Contig '+seq_id+' is shorter than flanking region requested!')
                 if coords[0]<coords[1]:
@@ -185,7 +185,7 @@ def main():
         N_multiple_hits = store_multiple_hits(input_sequences, results, args.smh)
         print("... Wrote "+str(N_multiple_hits)+" contigs (whole) with multiple blast hits to: "+args.smh)
 
-    print("\nSUMMARY:\n"+str(len(input_sequences))+" contigs in input fasta\n"+str(N_seqs_written)+" regions extracted (from contigs with one blast hit for gene).")
+    print("\nSUMMARY:\n"+str(len(input_sequences))+" contigs in input fasta\n"+str(N_seqs_written)+" regions extracted (from contigs with one blast hit for gene)")
 
 if __name__ == "__main__":
     main()
