@@ -58,12 +58,16 @@ def makePlot(family_name, dataset='ncbi_wgs'):
     target = [t.get_text() for t in np.array(cluster_fig.ax_heatmap.get_yticklabels())]
     ind= np.array([list(df.index.values).index(t) for t in target])
     # Read in prevalence data
-    prevalence_df = pd.read_csv(DATA_DIR+'/gene-prevalence-'+dataset+'.csv')
+    #prevalence_df = pd.read_csv(DATA_DIR+'/gene-prevalence-'+dataset+'.csv')
+    presence_absence_df = pd.read_csv(DATA_DIR+'/CARD-all-hits-presence-absence-'+dataset+'.csv', index_col=0)
+    family_df_pa = presence_absence_df[[x for x in presence_absence_df.columns if family_name in x]]
+    family_df = pd.DataFrame(list(zip(list(family_df_pa.columns), family_df_pa.sum(axis=1))) ,
+                            columns=['card_short_name', 'n'])
     # plot bar plot in ax
-    family_df = prevalence_df[prevalence_df['group']==family_name]
+    #family_df = prevalence_df[prevalence_df['group']==family_name]
     # Zero entries to add
     zero_hits = [x for x in target if x not in list(family_df['card_short_name'])]
-    zero_hits_df = pd.DataFrame([[x, 0, 'GES'] for x in zero_hits],
+    zero_hits_df = pd.DataFrame([[x, 0] for x in zero_hits],
     columns=family_df.columns)
     family_df_new = pd.concat([family_df, zero_hits_df])
     family_df_new.index = family_df_new['card_short_name']
@@ -84,7 +88,7 @@ def makePlot(family_name, dataset='ncbi_wgs'):
 def main():
     beta_lactamases = [x.strip() for x in open('../beta-lactamases.txt', 'r').readlines()]
     for b in beta_lactamases:
-        for d in ['ncbi_plasmid', 'ncbi_wgs', 'ncbi_chromosome']:
+        for d in ['ncbi_plasmid', 'ncbi_chromosome']: # ignoring contig/wgs for now
             print(b, d)
             makePlot(b, dataset=d)
 
