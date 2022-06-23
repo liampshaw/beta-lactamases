@@ -1,11 +1,12 @@
 
 #
 import itertools as iter
+import argparse
 
 def get_options():
     parser = argparse.ArgumentParser(description='computes a variety of distances between sequences')
-    parser.add_argument('input_file', help='Input gfa', type=str)
-    parser.add_argument('gene', help='Gene fasta file', type=str)
+    parser.add_argument('input_file', help='Input gfa base name', type=str)
+    parser.add_argument('gene_block', help='Block containing gene of interest (anchor)', type=str)
     return parser.parse_args()
 
 def distFirstBreakpoint(a, b, starting_block, upstream=True):
@@ -28,7 +29,6 @@ def distFirstBreakpoint(a, b, starting_block, upstream=True):
         i = 0
         while a_start-i > 0 and b_start-i > 0:
             i = i+1
-            print(i)
             if a[a_start-i]==b[b_start-i]:
                 shared_blocks.append(b[b_start-i])
             else:
@@ -48,14 +48,15 @@ def jaccard(a, b):
 
 def main():
     block_lengths = {}
-    with open('pangraph_all_u5k_d5k.gfa.colours.csv', 'r') as f:
+    args = get_options()
+    with open(args.input_file+'.colours.csv', 'r') as f:
         for i, line in enumerate(f.readlines()):
             if i>0:
                 line = line.split(',')
                 block_lengths[line[0]] = int(line[2].strip())
 
     path_dict = {}
-    with open('pangraph_all_u5k_d5k.gfa.blocks.csv', 'r') as f:
+    with open(args.input_file+'.blocks.csv', 'r') as f:
         for i, line in enumerate(f.readlines()):
             if i>0:
                 line = line.split(',')
@@ -64,15 +65,17 @@ def main():
                 else:
                     path_dict[line[0]] = [line[1]]
     # Generate snp-dists?
+    starting_block = args.gene_block
 
-    with open('output_dists.csv', 'w') as output_file:
-        with open('all_u5k_d5k.CTX-M.snpdists.tsv', 'r') as f: # generated with snp-dists -p from gene seqs
+    with open(args.input_file+'.output_dists.csv', 'w') as output_file:
+        output_file.write('seq1,seq2,dist.up,dist.down,snps\n')
+        with open(args.input_file+'.gene.snps.tsv', 'r') as f: # generated with snp-dists -p from gene seqs
             for line in f.readlines():
                 line = line.strip().split()
                 a, b, snps = line[0], line[1], int(line[2])
                 upstream_blocks = distFirstBreakpoint(path_dict[a], path_dict[b], starting_block)
                 upstream_dist = sum([block_lengths[x] for x in upstream_blocks])
-                downstream_blocks = distFirstBreakpoint(path_dict[a], path_dict[b], upstream=False)
+                downstream_blocks = distFirstBreakpoint(path_dict[a], path_dict[b], starting_block, upstream=False)
                 downstream_dist = sum([block_lengths[x] for x in downstream_blocks])
                 output_file.write('%s,%s,%d,%d,%d\n' % (a, b, upstream_dist, downstream_dist, snps))
 
