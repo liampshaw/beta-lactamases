@@ -172,19 +172,26 @@ def main():
 
     results = blast_search(gene_fasta, input_fasta)
     #print(results)
-    extractions = extract_regions(input_sequences, results, gene_length=gene_length, is_circular=args.circular, upstream_bases=int(args.upstream), downstream_bases=int(args.downstream))
+    extractions = extract_regions(input_sequences, results,
+                                gene_length=gene_length,
+                                is_circular=args.circular,
+                                upstream_bases=int(args.upstream),
+                                downstream_bases=int(args.downstream))
     N_seqs_written = 0
+    seqs_written = []
     with open(output_fasta, 'w') as output_file:
         for k, v in extractions.items():
             #print(k+',', len(v)-gene_length, 'bases extracted around gene', '('+str(len(v))+' total)')
             if args.complete==False:
                 output_file.write('>%s %sbp\n%s\n' % (k, str(len(v)), v))
+                seqs_written.append(k)
                 N_seqs_written += 1
                 #print("...writing to file.")
             elif len(v)>(int(args.upstream)+gene_length+int(args.downstream)-1):
                 if "n" not in v and "N" not in v: # check for ambiguous characters
                     #print("...writing to file.")
                     output_file.write('>%s %sbp\n%s\n' % (k, str(len(v)), v))
+                    seqs_written.append(k)
                     N_seqs_written += 1
     # Write multiple hits if requested
     if args.smh!='':
@@ -196,7 +203,8 @@ def main():
     gene_extractions = extract_regions(input_sequences, results, gene_length=gene_length, is_circular=False, upstream_bases=0, downstream_bases=0)
     with open(output_gene_fasta, 'w') as output_file:
         for k, v in gene_extractions.items():
-            output_file.write('>%s\n%s\n' % (k, v))
+            if k in seqs_written: # only write those that have been written into regions
+                output_file.write('>%s\n%s\n' % (k, v))
 
     print("\nSUMMARY:\n"+str(len(input_sequences))+" contigs in input fasta\n"+str(N_seqs_written)+" regions extracted (from contigs with one blast hit for gene)")
 
