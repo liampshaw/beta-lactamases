@@ -1,7 +1,7 @@
 
-library(ggplot2)
-library(ggridges)
-library(cowplot)
+require(ggplot2)
+require(ggridges)
+require(cowplot)
 
 args = commandArgs(trailingOnly=TRUE)
 
@@ -9,15 +9,10 @@ d <- read.csv(args[1],
               header=T, 
               stringsAsFactors = F)
 
-library(ggplot2)
-library(ggridges)
-library(cowplot)
-
-
 d$snps.categorical <- sapply(d$snps, function(x) 
   ifelse(x<8, x, "8 or more"))
 
-p.upstream <-  ggplot(d, aes( -dist.up, group=as.factor(snps.categorical), colour=(snps.categorical), y = 1 - ..y..))+
+p.upstream <-  ggplot(d, aes( -dist.up, group=as.factor(snps.categorical), colour=as.factor(snps.categorical), y = 1 - ..y..))+
   stat_ecdf()+
   theme_bw()+
   theme(legend.position = "none")+
@@ -27,7 +22,7 @@ p.upstream <-  ggplot(d, aes( -dist.up, group=as.factor(snps.categorical), colou
   theme(panel.grid = element_blank())+
   scale_color_brewer(palette="RdYlBu")
 
-p.downstream <- ggplot(d, aes( dist.down,group=as.factor(snps.categorical), colour=snps.categorical))+
+p.downstream <- ggplot(d, aes( dist.down,group=as.factor(snps.categorical), colour=as.factor(snps.categorical)))+
   stat_ecdf()+
   theme_bw()+
   labs(colour="SNPs")+
