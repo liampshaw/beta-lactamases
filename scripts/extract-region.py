@@ -193,7 +193,7 @@ def main():
 
     # Write just the gene sequences
     print(results)
-    gene_extractions = extract_regions(input_sequences, results, gene_length=gene_length, is_circular=False, upstream_bases=0, downstream_bases=1)
+    gene_extractions = extract_regions(input_sequences, results, gene_length=gene_length, is_circular=False, upstream_bases=0, downstream_bases=0)
     with open(output_gene_fasta, 'w') as output_file:
         for k, v in gene_extractions.items():
             output_file.write('>%s\n%s\n' % (k, v))
