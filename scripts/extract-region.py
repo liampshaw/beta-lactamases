@@ -18,7 +18,7 @@ def get_options():
                                      prog='extract_region')
     parser.add_argument('--gene', help='gene to search for', required=True)
     parser.add_argument('--input', help='input fasta file', required=True)
-    parser.add_argument('--output', help='output fasta file', required=True)
+    parser.add_argument('--output', help='output prefix', required=True)
     parser.add_argument('--upstream', help='upstream bases', default=2500, required=False)
     parser.add_argument('--downstream', help='downstream bases', default=2500, required=False)
     parser.add_argument('--complete', help='only keep contigs with all requested region', action='store_true')
@@ -80,7 +80,7 @@ def blast_search(query_fasta, db_fasta):
     blast_process = subprocess.Popen(['blastn', '-db', db_fasta, \
                             '-query', query_fasta, \
                             '-outfmt', '6', \
-                            '-max_target_seqs', '100000'],
+                            '-max_target_seqs', '10000000'],
                             stdout = subprocess.PIPE, stderr = subprocess.PIPE)
     blast_out, _ = blast_process.communicate() # Read the output from stdout
     blast_output = re.split('\n|\t',blast_out.decode()) # Decode
@@ -120,21 +120,26 @@ def extract_regions(sequences, blast_hits, gene_length, is_circular=False, upstr
                     extracted_seqs[seq_id] = reverse_complement(contig_seq)
             #print(region_seq)
             else:
+                print(seq_id)
                 triplicate_seq = contig_seq+contig_seq+contig_seq
                 if coords[0]<coords[1]: # positive strand
                     if not is_circular:
                         limits = [max(0, coords[0]-1-upstream_bases), min(coords[1]+downstream_bases, len(contig_seq))]
                         extracted_seqs[seq_id] = contig_seq[limits[0]:limits[1]]
+                        print(limits, limits[1]-limits[0])
                     elif is_circular:
                         limits = [max(coords[1], coords[0]-1-upstream_bases+len(contig_seq)), min(coords[0]+2*len(contig_seq), coords[1]+downstream_bases+len(contig_seq))]
                         extracted_seqs[seq_id] = triplicate_seq[limits[0]:limits[1]]
+                        print(limits, limits[1]-limits[0])
                 elif coords[0]>coords[1]: # negative strand
                     if not is_circular: # also put in a max thing here
                         limits = [max(0, coords[1]-1-downstream_bases), min(coords[0]+upstream_bases, len(contig_seq))]
                         extracted_seqs[seq_id] = reverse_complement(contig_seq[limits[0]:limits[1]])
+                        print(limits, limits[1]-limits[0])
                     elif is_circular:
                         limits = [max(coords[0], coords[1]-1-downstream_bases+len(contig_seq)), min(coords[1]+2*len(contig_seq), coords[0]+upstream_bases+len(contig_seq))]
                         extracted_seqs[seq_id] = reverse_complement(triplicate_seq[limits[0]:limits[1]])
+                        print(limits, limits[1]-limits[0])
     return extracted_seqs
 
 def store_multiple_hits(sequences, blast_hits, smh_file):
@@ -153,7 +158,8 @@ def main():
     input_fasta = args.input
     input_sequences = read_fasta(input_fasta)
 
-    output_fasta = args.output
+    output_fasta = args.output+'.fa'
+    output_gene_fasta = args.output+'_focal_gene.fa' # output for just gene sequences
     gene_fasta = args.gene
     # Get length of gene
     gene_seq = read_fasta(gene_fasta)
@@ -184,6 +190,13 @@ def main():
     if args.smh!='':
         N_multiple_hits = store_multiple_hits(input_sequences, results, args.smh)
         print("... Wrote "+str(N_multiple_hits)+" contigs (whole) with multiple blast hits to: "+args.smh)
+
+    # Write just the gene sequences
+    print(results)
+    gene_extractions = extract_regions(input_sequences, results, gene_length=gene_length, is_circular=False, upstream_bases=0, downstream_bases=1)
+    with open(output_gene_fasta, 'w') as output_file:
+        for k, v in gene_extractions.items():
+            output_file.write('>%s\n%s\n' % (k, v))
 
     print("\nSUMMARY:\n"+str(len(input_sequences))+" contigs in input fasta\n"+str(N_seqs_written)+" regions extracted (from contigs with one blast hit for gene)")
 
