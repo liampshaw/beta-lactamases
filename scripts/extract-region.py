@@ -187,12 +187,13 @@ def main():
                 seqs_written.append(k)
                 N_seqs_written += 1
                 #print("...writing to file.")
-            elif len(v)>(int(args.upstream)+gene_length+int(args.downstream)-1):
-                if "n" not in v and "N" not in v: # check for ambiguous characters
-                    #print("...writing to file.")
-                    output_file.write('>%s %sbp\n%s\n' % (k, str(len(v)), v))
-                    seqs_written.append(k)
-                    N_seqs_written += 1
+            elif v is not None:
+                if len(v)>(int(args.upstream)+gene_length+int(args.downstream)-1):
+                    if "n" not in v and "N" not in v: # check for ambiguous characters
+                        #print("...writing to file.")
+                        output_file.write('>%s %sbp\n%s\n' % (k, str(len(v)), v))
+                        seqs_written.append(k)
+                        N_seqs_written += 1
     # Write multiple hits if requested
     if args.smh!='':
         N_multiple_hits = store_multiple_hits(input_sequences, results, args.smh)
