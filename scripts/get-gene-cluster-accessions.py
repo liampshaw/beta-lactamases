@@ -15,6 +15,7 @@ def get_options():
     parser.add_argument('family', help='Name of enzyme family (e.g. CTX-M)', type=str)
     parser.add_argument('gene', help='Name of sequence (e.g. CTX-M-55)', type=str)
     parser.add_argument('threshold', help='Distance threshold (diffs in clustalo MSA)', type=int)
+    parser.add_argument('--singlehits', help='Only return accessions with a single hit', action='store_true', required=False, default=False)
     return parser.parse_args()
 
 
@@ -34,32 +35,40 @@ def getNeighbours(family_name, gene_name, distance=10):
 
 def main():
     args = get_options()
-    pa_df = pd.read_csv(DATA_DIR+'/CARD-all-hits-presence-absence-chrom-plasmid.csv',index_col=0)
+    #pa_df = pd.read_csv(DATA_DIR+'/CARD-all-hits-ncbi_chromosome_and_plasmid.csv',index_col=0)
 
-    genome_df = pd.read_csv('../CARD/card-genomes.txt', sep='\t', index_col=0)
+    #genome_df = pd.read_csv('../CARD/card-genomes.txt', sep='\t', index_col=0)
     # Gene clusters
     gene_cluster = getNeighbours(args.family, args.gene, args.threshold)
 
+    # Plasmid accessions
+    #plasmids = list(genome_df[genome_df['data_source']=='ncbi_plasmid'].index)
+    #plasmid_df = pa_df.loc[plasmids]
+    plasmid_df = pd.read_csv(DATA_DIR+'/CARD-all-hits-ncbi_plasmid.csv',index_col=0)
+
     # Dict of accessions and whether chromosome/plasmid
     accessions = {}
-    # Plasmid accessions
-    plasmids = list(genome_df[genome_df['data_source']=='ncbi_plasmid'].index)
-    plasmid_df = pa_df.loc[plasmids]
-
     for g in gene_cluster:
         if g in plasmid_df.columns:
-            results = list(plasmid_df.index[plasmid_df[g]!=0])
+            if args.singlehits==True:
+                results = list(plasmid_df.index[plasmid_df[g]==1])
+            elif args.singlehits==False:
+                results = list(plasmid_df.index[plasmid_df[g]!=0])
             for r in results:
                 if r not in accessions.keys():
                     accessions[r] = 'plasmid'
 
     # Chromosome accessions
-    chroms = list(genome_df[genome_df['data_source']=='ncbi_chromosome'].index)
+    #chroms = list(genome_df[genome_df['data_source']=='ncbi_chromosome'].index)
 
-    chrom_df = pa_df.loc[chroms]
+    #chrom_df = pa_df.loc[chroms]
+    chrom_df = pd.read_csv(DATA_DIR+'/CARD-all-hits-ncbi_chromosome.csv',index_col=0)
     for g in gene_cluster:
         if g in chrom_df.columns:
-            results = list(chrom_df.index[chrom_df[g]!=0])
+            if args.singlehits==True:
+                results = list(chrom_df.index[chrom_df[g]==1])
+            elif args.singlehits==False:
+                results = list(chrom_df.index[chrom_df[g]!=0])
             for r in results:
                 if r not in accessions.keys():
                     accessions[r] = 'chromosome'
