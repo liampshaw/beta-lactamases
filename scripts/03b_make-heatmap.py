@@ -61,7 +61,7 @@ def makePlot(family_name, dataset='ncbi_wgs'):
     #prevalence_df = pd.read_csv(DATA_DIR+'/gene-prevalence-'+dataset+'.csv')
     presence_absence_df = pd.read_csv(DATA_DIR+'/CARD-all-hits-presence-absence-'+dataset+'.csv', index_col=0)
     family_df_pa = presence_absence_df[[x for x in presence_absence_df.columns if family_name in x]]
-    family_df = pd.DataFrame(list(zip(list(family_df_pa.columns), family_df_pa.sum(axis=1))) ,
+    family_df = pd.DataFrame(list(zip(list(family_df_pa.columns), family_df_pa.sum(axis=0))) ,
                             columns=['card_short_name', 'n'])
     # plot bar plot in ax
     #family_df = prevalence_df[prevalence_df['group']==family_name]
