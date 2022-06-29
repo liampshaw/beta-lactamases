@@ -99,6 +99,9 @@ snp-dists -q -m all_u5k_d5k_focal_gene.aln   > pangraph_all_u5k_d5k.gfa.gene.snp
 echo "Pangraph..."
 pangraph build all_u5k_d5k.fa > pangraph_all_u5k_d5k.json # what should the minimum block size be?
 pangraph export --edge-minimum-length 0 pangraph_all_u5k_d5k.json -p pangraph_all_u5k_d5k  -o ./
+# Optional: polishing (time-intensive) and export
+# pangraph polish pangraph_all_u5k_d5k.json > pangraph_all_u5k_d5k_polished.json
+# pangraph 
 
 # Prepare gfa
 echo "Preparing gfa..."
