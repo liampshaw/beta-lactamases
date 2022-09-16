@@ -85,4 +85,5 @@ dependencies:
   - xz=5.2.5=haf1e3a3_1
   - zlib=1.2.12=hfe4f2af_1
   - zstd=1.5.2=ha9df2e0_1
+  - fasttree
 prefix: /Users/Liam/opt/miniconda3/envs/betalactamases
