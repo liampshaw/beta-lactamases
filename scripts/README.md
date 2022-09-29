@@ -107,6 +107,8 @@ python "$scriptDir"/extract-region.py --gene gene.fa --input all.fa --upstream 5
 # Align gene sequences  
 echo "Aligning gene sequences with mafft..."
 mafft --quiet all_u5k_d5k_focal_gene.fa > all_u5k_d5k_focal_gene.aln
+# Deduplicate
+seqkit rmdup -s < all_u5k_d5k_focal_gene.aln > all_u5k_d5k_focal_gene.dedup.aln -D all_u5k_d5k_focal_gene.dedup.txt
 # SNP distances  
 echo "SNP distances..."
 snp-dists -q -m all_u5k_d5k_focal_gene.aln   > pangraph_all_u5k_d5k.gfa.gene.snps.tsv   
@@ -141,7 +143,7 @@ python "$scriptDir"/compute-distances.py pangraph_all_u5k_d5k.gfa $geneBlock
 
 # Plot the distances  
 echo "Plotting distances..."
-Rscript "$scriptDir"/plot-output-dists.R pangraph_all_u5k_d5k.gfa.output_dists.csv pangraph_all_u5k_d5k.gfa.most_frequent_path_representative.txt 
+Rscript "$scriptDir"/plot-output-dists.R pangraph_all_u5k_d5k.gfa.output_dists.csv pangraph_all_u5k_d5k.gfa.most_frequent_path_representative.txt all_u5k_d5k_focal_gene.dedup.txt 
 ```
 
 `prepare-pangraph-gfa.py`
