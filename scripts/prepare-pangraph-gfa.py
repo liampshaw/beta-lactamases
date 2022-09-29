@@ -66,6 +66,45 @@ def readGFA(gfa_file, colour_all=True, colour_seed=1789):
         for block, colour in block_colour_dict.items():
             output_f_colours.write("%s,%s,%s\n" % (block, colour, str(node_dict[block])))
 
+def mostFrequentPathGFA(gfa_file): 
+    """Finds the most frequent (full-length) path in the gfa file
+    and returns a random ID of sequence that has that path."""
+    path_dict = {}
+    with open(gfa_file, 'r') as gfa:
+        i = 1
+        for line in gfa.readlines():
+            entries = line.split()
+            if entries[0] == "P":
+                path_dict[entries[1]] = entries[2] # store paths as strings
+    # get unique paths (including direction/strand)
+    unique_paths = list(set(a.values()))
+    # get how many times they occur
+    unique_path_counts = [list(a.values()).count(x) for x in unique_paths]
+    # find most prevalent path (can be tied - but .index will select just one)
+    most_prevalent_path = unique_paths[unique_path_counts.index(max(unique_path_counts))]
+    scores = {k:v for k, v in zip(unique_paths, unique_path_counts)}    
+    scores_sorted = {k: v for k, v in sorted(scores.items(), key=lambda item: item[1], reverse=True)}
+    # Summarise these 
+    output_path_file = gfa_file+'.unique_paths.txt'
+    unique_path_ids = dict.fromkeys(scores_sorted.keys()) 
+    # Pick a random sequence that has that path
+    for seq_id, path in path_dict.items():
+        if unique_path_ids[path]==None:
+            unique_path_ids[path] = [seq_id]
+        else:
+            unique_path_ids[path].append(seq_id)
+    with open(output_path_file, 'w') as output:
+        for path, ids in unique_path_ids.items():
+            output.write('%s\t%s\n' % (','.join(ids), path)) 
+
+
+
+
+
+
+
+
+
 def rewriteGFA(gfa_file, colour_file, new_gfa_file):
     """Rewrites a GFA with colours."""
     block_colour_dict = {}
