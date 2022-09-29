@@ -126,6 +126,8 @@ echo "Preparing gfa..."
 python "$scriptDir"/prepare-pangraph-gfa.py pangraph_all_u5k_d5k.gfa
 # change the .colours.csv output
 # Should use proper lengths of blocks - but this is a minor addition for once the pipeline is done.
+# this now also saves the counts of unique full-length paths and a representative of the most frequent path to 
+# a file
 
 # Find the gene block in pangraph  
 # (could be incorporated into the prepare pangraph step?
@@ -139,7 +141,7 @@ python "$scriptDir"/compute-distances.py pangraph_all_u5k_d5k.gfa $geneBlock
 
 # Plot the distances  
 echo "Plotting distances..."
-Rscript "$scriptDir"/plot-output-dists.R pangraph_all_u5k_d5k.gfa.output_dists.csv flanking-plot-output.pdf
+Rscript "$scriptDir"/plot-output-dists.R pangraph_all_u5k_d5k.gfa.output_dists.csv pangraph_all_u5k_d5k.gfa.most_frequent_path_representative.txt 
 ```
 
 `prepare-pangraph-gfa.py`

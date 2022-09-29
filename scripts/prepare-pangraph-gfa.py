@@ -78,9 +78,9 @@ def mostFrequentPathGFA(gfa_file):
             if entries[0] == "P":
                 path_dict[entries[1]] = entries[2] # store paths as strings
     # get unique paths (including direction/strand)
-    unique_paths = list(set(a.values()))
+    unique_paths = list(set(path_dict.values()))
     # get how many times they occur
-    unique_path_counts = [list(a.values()).count(x) for x in unique_paths]
+    unique_path_counts = [list(path_dict.values()).count(x) for x in unique_paths]
     # find most frequent path (can be tied - but .index will select just one)
     most_frequent_path = unique_paths[unique_path_counts.index(max(unique_path_counts))]
     scores = {k:v for k, v in zip(unique_paths, unique_path_counts)}    
