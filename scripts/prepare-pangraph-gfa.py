@@ -68,7 +68,8 @@ def readGFA(gfa_file, colour_all=True, colour_seed=1789):
 
 def mostFrequentPathGFA(gfa_file): 
     """Finds the most frequent (full-length) path in the gfa file
-    and returns a random ID of sequence that has that path."""
+    and returns a random ID of sequence that has that path.
+    Also saves a file with the unique paths and their IDs just in case."""
     path_dict = {}
     with open(gfa_file, 'r') as gfa:
         i = 1
@@ -80,8 +81,8 @@ def mostFrequentPathGFA(gfa_file):
     unique_paths = list(set(a.values()))
     # get how many times they occur
     unique_path_counts = [list(a.values()).count(x) for x in unique_paths]
-    # find most prevalent path (can be tied - but .index will select just one)
-    most_prevalent_path = unique_paths[unique_path_counts.index(max(unique_path_counts))]
+    # find most frequent path (can be tied - but .index will select just one)
+    most_frequent_path = unique_paths[unique_path_counts.index(max(unique_path_counts))]
     scores = {k:v for k, v in zip(unique_paths, unique_path_counts)}    
     scores_sorted = {k: v for k, v in sorted(scores.items(), key=lambda item: item[1], reverse=True)}
     # Summarise these 
@@ -96,7 +97,10 @@ def mostFrequentPathGFA(gfa_file):
     with open(output_path_file, 'w') as output:
         for path, ids in unique_path_ids.items():
             output.write('%s\t%s\n' % (','.join(ids), path)) 
-
+    most_frequent_path = list(scores_sorted.keys())[0]
+    representative_most_frequent = unique_path_ids[most_frequent_path][0]
+    with open(gfa_file+'.most_frequent_path_representative.txt', 'w') as f:
+       f.write(representative_most_frequent)
 
 
 
@@ -125,6 +129,8 @@ def main():
     input_gfa = str(args.input_file)
     colour_all_blocks = args.all
     readGFA(input_gfa, colour_all_blocks)
+    # get representative of most frequent full-length path in GFA
+    most_frequent_path_id = mostFrequentPathGFA(input_gfa)
     rewriteGFA(input_gfa,
         input_gfa+".colours.csv",
         input_gfa+".coloured.gfa")
