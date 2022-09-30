@@ -22,7 +22,7 @@ Needs: `card-genomes.txt` (CARD download, in `../CARD`)
 Makes: `CARD-all-hits-presence-absence-chrom-plasmid.csv`
 Could be improved to score perfect/strict matches differently. Currently both are stored as 1.
 
-`02a_make-matrix-card-data.py`
+`02a02a_make-matrix-card-data.py`_make-matrix-card-data.py`
 _Status_: runs
 _Usage_: `python 02_make-matrix-card-data.py`.
 Needs: `card-genomes.txt` (CARD download, in `../CARD`)
@@ -65,6 +65,7 @@ Could call `ncbi-acc-download` from within script
 Once the fastas are all downloaded, this is what the pipeline looks like at the moment: something like
 
 ```bash
+APIKEY="baa3a819c7daef503358eeef4038012d1508" # for NCBI downloads - better to do this once, but tbd
 FAMILY="KPC"
 GENE="KPC-2"
 THRESHOLD="25"
@@ -84,12 +85,30 @@ python get-gene-cluster-accessions.py $FAMILY $GENE $THRESHOLD --singlehits
 
 mkdir -p "$FAMILY"
 
+# THIS SECTION IS TO BE REPLACED - AIM TO DOWNLOAD FOR ALL BETA-lactamase
+# CONTAINING SEQUENCES FROM THE START
 while read f;                    
 do
 name=$(echo $f | cut -d ',' -f 1)
-ncbi-acc-download -F fasta $name; mv "$name".fa "$FAMILY"/
+ncbi-acc-download -F fasta $name --api-key $APIKEY; mv "$name".fa "$FAMILY"/
 echo $f
 done < "$GENE"_within_"$THRESHOLD"_diffs_accs.txt
+
+# GETTING BIOSAMPLE INFORMATION
+cut -d ',' -f 1 "$GENE"_within_"$THRESHOLD"_diffs_accs.txt > test.txt
+while read f;
+do
+	ncbi-acc-download -F genbank $f --api-key $APIKEY; biosample=$(grep "BioSample"  "$f".gbk | cut -d ':' -f 2 | tr -d ' '); echo $f,$biosample; rm "$f".gbk
+	#esummary -db biosample -id $biosample
+done < test.txt > biosamples.csv
+cut -d ',' -f 2 biosamples.csv > biosamples.txt
+# USE ESUMMARY TO COLLECT THE XML INFO
+epost -db biosample -input test_biosamples.txt api_key $APIKEY | efetch -format docsum > combined.xml
+# then parse into csv metadata with short python script
+python extract-xml.py combined.xml
+
+
+
 
 cd "$FAMILY"
 echo ">gene\n$GENE_SEQUENCE" > gene.fa
@@ -128,7 +147,7 @@ echo "Preparing gfa..."
 python "$scriptDir"/prepare-pangraph-gfa.py pangraph_all_u5k_d5k.gfa
 # change the .colours.csv output
 # Should use proper lengths of blocks - but this is a minor addition for once the pipeline is done.
-# this now also saves the counts of unique full-length paths and a representative of the most frequent path to 
+# this now also saves the counts of unique full-length paths and a representative of the most frequent path to
 # a file
 
 # Find the gene block in pangraph  
@@ -143,7 +162,7 @@ python "$scriptDir"/compute-distances.py pangraph_all_u5k_d5k.gfa $geneBlock
 
 # Plot the distances  
 echo "Plotting distances..."
-Rscript "$scriptDir"/plot-output-dists.R pangraph_all_u5k_d5k.gfa.output_dists.csv pangraph_all_u5k_d5k.gfa.most_frequent_path_representative.txt all_u5k_d5k_focal_gene.dedup.txt 
+Rscript "$scriptDir"/plot-output-dists.R pangraph_all_u5k_d5k.gfa.output_dists.csv pangraph_all_u5k_d5k.gfa.most_frequent_path_representative.txt all_u5k_d5k_focal_gene.dedup.txt
 ```
 
 `prepare-pangraph-gfa.py`
