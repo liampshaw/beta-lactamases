@@ -20,7 +20,7 @@ with(open(xml_file, 'r') as f):
     xml_index = 0
     for i, line in enumerate(f.readlines()):
         if i>3: # skip header...
-            print(line)
+            #print(line)
             if line.strip()=="</DocumentSummarySet>":
                 print('end')
                 xml_index = 'end'
@@ -41,10 +41,10 @@ for i, xml_string in enumerate(xml_list):
     organism = obj.DocumentSummary.Organism.cdata
     attribute_dict['organism'] = organism
     biosample_dict[biosample_accession] = attribute_dict
-    print(i, biosample_accession, attribute_dict)
+    #print(i, biosample_accession, attribute_dict)
 
 #
-useful_columns = ['organism', 'host', 'collected_by', 'env_broad_scale', 'geo_loc_name', 'collection_date', 'lat_lon']
+useful_columns = ['organism', 'host', 'collected_by',  'geo_loc_name', 'collection_date', 'lat_lon']
 
 # 'ENA first public', 'INSDC first public'
 
