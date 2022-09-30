@@ -65,7 +65,7 @@ Could call `ncbi-acc-download` from within script
 Once the fastas are all downloaded, this is what the pipeline looks like at the moment: something like
 
 ```bash
-APIKEY="baa3a819c7daef503358eeef4038012d1508" # for NCBI downloads - better to do this once, but tbd
+APIKEY="abf81216999e19fc8a23ae76fb9c6b208908" # for NCBI downloads - better to do this once, but tbd
 FAMILY="KPC"
 GENE="KPC-2"
 THRESHOLD="25"
@@ -101,9 +101,15 @@ do
 	ncbi-acc-download -F genbank $f --api-key $APIKEY; biosample=$(grep "BioSample"  "$f".gbk | cut -d ':' -f 2 | tr -d ' '); echo $f,$biosample; rm "$f".gbk
 	#esummary -db biosample -id $biosample
 done < test.txt > biosamples.csv
-cut -d ',' -f 2 biosamples.csv > biosamples.txt
+cut -d ',' -f 2 biosamples.csv | awk '$1!=""' > biosamples.txt # drop empty lines (epost complains)
 # USE ESUMMARY TO COLLECT THE XML INFO
-epost -db biosample -input test_biosamples.txt api_key $APIKEY | efetch -format docsum > combined.xml
+epost -db biosample -input biosamples.txt api_key $APIKEY | efetch -format docsum > combined.xml # need to split into 100 queries at a time. just use split -l and then
+# for f in xa*;
+# do
+# epost -db biosample -input $f api_key $APIKEY | efetch -format docsum > "$f".xml
+# echo $f
+# done
+
 # then parse into csv metadata with short python script
 python extract-xml.py combined.xml
 

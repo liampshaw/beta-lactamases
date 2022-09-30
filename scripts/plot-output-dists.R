@@ -68,7 +68,8 @@ makePlots <- function(df){
         panel.border = element_blank(),
         panel.background = element_blank())+
       xlim(c(-dist.max, 0))+
-      theme(plot.title=element_text(hjust=0.5))
+      theme(plot.title=element_text(hjust=0.5))+
+      scale_y_reverse()
     p.downstream <- ggplot(df, aes( dist.down,group=snps.categorical, colour=snps.categorical))+
       stat_ecdf()+
       theme_bw()+
@@ -90,7 +91,8 @@ makePlots <- function(df){
         panel.border = element_blank(),
         panel.background = element_blank())+
         xlim(c(0, dist.max))+
-        theme(plot.title=element_text(hjust=0.5))
+        theme(plot.title=element_text(hjust=0.5))+
+      scale_y_reverse()
     p = cowplot::plot_grid(p.upstream, p.downstream, rel_widths = c(0.8, 1))
     return(p)
 }
