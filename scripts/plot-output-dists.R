@@ -139,7 +139,7 @@ treePlot <- function(deduplicated_prefix){
     scale_size_continuous(range=c(2, 10), breaks=c(1, 10, 50, 100), name="No. sequences")+
     geom_treescale(width = 1, offset = 0.1, linesize = 1)+
     guides(fill=FALSE)+
-    ggtitle("NJ tree of focal gene sequences")
+    ggtitle("NJ tree of central gene")
   return(p)
 }
 
