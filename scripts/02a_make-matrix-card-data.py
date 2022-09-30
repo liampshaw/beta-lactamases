@@ -65,6 +65,23 @@ pa_chrom_df.to_csv(DATA_DIR+'CARD-all-hits-presence-absence-ncbi_chromosome.csv'
 hits_df_chrom = makePA(df_chrom, False)
 hits_df_chrom.to_csv(DATA_DIR+'CARD-all-hits-ncbi_chromosome.csv')
 
+# Just betalactamases
+betalactamases = []
+with open('../beta-lactamases.txt', 'r') as f:
+    for line in f.readlines():
+        betalactamases.append(line.strip())
+# Only the columns that match beta-lactamase names
+name_list = [[x for x in list(pa_df.columns) if y in x] for y in betalactamases]
+names = [x for y in name_list for x in y]
+# subset to beta-lactamase presence absence
+pa_df_bl = pa_df[names]
+# Remove empty rows (chrom/plasmid with no bl hits)
+pa_df_bl = pa_df_bl[pa_df_bl.sum(axis=1) != 0]
+pa_df_bl.to_csv(DATA_DIR+'CARD-all-hits-presence-absence-chrom-plasmid-betalactamase.csv')
+# Write just the accessions
+with open(DATA_DIR+'CARD-betalactamase-present-chrom-plasmid-accessions.txt', 'w') as f:
+    for id in list(pa_df_bl.index):
+        f.write('%s\n' % id)
 
 # Below not working atm
 #df_contig = df[df['data_source']=='ncbi_contig' ]
