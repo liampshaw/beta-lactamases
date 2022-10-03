@@ -157,9 +157,10 @@ def makePlot(family_name, dataset='ncbi_wgs', omit_zeros=False):
 def main():
     beta_lactamases = [x.strip() for x in open('../beta-lactamases.txt', 'r').readlines()]
     for b in beta_lactamases:
-        for d in ['ncbi_plasmid', 'ncbi_chromosome']: # ignoring contig/wgs for now
-            print(b, d)
-            makePlot(b, dataset=d, omit_zeros=True)
+        if b not in ["IND", "SME"]:
+            for d in ['ncbi_plasmid', 'ncbi_chromosome']: # ignoring contig/wgs for now
+                print(b, d)
+                makePlot(b, dataset=d, omit_zeros=True)
 
 
 if __name__ == "__main__":
