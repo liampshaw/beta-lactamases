@@ -137,10 +137,11 @@ treePlot <- function(deduplicated_prefix){
     geom_tippoint(aes(size=n, fill=categoricalSNPs), shape=21, colour="black")+
     #geom_tiplab2(aes(label=n.label), geom="label",size=4, hjust = 0)+
     scale_fill_manual(values=snps.categorical.colour.palette)+
-    #theme(legend.position = "bottom")+
+    theme(legend.title= element_text(size=8), 
+          legend.text = element_text(size=6))+
     scale_size_continuous(range=c(2, 10), breaks=c(1, 10, 50, 100), name="No. sequences")+
     geom_treescale(width = 1, offset = 0.1, linesize = 1)+
-    guides(fill=FALSE)+
+    guides(fill="none")+
     ggtitle("NJ tree of central gene")
   return(p)
 }
@@ -157,12 +158,12 @@ dev.off()
 
 deduplicated_prefix = gsub('.txt', '', args[3])
 p.tree <- treePlot(deduplicated_prefix)
-pdf('NJ-gene-tree.pdf')
+pdf('NJ-gene-tree.pdf', width=6, height=4)
 p.tree
 dev.off()
 
 pdf(paste0(args[1],'.flanking-plot-output-focal-gene-seq.pdf'), width=10, height=4)
 p.l <- makePlots(d.subset.2)
-p.r <- p.tree
-cowplot::plot_grid(p.l, p.r, rel_widths = c(2, 1))
+p.r <- ggdraw()+draw_image(magick::image_read_pdf("NJ-gene-tree.pdf", density = 300))
+cowplot::plot_grid(p.l, p.r, nrow = 1, rel_widths  = c(1.5, 1), align='hv', axis='t')
 dev.off()
