@@ -2,10 +2,6 @@ import sys
 import operator
 import pandas as pd
 
-#from pkg_resources import to_filename
-#sys.path.append("..")
-#import src.py_utils as put
-
 class CircularList(list):
     """Circular list class. 
     From https://stackoverflow.com/questions/8951020/pythonic-circular-list
