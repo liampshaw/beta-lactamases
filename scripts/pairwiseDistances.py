@@ -168,51 +168,18 @@ def main():
             a_lcs_block_seqs = [str(aln_dict[x][contig_ids[a]+'#1'].seq) for x in LCS_blocks]
             b_lcs_block_seqs = [str(aln_dict[x][contig_ids[b]+'#1'].seq) for x in LCS_blocks]
             LCS_results = computeCharacteristics(a_lcs_block_seqs, b_lcs_block_seqs)
-            #lcs_block_total_length = sum([len(b) for b in a_lcs_block_seqs])
-            #lcs_block_diffs = sum([[a_lcs_block_seqs[y][x]!=b_lcs_block_seqs[y][x] for x in range(len(b_lcs_block_seqs[y]))].count(True) \
-            #         for y in range(len(a_lcs_block_seqs))])
-            # lcs_snp_density = float(lcs_block_diffs)/lcs_block_total_length
-            # # Flanking
+
             upstream_blocks = sharedBlocksBeforeBreakpoint(a_blocks, b_blocks, focal_block, upstream=True)
             downstream_blocks = sharedBlocksBeforeBreakpoint(a_blocks, b_blocks, focal_block, upstream=False)
-            # flanking_blocks = upstream_blocks + downstream_blocks
-            # # this assumes the first block encountered is the first occurrence of that block. But that might not be true, so this might not handle duplications properly?
-            # a_flanking_blocks_seqs = [str(aln_dict[x][contig_ids[a]+'#1'].seq) for x in flanking_blocks] 
-            # b_flanking_blocks_seqs = [str(aln_dict[x][contig_ids[b]+'#1'].seq) for x in flanking_blocks]
-            # flanking_L_total = sum([len(b) for b in a_flanking_blocks_seqs]) # Includes empty sites...should correct this
-            # flanking_N_diff_sites = sum([[a_flanking_blocks_seqs[y][x]!=b_flanking_blocks_seqs[y][x] for x in range(len(b_flanking_blocks_seqs[y]))].count(True) \
-            #         for y in range(len(b_flanking_blocks_seqs))])         
-            # flanking_seq_N_diff_regions = islandsOfDifference(''.join(a_flanking_blocks_seqs),\
-            #                                         ''.join(b_flanking_blocks_seqs))
-            # if flanking_L_total!=0:
-            #     flanking_proportion_sites_different = float(flanking_N_diff_sites)/flanking_L_total
-            #     flanking_seq_N_diff_region_density = float(flanking_seq_N_diff_regions)/flanking_L_total
-            # else:
-            #     flanking_proportion_sites_different = 'NA'
-            #     flanking_seq_N_diff_region_density = 'NA'
-
             
             # Focal block
             a_focal_block_seq = [str(aln_dict[focal_block][contig_ids[a]+'#1'].seq)]
             b_focal_block_seq = [str(aln_dict[focal_block][contig_ids[b]+'#1'].seq)]
             focal_block_results = computeCharacteristics(a_focal_block_seq, b_focal_block_seq)
-            #focal_block_N_diff_sites = [a_focal_block_seq[x]!=b_focal_block_seq[x] for x in range(len(b_focal_block_seq))].count(True)
-
             # Upstream
             a_upstream_blocks_seqs = [str(aln_dict[x][contig_ids[a]+'#1'].seq) for x in upstream_blocks] 
             b_upstream_blocks_seqs = [str(aln_dict[x][contig_ids[b]+'#1'].seq) for x in upstream_blocks]
             upstream_block_results = computeCharacteristics(a_upstream_blocks_seqs, b_upstream_blocks_seqs)
-            #upstream_L_total = sum([len(b) for b in a_upstream_blocks_seqs]) # Includes empty sites...should correct this
-            #upstream_N_diff_sites = sum([[a_upstream_blocks_seqs[y][x]!=b_upstream_blocks_seqs[y][x] for x in range(len(b_upstream_blocks_seqs[y]))].count(True) \
-            #        for y in range(len(b_upstream_blocks_seqs))])         
-            #upstream_seq_N_diff_regions = islandsOfDifference(''.join(a_upstream_blocks_seqs),\
-            #                                        ''.join(b_upstream_blocks_seqs))
-            #if upstream_L_total!=0:
-            #    upstream_proportion_sites_different = float(upstream_N_diff_sites)/upstream_L_total
-            #    upstream_seq_N_diff_region_density = float(upstream_seq_N_diff_regions)/upstream_L_total
-            #else:
-            #    upstream_proportion_sites_different = 'NA'
-            #    upstream_seq_N_diff_region_density = 'NA'
             # Downstream
             a_downstream_blocks_seqs = [str(aln_dict[x][contig_ids[a]+'#1'].seq) for x in downstream_blocks] 
             b_downstream_blocks_seqs = [str(aln_dict[x][contig_ids[b]+'#1'].seq) for x in downstream_blocks]
@@ -234,16 +201,12 @@ def main():
             contig_first = sorted([contig_ids[a], contig_ids[b]])[0]
             contig_second = sorted([contig_ids[a], contig_ids[b]])[1]
             contig_string = contig_first+","+contig_second
+            # Output strings - component parts
             LCS_string = ','.join([str(x) for x in LCS_results.values()])
             upstream_string = ','.join([str(x) for x in upstream_block_results.values()])
             downstream_string = ','.join([str(x) for x in downstream_block_results.values()])
             focal_string = ','.join([str(x) for x in focal_block_results.values()])
-           # output_string = contig_string+","+\
-                #str(len(LCS_blocks))+','+str(lcs_block_total_length)+','+str(lcs_block_diffs)+','+str(lcs_snp_density)+','+\
-                    #str(len(flanking_blocks))+','+str(flanking_L_total)+','+str(flanking_N_diff_sites)+','+str(flanking_proportion_sites_different)+','+str(flanking_seq_N_diff_regions)+','+str(flanking_seq_N_diff_region_density)+','+\
-                    #str(len(upstream_blocks))+',-'+str(upstream_L_total)+','+str(upstream_N_diff_sites)+','+str(upstream_proportion_sites_different)+','+str(upstream_seq_N_diff_regions)+','+str(upstream_seq_N_diff_region_density)+','+\
-                     #str(len(downstream_blocks))+','+str(downstream_L_total)+','+str(downstream_N_diff_sites)+','+str(downstream_proportion_sites_different)+','+str(downstream_seq_N_diff_regions)+','+str(downstream_seq_N_diff_region_density)+','+\
-                    #str(focal_block_N_diff_sites)
+            # Create output string
             output_string = contig_string+","+focal_string+","+upstream_string+","+downstream_string+","+LCS_string
 
             print(output_string)
