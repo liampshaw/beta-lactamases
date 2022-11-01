@@ -80,7 +80,9 @@ def computeCharacteristics(sequence_list_1, sequence_list_2):
     total_L = 0
     for seq1, seq2 in zip(sequence_list_1, sequence_list_2):
         for i in range(len(seq1)):
-            if seq1!="-" or seq2[i]!="-": # ignore sites missing in both
+            if seq1[i]=="-" and seq2[i]=="-": # ignore sites missing in both
+                pass
+            else:
                 total_L += 1
 
     N_diff_sites = sum([[sequence_list_1[y][x]!=sequence_list_2[y][x] for x in range(len(sequence_list_2[y]))].count(True) \
