@@ -112,10 +112,13 @@ treePlot <- function(deduplicated_prefix){
   metadata$isolates <- NULL
   metadata$isolate <- rownames(metadata)
   
+  if (length(which(!tree$tip.label %in% metadata$isolate))>0){
+
   metadata.single <- data.frame(isolate=tree$tip.label[which(!tree$tip.label %in% metadata$isolate)],
                                 n=1)
   
   metadata <- rbind(metadata, metadata.single)
+}
   metadata <- metadata[,c("isolate", "n")]
   rownames(metadata) <- metadata$isolate
   
@@ -132,7 +135,7 @@ treePlot <- function(deduplicated_prefix){
   metadata$n.label <- sapply(metadata$n, 
                              function(x) ifelse(x==1, "", x))
   
-  p <- ggtree(tree, layout = 'equal_angle')
+  p <- ggtree(tree, layout = 'rectangular')
   p <- p %<+% metadata+
     geom_tippoint(aes(size=n, fill=categoricalSNPs), shape=21, colour="black")+
     #geom_tiplab2(aes(label=n.label), geom="label",size=4, hjust = 0)+
@@ -158,12 +161,11 @@ dev.off()
 
 deduplicated_prefix = gsub('.txt', '', args[3])
 p.tree <- treePlot(deduplicated_prefix)
-pdf('NJ-gene-tree.pdf', width=6, height=4)
-p.tree
-dev.off()
+ggsave(plot=p.tree, file='NJ-gene-tree.pdf', width=6, height=4)
 
-pdf(paste0(args[1],'.flanking-plot-output-focal-gene-seq.pdf'), width=10, height=4)
+#pdf(paste0(args[1],'.flanking-plot-output-focal-gene-seq.pdf'), width=10, height=4)
 p.l <- makePlots(d.subset.2)
 p.r <- ggdraw()+draw_image(magick::image_read_pdf("NJ-gene-tree.pdf", density = 300))
-cowplot::plot_grid(p.l, p.r, nrow = 1, rel_widths  = c(1.5, 1), align='hv', axis='t')
-dev.off()
+p.combined = cowplot::plot_grid(p.l, p.r, nrow = 1, rel_widths  = c(1.5, 1), align='hv', axis='t')
+ggsave(plot=p.combined, file=paste0(args[1],'.flanking-plot-output-focal-gene-seq.pdf'), width=10, height=4)
+#dev.off()
