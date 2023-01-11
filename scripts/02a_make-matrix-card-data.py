@@ -5,7 +5,7 @@ import numpy as np
 
 DATA_DIR = '../data-processing/'
 
-df = pd.read_csv('../CARD/index-for-model-sequences.txt', sep='\t', index_col=0)
+df = pd.read_csv('../data/CARD-index-for-model-sequences.txt', sep='\t', index_col=0)
 # replace NaN with empty string
 df = df.fillna("")
 

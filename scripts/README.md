@@ -14,15 +14,7 @@ Makes: `gene-prevalence-ncbi_plasmid.csv` etc.
     `clinical-betalactamase-groups.pdf` and `.png` figure of prevalence of given families
 Currently this makes the figure only for `ncbi_wgs`. It could be changed to do it for `ncbi_chromosome` and `ncbi_plasmid` as well (trivial).
 
-`02_make-matrix-card-data.py`
-**Defunct**
-_Status_: runs
-_Usage_: `python 02_make-matrix-card-data.py`.
-Needs: `card-genomes.txt` (CARD download, in `../CARD`)
-Makes: `CARD-all-hits-presence-absence-chrom-plasmid.csv`
-Could be improved to score perfect/strict matches differently. Currently both are stored as 1.
-
-`02a02a_make-matrix-card-data.py`_make-matrix-card-data.py`
+`02a_make-matrix-card-data.py`_make-matrix-card-data.py`
 _Status_: runs
 _Usage_: `python 02_make-matrix-card-data.py`.
 Needs: `card-genomes.txt` (CARD download, in `../CARD`)

@@ -4,4 +4,8 @@ card-data/*
 scripts/*_within*diffs*txt
 scripts/*/*
 scripts/.Rhistory
+scripts/*fa
+scripts/*aln
+scripts/*txt
+data/CARD*
 .DS_Store
