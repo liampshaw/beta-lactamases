@@ -7,7 +7,7 @@ In the current analysis (Jan 2023) we are using the v3.1.0 release which can be 
 
 Sequence data can be downloaded from NCBI directly using the accessions. 
 
-Further data from CARD is required. Specifically, after downloading a release of the prevalence data, you will need to use: 
+Further data from CARD is required. Specifically, after downloading the prevalence data, you will need to extract the archive in this folder and uncompress the following three files (the other files are not needed and can be deleted): 
 
 * `card-genomes.txt`  
 * `index-for-model-sequences.txt`

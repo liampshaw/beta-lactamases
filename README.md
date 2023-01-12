@@ -11,3 +11,5 @@ conda create -n betalactamases
 conda activate betalactamases 
 conda install scipy pandas snp-dists numpy seaborn biopython ncbi-acc-download ncbi-genome-download fasttree seqkit untangle entrez-direct
 ```
+
+To run scripts in `scripts` directory will also require downloading CARD data from [here](https://card.mcmaster.ca/download/6/prevalence-v3.1.0.tar.bz2) and extracting in the `data` directory. Only three files are needed: see README in `data` directory for more information. 
