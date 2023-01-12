@@ -15,4 +15,5 @@ old/
 data-processing/*csv
 data-processing/*pdf
 data-processing/*png
+data-processing/*txt
 .DS_Store
