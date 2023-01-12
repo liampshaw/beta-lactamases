@@ -66,10 +66,11 @@ def main():
                 if r not in accessions.keys():
                     accessions[r] = 'chromosome'
 
-    # Write to file
-    with open(args.gene+'_within_'+str(args.threshold)+'_diffs_accs.txt', 'w') as f:
-        for k, v in accessions.items():
-            _ = f.write('%s,%s\n' % (k, v))
+    # Write to stdout
+    #with open(args.gene+'_within_'+str(args.threshold)+'_diffs_accs.txt', 'w') as f:
+    #    for k, v in accessions.items():
+    for k, v in accessions.items():
+        _ = print('%s,%s' % (k, v))
 
 if __name__ == "__main__":
     main()
