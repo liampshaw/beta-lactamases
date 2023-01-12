@@ -21,7 +21,7 @@ def get_options():
 
 def getNeighbours(family_name, gene_name, distance=10):
     """get the neighbours using clustering within a certain distance threshold of the gene"""
-    snps = pd.read_csv(DATA_DIR+'/'+family_name+'_diffs_aln.tsv', sep='\t', index_col=0)
+    snps = pd.read_csv(DATA_DIR+'/fasta_diffs/'+family_name+'_diffs_aln.tsv', sep='\t', index_col=0)
     #plt.close()
     df = snps
     # and cluster
