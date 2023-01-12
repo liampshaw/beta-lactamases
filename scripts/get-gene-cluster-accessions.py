@@ -35,15 +35,11 @@ def getNeighbours(family_name, gene_name, distance=10):
 
 def main():
     args = get_options()
-    #pa_df = pd.read_csv(DATA_DIR+'/CARD-all-hits-ncbi_chromosome_and_plasmid.csv',index_col=0)
 
-    #genome_df = pd.read_csv('../CARD/card-genomes.txt', sep='\t', index_col=0)
     # Gene clusters
     gene_cluster = getNeighbours(args.family, args.gene, args.threshold)
 
     # Plasmid accessions
-    #plasmids = list(genome_df[genome_df['data_source']=='ncbi_plasmid'].index)
-    #plasmid_df = pa_df.loc[plasmids]
     plasmid_df = pd.read_csv(DATA_DIR+'/CARD-all-hits-ncbi_plasmid.csv',index_col=0)
 
     # Dict of accessions and whether chromosome/plasmid
@@ -58,10 +54,7 @@ def main():
                 if r not in accessions.keys():
                     accessions[r] = 'plasmid'
 
-    # Chromosome accessions
-    #chroms = list(genome_df[genome_df['data_source']=='ncbi_chromosome'].index)
 
-    #chrom_df = pa_df.loc[chroms]
     chrom_df = pd.read_csv(DATA_DIR+'/CARD-all-hits-ncbi_chromosome.csv',index_col=0)
     for g in gene_cluster:
         if g in chrom_df.columns:
