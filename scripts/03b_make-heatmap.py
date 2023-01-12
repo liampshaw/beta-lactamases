@@ -89,7 +89,7 @@ def makePlot(family_name, dataset='ncbi_wgs', omit_zeros=False):
         cluster_fig.ax_col_dendrogram.set_visible(False) #suppress column dendrogram
         plt.savefig(DATA_DIR+'/'+'omit_zeros_'+dataset+'_'+family_name+'_clusters.pdf', bbox_inches='tight')
     else:
-        snps = pd.read_csv(DATA_DIR+'/'+family_name+'_diffs_aln.tsv', sep='\t', index_col=0)
+        snps = pd.read_csv(DATA_DIR+'/fasta_diffs/'+family_name+'_diffs_aln.tsv', sep='\t', index_col=0)
         #plt.close()
         df = snps
         # and cluster
