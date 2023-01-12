@@ -8,5 +8,8 @@ scripts/*fa
 scripts/*aln
 scripts/*txt
 metadata/
-data/CARD*
+data/card-genomes.txt
+data/index-for-model-sequences.txt
+nucleotide_fasta_protein_homolog_model.fasta
+data/
 .DS_Store

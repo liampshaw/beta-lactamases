@@ -6,7 +6,7 @@ GENE=$1
 FAMILY=$(echo $GENE | rev | cut -d '-' -f 2- | rev )
 THRESHOLD="25"
 #GENE_SEQUENCE=$(grep -A 1 $GENE"." gene-lists.fa | tail -n 1)
-GENE_SEQUENCE=$(grep -A 1 $GENE" " ../data/CARD-nucleotide_fasta_protein_homolog_model.fasta  | tail -n 1)
+GENE_SEQUENCE=$(grep -A 1 $GENE" " ../data/nucleotide_fasta_protein_homolog_model.fasta  | tail -n 1)
 echo $GENE
 echo $FAMILY
 echo $GENE_SEQUENCE
