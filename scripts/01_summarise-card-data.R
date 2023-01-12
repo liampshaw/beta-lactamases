@@ -4,7 +4,7 @@ require(cowplot)
 
 DATA_DIR = '../data-processing/'
 
-d <- read.csv('../CARD/index-for-model-sequences.txt',
+d <- read.csv('../data/CARD-index-for-model-sequences.txt',
               header=T,
               stringsAsFactors = F,
               sep='\t')
