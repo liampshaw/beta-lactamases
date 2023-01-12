@@ -8,23 +8,22 @@ Remember to activate the conda environment first with `conda activate betalactam
 `01_summarise-CARD-data.R`
 _Status_: runs
 _Usage_: `Rscript 01_summarise-CARD-data.R`
-Needs: `index-for-model-sequences.txt` (CARD download, in `../CARD`)
+Needs: `index-for-model-sequences.txt` (CARD download, assumed in `../data`)
       `../beta-lactamases.txt` (list of clinically relevant beta-lactamase families)
 Makes: `gene-prevalence-ncbi_plasmid.csv` etc.
     `clinical-betalactamase-groups.pdf` and `.png` figure of prevalence of given families
 Currently this makes the figure only for `ncbi_wgs`. It could be changed to do it for `ncbi_chromosome` and `ncbi_plasmid` as well (trivial).
 
-`02a_make-matrix-card-data.py`_make-matrix-card-data.py`
+`02_make-matrix-card-data.py`_make-matrix-card-data.py`
 _Status_: runs
 _Usage_: `python 02_make-matrix-card-data.py`.
-Needs: `card-genomes.txt` (CARD download, in `../CARD`)
+Needs: `card-genomes.txt` (CARD download, assumed in `../data`)
 Makes: `CARD-all-hits-presence-absence-chrom-plasmid.csv` and other files
-The version I now use.
 
 `03a_align-families.sh`
 _Status_: runs
 _Usage_: `source 03a_align-families.sh` (because of conda environments, `./03a_` won't work)
-Needs: `nucleotide_fasta_protein_homolog_model.fasta` (CARD download, in `../CARD`)
+Needs: `nucleotide_fasta_protein_homolog_model.fasta` (CARD download, assumed in `../data`)
 Extracts gene sequences from this file with `grep` (could be replaced with python to be more reliable)
 Then aligns these sequences with mafft (not clustalo - )
 Then uses `snp-dists -a -b` to get differences including insertions and deletions (gaps, not just SNPs)
@@ -45,7 +44,7 @@ Could omit the 'empty rows' i.e. those sequence variants that have no hits in CA
 _Status_: runs.
 Needs:
 `CARD-all-hits-presence-absence-chrom-plasmid.csv` (made by `make-matrix-card-data.py`, see below)
-`card-genomes.txt` (CARD download, in `../CARD`)
+`card-genomes.txt` (CARD download, assumed in `../data`)
 `_diffs_aln.tsv` (from `make-heatmap.sh`)
 Could be altered to take arguments with argparse.
 Currently does not download the genomes.

@@ -11,5 +11,6 @@ metadata/
 data/card-genomes.txt
 data/index-for-model-sequences.txt
 nucleotide_fasta_protein_homolog_model.fasta
+old/
 data/
 .DS_Store
