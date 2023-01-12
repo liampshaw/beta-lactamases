@@ -79,3 +79,15 @@ python "$scriptDir"/compute-distances.py $OUTPUTDIR/pangraph_all_u5k_d5k.gfa $ge
 # Plot the distances
 echo "Plotting distances..."
 Rscript "$scriptDir"/plot-output-dists.R $OUTPUTDIR/pangraph_all_u5k_d5k.gfa.output_dists.csv $OUTPUTDIR/pangraph_all_u5k_d5k.gfa.most_frequent_path_representative.txt $OUTPUTDIR/all_u5k_d5k_focal_gene.dedup.txt
+
+# Make pangenome plots
+# Bandage
+Bandage image $OUTPUTDIR/pangraph_all_u5k_d5k.gfa.coloured.gfa \
+        $OUTPUTDIR/pangraph_all_u5k_d5k.gfa.png \
+        --height 4000 --width 7000 \
+        --colour custom
+# and linearized blocks as well
+Rscript plot-blocks.R \
+        $OUTPUTDIR/pangraph_all_u5k_d5k.gfa.blocks.csv \
+        $geneBlock $OUTPUTDIR/pangraph_all_u5k_d5k.gfa.png \
+        $OUTPUTDIR/pangraph_blocks_plot.pdf
