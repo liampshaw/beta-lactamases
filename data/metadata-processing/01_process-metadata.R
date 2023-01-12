@@ -2,12 +2,6 @@
 # - adding information on whether accession is chromosome/plasmid
 # - formatting the dates properly
 
-# Process followed:
-# 01_process-metadata.R: metadata-raw.csv > metadata-processed-v1.csv
-# Manually edit spreadsheet: metadata-processed-v1.csv > metadata-processed-v2.csv
-# 02_process-metadata.R: metadata-processed-v2.csv > metadata-processed-v3.csv
-# That v3 file becomes metadata.csv
-
 metadata <- read.csv('metadata-raw.csv',
                      header=T,
                      stringsAsFactors = F, 
