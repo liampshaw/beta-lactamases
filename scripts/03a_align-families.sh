@@ -3,6 +3,7 @@
 mkdir -p ../data-processing/fasta
 mkdir -p ../data-processing/fasta_aln
 mkdir -p ../data-processing/fasta_diffs
+mkdir -p ../data-processing/plots
 
 while read gene;
 do

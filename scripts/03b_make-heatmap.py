@@ -22,7 +22,7 @@ def makePlot(family_name, dataset='ncbi_wgs', omit_zeros=False):
     """makes the plot of prevalence in a given dataset.
     omit_zeros: whether to plot those with zero prevalence"""
     if omit_zeros==True:
-        snps = pd.read_csv(DATA_DIR+'/'+family_name+'_diffs_aln.tsv', sep='\t', index_col=0)
+        snps = pd.read_csv(DATA_DIR+'/fasta_diffs/'+family_name+'_diffs_aln.tsv', sep='\t', index_col=0)
         #plt.close()
         # Read in prevalence data
         #prevalence_df = pd.read_csv(DATA_DIR+'/gene-prevalence-'+dataset+'.csv')
@@ -87,7 +87,7 @@ def makePlot(family_name, dataset='ncbi_wgs', omit_zeros=False):
         cluster_fig.fig.suptitle(family_name,fontsize=60, y=1)
         plt.title(dataset+'\n'+'n='+str(sum(family_df_new['n'])), fontsize=20)
         cluster_fig.ax_col_dendrogram.set_visible(False) #suppress column dendrogram
-        plt.savefig(DATA_DIR+'/'+'omit_zeros_'+dataset+'_'+family_name+'_clusters.pdf', bbox_inches='tight')
+        plt.savefig(DATA_DIR+'/plots/'+'omit_zeros_'+dataset+'_'+family_name+'_clusters.pdf', bbox_inches='tight')
     else:
         snps = pd.read_csv(DATA_DIR+'/fasta_diffs/'+family_name+'_diffs_aln.tsv', sep='\t', index_col=0)
         #plt.close()
@@ -151,7 +151,7 @@ def makePlot(family_name, dataset='ncbi_wgs', omit_zeros=False):
         cluster_fig.fig.suptitle(family_name,fontsize=60, y=1)
         plt.title(dataset+'\n'+'n='+str(sum(family_df['n'])), fontsize=20)
         cluster_fig.ax_col_dendrogram.set_visible(False) #suppress column dendrogram
-        plt.savefig(DATA_DIR+'/'+dataset+'_'+family_name+'_clusters.pdf', bbox_inches='tight')
+        plt.savefig(DATA_DIR+'/plots/'+dataset+'_'+family_name+'_clusters.pdf', bbox_inches='tight')
     return
 
 def main():
