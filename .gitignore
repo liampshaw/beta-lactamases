@@ -13,4 +13,7 @@ data/index-for-model-sequences.txt
 nucleotide_fasta_protein_homolog_model.fasta
 old/
 data/
+data-processing/*csv
+data-processing/*pdf
+data-processing/*png
 .DS_Store
