@@ -7,5 +7,6 @@ scripts/.Rhistory
 scripts/*fa
 scripts/*aln
 scripts/*txt
+metadata/
 data/CARD*
 .DS_Store
