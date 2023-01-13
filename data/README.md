@@ -4,7 +4,8 @@ Description of data files:
 
 * `accessions.txt` - accessions of all the NCBI chromosomes and plasmids (excluding WGS-only contigs) that contain a hit for one of the analysed beta-lactamase families (CARD prevalence data)
 * `metadata.csv` - cleaned metadata for all the sequences listed in the above. See `metadata-preparation` for details of how this was done 
-* `nucleotide_fasta_protein_homolog_model.fasta` - CARD v3.2.2 nucleotide fasta of AMR genes which confer resistance through their presence (includes all beta-lactamases) 
+* `nucleotide_fasta_protein_homolog_model.fasta` - CARD v3.2.2 nucleotide fasta of AMR genes which confer resistance through their presence (includes all beta-lactamases)
+* `genes.txt` - focal genes selected from twelve clinically important beta-lactamase enzyme families (some families have multiple genes) 
 
 Sequence data can be downloaded from NCBI directly using the accessions. 
 
