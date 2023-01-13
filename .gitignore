@@ -11,6 +11,7 @@ metadata/
 data/card-genomes.txt
 data/index-for-model-sequences.txt
 nucleotide_fasta_protein_homolog_model.fasta
+output/
 old/
 data-processing/*csv
 data-processing/*pdf
