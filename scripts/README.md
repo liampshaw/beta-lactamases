@@ -4,7 +4,7 @@ Unless otherwise specified, all should be run from within `scripts`. Remember to
 
 ## Default pipeline
 
-The default pipeline will take a multi-fasta file of sequences which are presume to all have a gene in common (e.g. an antibiotic resistance gene) present in one copy only. The pipeline will extract a region of specified size (default: 5000 bases upstream and 5000 bases downstream) and then run pangraph and produce diagnostic visualizations of the diversity around the central gene. 
+The default pipeline `runDefaultPipeline.py` is a python script that calls other scripts. It will take a multi-fasta file of sequences which are presumed to all have a gene in common (e.g. an antibiotic resistance gene) present in one copy only. The pipeline will extract a region of specified size (default: 5000 bases upstream and 5000 bases downstream) and then run pangraph and produce diagnostic visualizations of the diversity around the central gene. 
 
 ```
 usage: runDefaultPipeline [-h] --fasta FASTA --gene GENE [--outputdir OUTPUTDIR] [--upstream UPSTREAM] [--downstream DOWNSTREAM] [--polish] [--panx]
@@ -25,7 +25,7 @@ options:
 ```
 
 
-## CARD data processing
+## CARD data processing  
 
 This sequence of scripts can be run with `prepare-CARD-data.sh` which calls them in turn. 
 
