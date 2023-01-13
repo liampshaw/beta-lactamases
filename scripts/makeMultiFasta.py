@@ -25,7 +25,7 @@ def main():
     get_seq = 'grep -A 1 '+args.gene+' ../data/nucleotide_fasta_protein_homolog_model.fasta | tail -n 1'
     get_seq_out = subprocess.check_output(get_seq, shell=True)
     gene_seq = get_seq_out.decode().strip('\n')
-    with open(args.outputdir+'/gene.fa', 'w') as f:
+    with open(args.outputdir+'/'+args.gene+'.fa', 'w') as f:
         f.write('>%s\n%s' % (args.gene, gene_seq))
 
     get_gene_clusters = 'python getGeneClusterAccessions.py '+gene_family+' '+\
@@ -33,10 +33,10 @@ def main():
                                             str(args.threshold)+\
                                              " --singlehits | cut -d ',' -f 1 | sed -e 's/$/.fa/g' | "+\
                                              "sed -e 's~^~'"+args.fastadir+"'/~g' > "+\
-                                             args.outputdir+"/accs.txt"
+                                             args.outputdir+"/"+args.gene+"_fastas.txt"
     get_gene_clusters_out = subprocess.check_output(get_gene_clusters, shell=True)
 
-    cat = "xargs cat < "+args.outputdir+"/accs.txt > "+args.outputdir+"/seqs.fa"
+    cat = "xargs cat < "+args.outputdir+"/"+args.gene+"_fastas.txt > "+args.outputdir+"/"+args.gene+"_seqs.fa"
     cat_out = subprocess.check_output(cat, shell=True)
 
 
