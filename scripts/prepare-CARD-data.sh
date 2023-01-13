@@ -1,9 +1,9 @@
 #!/bin/bash
 
-Rscript 01_summarise-CARD-data.R 
+Rscript prepare-01_summarise-CARD-data.R 
 
-python 02_make-matrix-card-data.py 
+python prepare-02_make-matrix-CARD-data.py 
 
-source 03a_align-families.sh 
+source prepare-03a_align-families.sh 
 
-python 03b_make-heatmap.py 
+python prepare-03b_make-heatmap.py 
