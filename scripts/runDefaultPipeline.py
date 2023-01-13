@@ -3,6 +3,7 @@ import argparse
 import subprocess
 import os
 import re
+from datetime import datetime
 
 
 def get_options():
@@ -38,8 +39,11 @@ def main():
     # Output prefixes
     output_prefix_no_dir = 'all_u'+str(args.upstream)+'_d'+str(args.downstream)
     output_prefix = args.outputdir+'/'+output_prefix_no_dir
-
     # Log the parameters used and write to file
+    with open(args.outputdir+'/'+'params.log', 'w') as f:
+        f.write('run: '+datetime.now().strftime("%d/%m/%Y %H:%M:%S")+'\n\n')
+        for k, v in vars(args).items():
+            f.write('%s: %s\n' % (str(k), str(v)))
 
     # Extract region around gene
     extract_region_command = ['python', 'extract-region.py',
