@@ -46,7 +46,7 @@ def main():
             f.write('%s: %s\n' % (str(k), str(v)))
 
     # Extract region around gene
-    extract_region_command = ['python', 'extract-region.py',
+    extract_region_command = ['python', 'extractRegion.py',
                                         '--gene', args.gene,
                                         '--input', args.fasta,
                                         '--upstream', str(args.upstream),
@@ -90,7 +90,7 @@ def main():
         print(pangraph_panx_export_output)
 
     # Prepare gfa for visualisation
-    prepare_gfa = 'python prepare-pangraph-gfa.py '+output_prefix+'_pangraph.gfa'
+    prepare_gfa = 'python preparePangraphGFA.py '+output_prefix+'_pangraph.gfa'
     prepare_gfa_output = subprocess.call(prepare_gfa, shell=True)
     print(prepare_gfa_output)
 
@@ -104,7 +104,7 @@ def main():
     gene_block = blast_gene_output.decode().strip('\n')
 
     # Compute the distances
-    compute_distance = 'python compute-distances.py '+output_prefix+'_pangraph.gfa '+gene_block
+    compute_distance = 'python computeDistances.py '+output_prefix+'_pangraph.gfa '+gene_block
     compute_distance_output = subprocess.call(compute_distance, shell=True)
     print(compute_distance_output)
 
