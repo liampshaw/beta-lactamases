@@ -2,6 +2,28 @@
 
 Unless otherwise specified, all should be run from within `scripts`. Remember to activate the conda environment first with `conda activate betalactamases` (or have all necessary things installed).
 
+## Default pipeline
+
+The default pipeline will take a multi-fasta file of sequences which are presume to all have a gene in common (e.g. an antibiotic resistance gene) present in one copy only. The pipeline will extract a region of specified size (default: 5000 bases upstream and 5000 bases downstream) and then run pangraph and produce diagnostic visualizations of the diversity around the central gene. 
+
+```
+usage: runDefaultPipeline [-h] --fasta FASTA --gene GENE [--outputdir OUTPUTDIR] [--upstream UPSTREAM] [--downstream DOWNSTREAM] [--polish] [--panx]
+
+Run pangraph pipeline on the flanking regions of a gene.
+
+options:
+  -h, --help            show this help message and exit
+  --fasta FASTA         Multi-fasta file of input sequences containing the gene.
+  --gene GENE           Fasta of focal gene to centre analysis on.
+  --outputdir OUTPUTDIR
+                        Output directory
+  --upstream UPSTREAM   Upstream bases
+  --downstream DOWNSTREAM
+                        Upstream bases
+  --polish              Whether to use pangraph polish (time-intensive).
+  --panx                Whether to export panX output (time-intensive).
+```
+
 
 ## CARD data processing
 
@@ -15,7 +37,7 @@ Makes: `gene-prevalence-ncbi_plasmid.csv` etc.
     `clinical-betalactamase-groups.pdf` and `.png` figure of prevalence of given families  
 Currently this makes the figure only for `ncbi_wgs`. It could be changed to do it for `ncbi_chromosome` and `ncbi_plasmid` as well.
 
-### `prepare-02_make-matrix-CARD-data.py`_make-matrix-card-data.py`
+### `prepare-02_make-matrix-CARD-data.py`
 
 _Usage_: `python 02_make-matrix-CARD-data.py`.  
 
