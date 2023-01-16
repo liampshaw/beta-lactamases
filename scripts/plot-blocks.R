@@ -87,5 +87,7 @@ if (args[3]=='none'){
 # Make the output pdf with a blank plot
   p.final = cowplot::plot_grid(p.blocks, ggdraw(), nrow=1, align='h')
 }
-ggsave(p.final, file=args[4], width=8, height=8, dpi=300)
+pdf(file=args[4], width=8, height=8, dpi=300)
+p.final
+dev.off()
 
