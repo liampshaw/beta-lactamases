@@ -16,6 +16,7 @@ def get_options():
     parser.add_argument('--downstream', help='Upstream bases (default=5000)', required=False, default=5000)
     parser.add_argument('--polish', help='Whether to use pangraph polish (time-intensive; default=False).', required=False, action='store_true', default=False)
     parser.add_argument('--panx', help='Whether to export panX output (time-intensive; default=False).', required=False, action='store_true', default=False)
+    parser.add_argument('--aligner', choices=['minimap2', 'mmseqs'],  help='Alignment kernel in pangraph (default=minimap2)', required=False, default='minimap2')
     parser.add_argument('--bandage', help='Whether to run Bandage to get Bandage-visualized graph (default=False)', required=False, action='store_true', default=False)
     parser.add_argument('--prefix', help='Output prefix (default=current date & time)', required=False, default=False)
     return parser.parse_args()
@@ -78,11 +79,11 @@ def main():
     # PANGRAPH
     # Build the initial pangraph
     if args.polish==True:
-        pangraph_build_polish = 'pangraph build '+output_prefix+'.fa | pangraph polish > '+output_prefix+'_pangraph.json'
+        pangraph_build_polish = 'pangraph build -k '+args.aligner+' '+output_prefix+'.fa | pangraph polish > '+output_prefix+'_pangraph.json'
         pangraph_polish_output = subprocess.call(pangraph_build_polish, shell=True)
         print(pangraph_polish_output)
     else:
-        pangraph_build = 'pangraph build '+output_prefix+'.fa > '+output_prefix+'_pangraph.json'
+        pangraph_build = 'pangraph build -k '+args.aligner+' '+output_prefix+'.fa > '+output_prefix+'_pangraph.json'
         pangraph_build_output = subprocess.call(pangraph_build, shell=True)
         print(pangraph_build_output)
 
@@ -141,6 +142,8 @@ def main():
                                             gene_block+' '+\
                                             output_prefix+'_pangraph.gfa.png '+\
                                             output_prefix+'_pangraph_blocks_plot.pdf'
+        print(plot_blocks)
+        subprocess.call(plot_blocks, shell=True)
 
 
 
