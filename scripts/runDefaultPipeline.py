@@ -16,6 +16,7 @@ def get_options():
     parser.add_argument('--downstream', help='Upstream bases', required=False, default=5000)
     parser.add_argument('--polish', help='Whether to use pangraph polish (time-intensive).', required=False, action='store_true', default=False)
     parser.add_argument('--panx', help='Whether to export panX output (time-intensive).', required=False, action='store_true', default=False)
+    parser.add_argument('--bandage', help='Whether to run Bandage to get Bandage-visualized graph.', required=False, action='store_true', default=False)
     return parser.parse_args()
 
 def run_command(command_list, output_file=False):
@@ -113,19 +114,27 @@ def main():
     plot_dists_output = subprocess.call(plot_dists, shell=True)
     print(plot_dists_output)
 
-    # Make Bandage plot
-    bandage = 'Bandage image '+output_prefix+'_pangraph.gfa.coloured.gfa '+\
+    # If Bandage
+    if args.bandage==True:
+        #Make Bandage plot
+        bandage = 'Bandage image '+output_prefix+'_pangraph.gfa.coloured.gfa '+\
                                 output_prefix+'_pangraph.gfa.png '+\
                                 '--height 4000 --width 7000 --colour custom'
-    subprocess.call(bandage, shell=True)
-
-    # Plot blocks
-    plot_blocks = 'Rscript plot-blocks.R '+output_prefix+'_pangraph.gfa.blocks.csv '+\
-                                        gene_block+' '+\
-                                        output_prefix+'_pangraph.gfa.png '+\
-                                        output_prefix+'_pangraph_blocks_plot.pdf'
-    print(plot_blocks)
-    subprocess.call(plot_blocks, shell=True)
+        print(bandage)
+        subprocess.call(bandage, shell=True)
+        # Plot blocks
+        plot_blocks = 'Rscript plot-blocks.R '+output_prefix+'_pangraph.gfa.blocks.csv '+\
+                                            gene_block+' '+\
+                                            output_prefix+'_pangraph.gfa.png '+\
+                                            output_prefix+'_pangraph_blocks_plot.pdf'
+        print(plot_blocks)
+        subprocess.call(plot_blocks, shell=True)
+    else:
+        # Plot blocks without bandage
+        plot_blocks = 'Rscript plot-blocks.R '+output_prefix+'_pangraph.gfa.blocks.csv '+\
+                                            gene_block+' '+\
+                                            output_prefix+'_pangraph.gfa.png '+\
+                                            output_prefix+'_pangraph_blocks_plot.pdf'
 
 
 
