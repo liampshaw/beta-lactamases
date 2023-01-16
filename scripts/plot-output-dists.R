@@ -169,7 +169,7 @@ dev.off()
 
 #pdf(paste0(args[1],'.flanking-plot-output-focal-gene-seq.pdf'), width=10, height=4)
 p.l <- makePlots(d.subset.2)
-p.r <- ggdraw()+draw_image(magick::image_read_pdf(paste0(args[3], "-NJ-gene-tree.pdf"), density = 300))
+#p.r <- ggdraw()+draw_image(magick::image_read_pdf(paste0(args[3], "-NJ-gene-tree.pdf"), density = 300))
 p.combined = cowplot::plot_grid(p.l, p.tree, nrow = 1, rel_widths  = c(1.5, 1), align='hv', axis='t')
 pdf(file=paste0(args[1],'.flanking-plot-output-focal-gene-seq.pdf'), width=10, height=4)
 p.combined
