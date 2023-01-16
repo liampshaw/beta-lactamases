@@ -54,6 +54,7 @@ def main():
             f.write('%s: %s\n' % (str(k), str(v)))
 
     # Extract region around gene
+    print("## EXTRACTING REGION AROUND GENE ##")
     extract_region_command = ['python', 'extractRegion.py',
                                         '--gene', args.gene,
                                         '--input', args.fasta,
@@ -61,89 +62,114 @@ def main():
                                         '--downstream', str(args.downstream),
                                         '--complete',
                                         '--output', output_prefix]
-    print(run_command(extract_region_command))
+    print(" ".join(extract_region_command))
+    print("Return code:", run_command(extract_region_command))
 
     # Align central gene
+    print("## ALIGNING CENTRAL GENE ##")
     mafft_command = ['mafft', '--quiet', output_prefix+'_focal_gene.fa']
-    print(run_command(mafft_command, open(output_prefix+'_focal_gene.aln', 'w')))
+    print(" ".join(mafft_command))
+    print("Return code:", run_command(mafft_command, open(output_prefix+'_focal_gene.aln', 'w')))
 
     # Remove duplicates (how many variants of gene)
     rmdup_command = 'seqkit rmdup -s < '+output_prefix+'_focal_gene.aln > '+output_prefix+'_focal_gene.dedup.aln -D '+output_prefix+'_focal_gene.dedup.txt'
+    print("Command:", rmdup_command)
     rmdup_output = subprocess.call(rmdup_command, shell=True)
-    print(rmdup_output)
+    print("Return code:", rmdup_output)
     # SNP distances between gene variants (for NJ tree)
+
     snpdists_command = 'snp-dists -q -m '+output_prefix+'_focal_gene.aln > '+output_prefix+'_pangraph.gfa.gene.snps.tsv' # this is a bad filename - for plot-output-dists.R
+    print("Command:", snpdists_command)
     snpdists_output = subprocess.call(snpdists_command, shell=True)
-    print(snpdists_output)
+    print("Return code:", snpdists_output)
 
     # PANGRAPH
     # Build the initial pangraph
+    print("## PANGRAPH BUILDING ##")
     if args.polish==True:
         pangraph_build_polish = 'pangraph build -k '+args.aligner+' '+output_prefix+'.fa | pangraph polish > '+output_prefix+'_pangraph.json'
+        print("Command:", pangraph_build_polish)
         pangraph_polish_output = subprocess.call(pangraph_build_polish, shell=True)
-        print(pangraph_polish_output)
+        print("Return code:", pangraph_polish_output)
     else:
         pangraph_build = 'pangraph build -k '+args.aligner+' '+output_prefix+'.fa > '+output_prefix+'_pangraph.json'
+        print("Command:", pangraph_build)
         pangraph_build_output = subprocess.call(pangraph_build, shell=True)
-        print(pangraph_build_output)
+        print("Return code:", pangraph_build_output)
 
     # Export to gfa
+    print("## PANGRAPH EXPORT ##")
     pangraph_export = 'pangraph export --edge-minimum-length 0 '+output_prefix+'_pangraph.json -p '+output_prefix+'_pangraph -o ./'
+    print("Command:", pangraph_export)
     pangraph_export_output = subprocess.call(pangraph_export, shell=True)
-    print(pangraph_export_output)
+    print("Return code:", pangraph_export_output)
 
     if args.panx==True: # currently failing on GES-24 test case
         pangraph_panx_export = 'pangraph export '+output_prefix+'_pangraph.json -p '+output_prefix+'_pangraph -o '+args.outputdir+' --export-panX --no-export-gfa'
+        print("Command:", pangraph_panx_export)
         pangraph_panx_export_output = subprocess.call(pangraph_panx_export, shell=True)
-        print(pangraph_panx_export_output)
+        print("Return code:", pangraph_panx_export_output)
 
     # Prepare gfa for visualisation
+    print("## PREPARING FILES FOR VISUALISATION ##")
     prepare_gfa = 'python preparePangraphGFA.py '+output_prefix+'_pangraph.gfa'
+    print("Command:", prepare_gfa)
     prepare_gfa_output = subprocess.call(prepare_gfa, shell=True)
-    print(prepare_gfa_output)
+    print("Return code:", prepare_gfa_output)
 
     # Find block in pancontigs which contains focal gene
     makedb = 'makeblastdb -in '+output_prefix+'_pangraph.fa -dbtype nucl'
+    print("Command:", makedb)
     makedb_output = subprocess.call(makedb, shell=True)
-    print(makedb_output)
+    print("Return code:", makedb_output)
 
     blast_gene = 'blastn -query '+args.gene+' -db '+output_prefix+'_pangraph.fa -outfmt 6 | cut -f 2'
+    print("Command:", blast_gene)
     blast_gene_output = subprocess.check_output(blast_gene, shell=True)
     gene_block = blast_gene_output.decode().strip('\n')
+    print("Gene block:", gene_block)
 
     # Compute the distances
     compute_distance = 'python computeDistances.py '+output_prefix+'_pangraph.gfa '+gene_block
+    print("Command:", compute_distance)
     compute_distance_output = subprocess.call(compute_distance, shell=True)
-    print(compute_distance_output)
+    print("Return code:", compute_distance_output)
 
     # Plot the distances
+    print("## PLOTTING ##")
     plot_dists = 'Rscript plot-output-dists.R '+output_prefix+'_pangraph.gfa.output_dists.csv '+output_prefix+'_pangraph.gfa.most_frequent_path_representative.txt '+output_prefix+'_focal_gene.dedup.txt'
+    print("Command:", plot_dists)
     plot_dists_output = subprocess.call(plot_dists, shell=True)
-    print(plot_dists_output)
+    print("Return code:", plot_dists_output)
 
     # If Bandage
     if args.bandage==True:
         #Make Bandage plot
+        print("## BANDAGE PLOT ##")
         bandage = 'Bandage image '+output_prefix+'_pangraph.gfa.coloured.gfa '+\
                                 output_prefix+'_pangraph.gfa.png '+\
                                 '--height 4000 --width 7000 --colour custom'
-        print(bandage)
-        subprocess.call(bandage, shell=True)
+        print("Command:", bandage)
+        bandage_output = subprocess.call(bandage, shell=True)
+        print("Return code:", bandage_output)
         # Plot blocks
+        print("## LINEAR PLOT ##")
         plot_blocks = 'Rscript plot-blocks.R '+output_prefix+'_pangraph.gfa.blocks.csv '+\
                                             gene_block+' '+\
                                             output_prefix+'_pangraph.gfa.png '+\
                                             output_prefix+'_pangraph_blocks_plot.pdf'
-        print(plot_blocks)
-        subprocess.call(plot_blocks, shell=True)
+        print("Command:", plot_blocks)
+        plot_blocks_out = subprocess.call(plot_blocks, shell=True)
+        print("Return code:", plot_blocks_out)
     else:
         # Plot blocks without bandage
         plot_blocks = 'Rscript plot-blocks.R '+output_prefix+'_pangraph.gfa.blocks.csv '+\
                                             gene_block+' '+\
                                             'none '+\
                                             output_prefix+'_pangraph_blocks_plot.pdf'
-        print(plot_blocks)
-        subprocess.call(plot_blocks, shell=True)
+        print("Command:", plot_blocks)
+        plot_blocks_out = subprocess.call(plot_blocks, shell=True)
+        print("Return code:", plot_blocks_out)
 
 
 
