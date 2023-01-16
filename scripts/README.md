@@ -24,6 +24,8 @@ options:
   --panx                Whether to export panX output (time-intensive).
 ```
 
+The plotting component scripts require the following R libraries: `RColorBrewer, cowplot, dplyr, ggdendro, gggenes, ggplot2, ggridges, ggtree, reshape2, vegan` (N.B. not checked to see if some are not in fact required). 
+
 
 ## CARD data processing  
 
