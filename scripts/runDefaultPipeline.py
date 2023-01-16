@@ -140,7 +140,7 @@ def main():
         # Plot blocks without bandage
         plot_blocks = 'Rscript plot-blocks.R '+output_prefix+'_pangraph.gfa.blocks.csv '+\
                                             gene_block+' '+\
-                                            output_prefix+'_pangraph.gfa.png '+\
+                                            'none '+\
                                             output_prefix+'_pangraph_blocks_plot.pdf'
         print(plot_blocks)
         subprocess.call(plot_blocks, shell=True)
