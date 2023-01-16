@@ -8,7 +8,7 @@ require(vegan) # for Jaccard distance
 args = commandArgs(trailingOnly=TRUE)
 # 1 - gfa csv
 # 2 - name of block with gene in (for centering)
-# 3 - png from bandage
+# 3 - png from bandage (if string 'none' then no bandage plot used)
 # 4 - output pdf
 
 # Genome blocks approach
@@ -74,12 +74,18 @@ p.blocks <- ggplot(genome.blocks.unique, aes(xmin = new.start, xmax = new.end, f
   ggtitle("Linearized blocks")+
   theme(plot.title=element_text(hjust=0.5))+
   xlab("Position (bp)")
-# Include the bandage graph plot
-p.graph <- ggdraw() + draw_image(args[3])+
-  ggtitle("Graph representation")+
-  theme(plot.title=element_text(hjust=0.5))
 
-# Make the output pdf with both
-pdf(args[4], height=8, width=10)
-cowplot::plot_grid(p.blocks, p.graph, nrow=1, align='h')
-dev.off()
+# Include the bandage graph plot
+
+if (args[3]!='none'){
+  p.graph <- ggdraw() + draw_image(args[3])+
+    ggtitle("Graph representation")+
+    theme(plot.title=element_text(hjust=0.5))
+  p.final = cowplot::plot_grid(p.blocks, p.graph, nrow=1, align='h')
+}
+if (args[3]=='none'){
+# Make the output pdf with a blank plot
+  p.final = cowplot::plot_grid(p.blocks, ggdraw(), nrow=1, align='h')
+}
+ggsave(p.final, file=args[4], width=8, height=8, dpi=300)
+
