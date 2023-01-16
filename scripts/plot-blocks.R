@@ -78,14 +78,14 @@ p.blocks <- ggplot(genome.blocks.unique, aes(xmin = new.start, xmax = new.end, f
 # Include the bandage graph plot
 
 if (args[3]!='none'){
-  p.graph <- ggdraw() + draw_image(args[3])+
+  p.graph <- cowplot::ggdraw() + cowplot::draw_image(args[3])+
     ggtitle("Graph representation")+
     theme(plot.title=element_text(hjust=0.5))
   p.final = cowplot::plot_grid(p.blocks, p.graph, nrow=1, align='h')
 }
 if (args[3]=='none'){
 # Make the output pdf with a blank plot
-  p.final = cowplot::plot_grid(p.blocks, ggdraw(), nrow=1, align='h')
+  p.final = cowplot::plot_grid(p.blocks, cowplot::ggdraw(), nrow=1, align='h')
 }
 pdf(file=args[4], width=8, height=8)
 p.final

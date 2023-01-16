@@ -5,6 +5,7 @@ require(cowplot)
 require(RColorBrewer)
 require(ape)
 require(ggtree)
+require(magick)
 
 args = commandArgs(trailingOnly=TRUE)
 # Args:
