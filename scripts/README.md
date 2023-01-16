@@ -7,7 +7,7 @@ Unless otherwise specified, all should be run from within `scripts`. Remember to
 The default pipeline `runDefaultPipeline.py` is a python script that calls other scripts. It will take a multi-fasta file of sequences which are presumed to all have a gene in common (e.g. an antibiotic resistance gene) present in one copy only. The pipeline will extract a region of specified size (default: 5000 bases upstream and 5000 bases downstream) and then run pangraph and produce diagnostic visualizations of the diversity around the central gene. 
 
 ```
-usage: runDefaultPipeline [-h] --fasta FASTA --gene GENE [--outputdir OUTPUTDIR] [--upstream UPSTREAM] [--downstream DOWNSTREAM] [--polish] [--panx]
+usage: runDefaultPipeline [-h] --fasta FASTA --gene GENE [--outputdir OUTPUTDIR] [--upstream UPSTREAM] [--downstream DOWNSTREAM] [--polish] [--panx] [--bandage] [--prefix PREFIX]
 
 Run pangraph pipeline on the flanking regions of a gene.
 
@@ -16,15 +16,36 @@ options:
   --fasta FASTA         Multi-fasta file of input sequences containing the gene.
   --gene GENE           Fasta of focal gene to centre analysis on.
   --outputdir OUTPUTDIR
-                        Output directory
-  --upstream UPSTREAM   Upstream bases
+                        Output directory (default='./')
+  --upstream UPSTREAM   Upstream bases (default=5000)
   --downstream DOWNSTREAM
-                        Upstream bases
-  --polish              Whether to use pangraph polish (time-intensive).
-  --panx                Whether to export panX output (time-intensive).
+                        Upstream bases (default=5000)
+  --polish              Whether to use pangraph polish (time-intensive; default=False).
+  --panx                Whether to export panX output (time-intensive; default=False).
+  --bandage             Whether to run Bandage to get Bandage-visualized graph (default=False)
+  --prefix PREFIX       Output prefix (default=current date & time) 
 ```
 
 The plotting component scripts require the following R libraries: `RColorBrewer, cowplot, dplyr, ggdendro, gggenes, ggplot2, ggridges, ggtree, reshape2, vegan` (N.B. not checked to see if some are not in fact required). 
+
+Assuming that all the fasta files have been downloaded, to prepare a multi-fasta file of input sequences containing a given named gene variant (and nearby genes) one can use `makeMultiFasta.py`:
+
+```
+usage: makeMultiFasta [-h] --gene GENE [--threshold THRESHOLD] --fastadir FASTADIR [--outputdir OUTPUTDIR] [--multiplehits]
+
+Make a multi fasta file for a given gene.
+
+options:
+  -h, --help            show this help message and exit
+  --gene GENE           Name of gene (e.g. CTX-M-15, VIM-1, NDM-1).
+  --threshold THRESHOLD
+                        SNP threshold for distance from gene variant.
+  --fastadir FASTADIR   Directory with fasta files.
+  --outputdir OUTPUTDIR
+                        Output directory
+  --multiplehits        Whether to allow multiple hits
+```
+
 
 
 ## CARD data processing  
