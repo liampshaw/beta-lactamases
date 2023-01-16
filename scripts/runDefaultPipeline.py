@@ -17,6 +17,7 @@ def get_options():
     parser.add_argument('--polish', help='Whether to use pangraph polish (time-intensive).', required=False, action='store_true', default=False)
     parser.add_argument('--panx', help='Whether to export panX output (time-intensive).', required=False, action='store_true', default=False)
     parser.add_argument('--bandage', help='Whether to run Bandage to get Bandage-visualized graph.', required=False, action='store_true', default=False)
+    parser.add_argument('--prefix', help='Output prefix.', required=False, default=False)
     return parser.parse_args()
 
 def run_command(command_list, output_file=False):
@@ -38,8 +39,13 @@ def main():
     if not os.path.exists(args.outputdir):
         os.mkdir(args.outputdir)
     # Output prefixes
-    output_prefix_no_dir = 'all_u'+str(args.upstream)+'_d'+str(args.downstream)
+    if args.prefix==False:
+        prefix_string = datetime.now().strftime("%Y_%m_%d.%H_%M_%S")
+    else:
+        prefix_string = str(args.prefix)
+    output_prefix_no_dir = prefix_string+'.'+'all_u'+str(args.upstream)+'_d'+str(args.downstream)
     output_prefix = args.outputdir+'/'+output_prefix_no_dir
+
     # Log the parameters used and write to file
     with open(args.outputdir+'/'+'params.log', 'w') as f:
         f.write('run: '+datetime.now().strftime("%d/%m/%Y %H:%M:%S")+'\n\n')
