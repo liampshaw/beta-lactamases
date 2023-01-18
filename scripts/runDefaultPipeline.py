@@ -110,21 +110,15 @@ def main():
         pangraph_panx_export_output = subprocess.call(pangraph_panx_export, shell=True)
         print("Return code:", pangraph_panx_export_output)
 
-    # Prepare gfa for visualisation
-    # (now defunct apart from for Bandage, see below)
+    # Prepare files for visualisation
     print("## PREPARING FILES FOR VISUALISATION ##")
-    #prepare_gfa = 'python preparePangraphGFA.py '+output_prefix+'_pangraph.gfa'
-    #print("Command:", prepare_gfa)
-    #prepare_gfa_output = subprocess.call(prepare_gfa, shell=True)
-    #print("Return code:", prepare_gfa_output)
-    # Most frequent path representative
-
+    # Get most frequent path
     most_freq_path = 'python mostFrequentPathGFA.py --gfa '+output_prefix+'_pangraph.gfa'
     print("Command:", most_freq_path)
     most_freq_path_output = subprocess.call(most_freq_path, shell=True)
     print("Return code:", most_freq_path_output)
 
-    # Alternative: prepare json for visualisation
+    # Alternative to old method from gfa: prepare json for visualisation
     prepare_json = 'python convertPangraphToBlockList.py '+\
                     '--json '+output_prefix+'_pangraph.json '+\
                     '--gfa '+output_prefix+'_pangraph.gfa'
@@ -154,7 +148,7 @@ def main():
 
     # Plot the distances
     print("## PLOTTING ##")
-    plot_dists = 'Rscript plot-output-dists.R '+output_prefix+'_pangraph.gfa.output_dists.csv '+output_prefix+'_pangraph.gfa.most_frequent_path_representative.txt '+output_prefix+'_focal_gene.dedup.txt'
+    plot_dists = 'Rscript plot-output-dists.R '+output_prefix+'_pangraph.json.output_dists.csv '+output_prefix+'_pangraph.gfa.most_frequent_path_representative.txt '+output_prefix+'_focal_gene.dedup.txt'
     print("Command:", plot_dists)
     plot_dists_output = subprocess.call(plot_dists, shell=True)
     print("Return code:", plot_dists_output)
