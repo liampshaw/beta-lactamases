@@ -26,10 +26,10 @@ block.colours <- unique(genome.blocks$colour)
 names(block.colours) <- unique(genome.blocks$block.coloured)
 
 
-KPC.block.locations <- genome.blocks[which(genome.blocks$block==args[2]),c("start", "end")]
-rownames(KPC.block.locations) <- genome.blocks[which(genome.blocks$block==args[2]),"genome"]
+gene.block.locations <- genome.blocks[which(genome.blocks$block==args[2]),c("start", "end")]
+rownames(gene.block.locations) <- genome.blocks[which(genome.blocks$block==args[2]),"genome"]
 transformAnnotationsBlocks <- function(genome, default_offset=9926){
-  offset <- default_offset-KPC.block.locations[genome, c("start")]
+  offset <- default_offset-gene.block.locations[genome, c("start")]
   return(offset)
 }
 
