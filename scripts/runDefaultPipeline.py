@@ -78,7 +78,7 @@ def main():
     print("Return code:", rmdup_output)
     # SNP distances between gene variants (for NJ tree)
 
-    snpdists_command = 'snp-dists -q -m '+output_prefix+'_focal_gene.aln > '+output_prefix+'_pangraph.gfa.gene.snps.tsv' # this is a bad filename - for plot-output-dists.R
+    snpdists_command = 'snp-dists -q -m '+output_prefix+'_focal_gene.aln > '+output_prefix+'_pangraph.json.gene.snps.tsv' # this is a bad filename - for plot-output-dists.R
     print("Command:", snpdists_command)
     snpdists_output = subprocess.call(snpdists_command, shell=True)
     print("Return code:", snpdists_output)
@@ -117,6 +117,12 @@ def main():
     #print("Command:", prepare_gfa)
     #prepare_gfa_output = subprocess.call(prepare_gfa, shell=True)
     #print("Return code:", prepare_gfa_output)
+    # Most frequent path representative
+
+    most_freq_path = 'python mostFrequentPathGFA.py --gfa '+output_prefix+'_pangraph.gfa'
+    print("Command:", most_freq_path)
+    most_freq_path_output = subprocess.call(most_freq_path, shell=True)
+    print("Return code:", most_freq_path_output)
 
     # Alternative: prepare json for visualisation
     prepare_json = 'python convertPangraphToBlockList.py '+\
@@ -141,7 +147,7 @@ def main():
     print("Gene block:", gene_block)
 
     # Compute the distances
-    compute_distance = 'python computeDistances.py '+output_prefix+'_pangraph.gfa '+gene_block
+    compute_distance = 'python computeDistances.py '+output_prefix+'_pangraph.json '+gene_block
     print("Command:", compute_distance)
     compute_distance_output = subprocess.call(compute_distance, shell=True)
     print("Return code:", compute_distance_output)
