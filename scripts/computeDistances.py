@@ -5,7 +5,7 @@ import argparse
 
 def get_options():
     parser = argparse.ArgumentParser(description='computes a variety of distances between sequences')
-    parser.add_argument('input_file', help='Input gfa base name', type=str)
+    parser.add_argument('input_file', help='Input file (pangraph json)', type=str)
     parser.add_argument('gene_block', help='Block containing gene of interest (anchor)', type=str)
     return parser.parse_args()
 
@@ -47,23 +47,30 @@ def jaccard(a, b):
 # Function to call blast to get the starting block (contains gene) from the pangraph
 
 def main():
-    block_lengths = {}
+    #block_lengths = {}
     args = get_options()
-    with open(args.input_file+'.colours.csv', 'r') as f:
-        for i, line in enumerate(f.readlines()):
-            if i>0:
-                line = line.split(',')
-                block_lengths[line[0]] = int(line[2].strip())
-
+    #with open(args.input_file+'.colours.csv', 'r') as f:
+    #    for i, line in enumerate(f.readlines()):
+    #        if i>0:
+    #            line = line.split(',')
+    #            block_lengths[line[0]] = int(line[2].strip())
+    #block_lengths = {}
+    block_lengths = {}
     path_dict = {}
     with open(args.input_file+'.blocks.csv', 'r') as f:
         for i, line in enumerate(f.readlines()):
             if i>0:
                 line = line.split(',')
+                print(line)
                 if line[0] in path_dict.keys():
                     path_dict[line[0]].append(line[1])
                 else:
                     path_dict[line[0]] = [line[1]]
+                if line[1] in block_lengths.keys():
+                    block_lengths[line[1]][line[0]] = abs(int(line[4])-int(line[3]))
+                else:
+                    block_lengths[line[1]] = {line[0]: abs(int(line[4])-int(line[3]))}
+    print(path_dict)
     # Generate snp-dists?
     starting_block = args.gene_block
 
@@ -74,9 +81,9 @@ def main():
                 line = line.strip().split()
                 a, b, snps = line[0], line[1], int(line[2])
                 upstream_blocks = distFirstBreakpoint(path_dict[a], path_dict[b], starting_block)
-                upstream_dist = sum([block_lengths[x] for x in upstream_blocks])
+                upstream_dist = sum([block_lengths[x][a] for x in upstream_blocks])
                 downstream_blocks = distFirstBreakpoint(path_dict[a], path_dict[b], starting_block, upstream=False)
-                downstream_dist = sum([block_lengths[x] for x in downstream_blocks])
+                downstream_dist = sum([block_lengths[x][a] for x in downstream_blocks])
                 output_file.write('%s,%s,%d,%d,%d\n' % (a, b, upstream_dist, downstream_dist, snps))
 
 if __name__ == "__main__":
