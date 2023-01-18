@@ -63,7 +63,7 @@ def main():
                                         '--complete',
                                         '--output', output_prefix]
     print(" ".join(extract_region_command))
-    print("Return code:", run_command(extract_region_command))
+    print("Output:", run_command(extract_region_command))
 
     # Align central gene
     print("## ALIGNING CENTRAL GENE ##")
@@ -138,6 +138,8 @@ def main():
     print("Command:", blast_gene)
     blast_gene_output = subprocess.check_output(blast_gene, shell=True)
     gene_block = blast_gene_output.decode().strip('\n')
+    with open(output_prefix+'.gene_block.txt', 'w') as f:
+        f.write('%s' % gene_block)
     print("Gene block:", gene_block)
 
     # Compute the distances
@@ -168,7 +170,7 @@ def main():
         plot_blocks = 'Rscript plot-blocks.R '+output_prefix+'_pangraph.json.blocks.csv '+\
                                             gene_block+' '+\
                                             output_prefix+'_pangraph.gfa.png '+\
-                                            output_prefix+'_pangraph_blocks_plot.pdf'
+                                            output_prefix+'_pangraph_blocks_plot.pdf 8 8'
         print("Command:", plot_blocks)
         plot_blocks_out = subprocess.call(plot_blocks, shell=True)
         print("Return code:", plot_blocks_out)
@@ -177,7 +179,7 @@ def main():
         plot_blocks = 'Rscript plot-blocks.R '+output_prefix+'_pangraph.json.blocks.csv '+\
                                             gene_block+' '+\
                                             'none '+\
-                                            output_prefix+'_pangraph_blocks_plot.pdf'
+                                            output_prefix+'_pangraph_blocks_plot.pdf 8 8'
         print("Command:", plot_blocks)
         plot_blocks_out = subprocess.call(plot_blocks, shell=True)
         print("Return code:", plot_blocks_out)
