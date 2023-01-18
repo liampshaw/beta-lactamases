@@ -120,26 +120,26 @@ def extract_regions(sequences, blast_hits, gene_length, is_circular=False, upstr
                     extracted_seqs[seq_id] = reverse_complement(contig_seq)
             #print(region_seq)
             else:
-                print(seq_id)
+                #print(seq_id)
                 triplicate_seq = contig_seq+contig_seq+contig_seq
                 if coords[0]<coords[1]: # positive strand
                     if not is_circular:
                         limits = [max(0, coords[0]-1-upstream_bases), min(coords[1]+downstream_bases, len(contig_seq))]
                         extracted_seqs[seq_id] = contig_seq[limits[0]:limits[1]]
-                        print(limits, limits[1]-limits[0])
+                        #print(limits, limits[1]-limits[0])
                     elif is_circular:
                         limits = [max(coords[1], coords[0]-1-upstream_bases+len(contig_seq)), min(coords[0]+2*len(contig_seq), coords[1]+downstream_bases+len(contig_seq))]
                         extracted_seqs[seq_id] = triplicate_seq[limits[0]:limits[1]]
-                        print(limits, limits[1]-limits[0])
+                        #print(limits, limits[1]-limits[0])
                 elif coords[0]>coords[1]: # negative strand
                     if not is_circular: # also put in a max thing here
                         limits = [max(0, coords[1]-1-downstream_bases), min(coords[0]+upstream_bases, len(contig_seq))]
                         extracted_seqs[seq_id] = reverse_complement(contig_seq[limits[0]:limits[1]])
-                        print(limits, limits[1]-limits[0])
+                        #print(limits, limits[1]-limits[0])
                     elif is_circular:
                         limits = [max(coords[0], coords[1]-1-downstream_bases+len(contig_seq)), min(coords[1]+2*len(contig_seq), coords[0]+upstream_bases+len(contig_seq))]
                         extracted_seqs[seq_id] = reverse_complement(triplicate_seq[limits[0]:limits[1]])
-                        print(limits, limits[1]-limits[0])
+                        #print(limits, limits[1]-limits[0])
     return extracted_seqs
 
 def store_multiple_hits(sequences, blast_hits, smh_file):

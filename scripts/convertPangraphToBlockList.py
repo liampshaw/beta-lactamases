@@ -86,12 +86,10 @@ def main():
 
     genome_dict = extractPaths(pangraph_json['paths'])
     block_colour_dict = colourBlocks(pangraph_json['blocks'])
-    print(block_colour_dict)
 
     with open(output_blocks, 'w') as output_f:
         output_f.write("genome,block,strand,start,end,colour\n")
         for g, values in genome_dict.items():
-            print(g, values)
             for v in values:
                 block = v[0]
                 output_f.write("%s\n" % (g+","+','.join([str(x) for x in v])+","+block_colour_dict[block]))

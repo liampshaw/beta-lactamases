@@ -61,7 +61,6 @@ def main():
         for i, line in enumerate(f.readlines()):
             if i>0:
                 line = line.split(',')
-                print(line)
                 if line[0] in path_dict.keys():
                     path_dict[line[0]].append(line[1])
                 else:
@@ -70,7 +69,6 @@ def main():
                     block_lengths[line[1]][line[0]] = abs(int(line[4])-int(line[3]))
                 else:
                     block_lengths[line[1]] = {line[0]: abs(int(line[4])-int(line[3]))}
-    print(path_dict)
     # Generate snp-dists?
     starting_block = args.gene_block
 
