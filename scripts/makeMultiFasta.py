@@ -22,7 +22,7 @@ def main():
     print(gene_family)
 
 
-    get_seq = 'grep -A 1 '+args.gene+' ../data/nucleotide_fasta_protein_homolog_model.fasta | tail -n 1'
+    get_seq = "grep -A 1 '"+args.gene+" ' ../data/nucleotide_fasta_protein_homolog_model.fasta | tail -n 1"
     get_seq_out = subprocess.check_output(get_seq, shell=True)
     gene_seq = get_seq_out.decode().strip('\n')
     with open(args.outputdir+'/'+args.gene+'.fa', 'w') as f:
