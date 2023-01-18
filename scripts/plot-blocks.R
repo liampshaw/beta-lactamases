@@ -10,6 +10,9 @@ args = commandArgs(trailingOnly=TRUE)
 # 2 - name of block with gene in (for centering)
 # 3 - png from bandage (if string 'none' then no bandage plot used)
 # 4 - output pdf
+# 5 - output pdf width (inches)
+# 6 - output pdf height (inches)
+print(args)
 
 # Genome blocks approach
 genome.blocks <- read.csv(args[1], header=T, stringsAsFactors = F)
@@ -87,7 +90,7 @@ if (args[3]=='none'){
 # Make the output pdf with a blank plot
   p.final = cowplot::plot_grid(p.blocks, cowplot::ggdraw(), nrow=1, align='h')
 }
-pdf(file=args[4], width=8, height=8)
+pdf(file=args[4], width=as.numeric(args[5]), height=as.numeric(args[6]))
 p.final
 dev.off()
 
