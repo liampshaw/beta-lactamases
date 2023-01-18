@@ -104,18 +104,29 @@ def main():
     pangraph_export_output = subprocess.call(pangraph_export, shell=True)
     print("Return code:", pangraph_export_output)
 
-    if args.panx==True: # currently failing on GES-24 test case
+    if args.panx==True:
         pangraph_panx_export = 'pangraph export '+output_prefix+'_pangraph.json -p '+output_prefix+'_pangraph -o '+args.outputdir+' --export-panX --no-export-gfa'
         print("Command:", pangraph_panx_export)
         pangraph_panx_export_output = subprocess.call(pangraph_panx_export, shell=True)
         print("Return code:", pangraph_panx_export_output)
 
     # Prepare gfa for visualisation
+    # (now defunct apart from for Bandage, see below)
     print("## PREPARING FILES FOR VISUALISATION ##")
-    prepare_gfa = 'python preparePangraphGFA.py '+output_prefix+'_pangraph.gfa'
-    print("Command:", prepare_gfa)
-    prepare_gfa_output = subprocess.call(prepare_gfa, shell=True)
-    print("Return code:", prepare_gfa_output)
+    #prepare_gfa = 'python preparePangraphGFA.py '+output_prefix+'_pangraph.gfa'
+    #print("Command:", prepare_gfa)
+    #prepare_gfa_output = subprocess.call(prepare_gfa, shell=True)
+    #print("Return code:", prepare_gfa_output)
+
+    # Alternative: prepare json for visualisation
+    prepare_json = 'python convertPangraphToBlockList.py '+\
+                    '--json '+output_prefix+'_pangraph.json '+\
+                    '--gfa '+output_prefix+'_pangraph.gfa'
+    print("Command:", prepare_json)
+    prepare_json_output = subprocess.call(prepare_json, shell=True)
+    print("Return code:", prepare_json_output)
+
+
 
     # Find block in pancontigs which contains focal gene
     makedb = 'makeblastdb -in '+output_prefix+'_pangraph.fa -dbtype nucl'
@@ -154,7 +165,7 @@ def main():
         print("Return code:", bandage_output)
         # Plot blocks
         print("## LINEAR PLOT ##")
-        plot_blocks = 'Rscript plot-blocks.R '+output_prefix+'_pangraph.gfa.blocks.csv '+\
+        plot_blocks = 'Rscript plot-blocks.R '+output_prefix+'_pangraph.json.blocks.csv '+\
                                             gene_block+' '+\
                                             output_prefix+'_pangraph.gfa.png '+\
                                             output_prefix+'_pangraph_blocks_plot.pdf'
@@ -163,7 +174,7 @@ def main():
         print("Return code:", plot_blocks_out)
     else:
         # Plot blocks without bandage
-        plot_blocks = 'Rscript plot-blocks.R '+output_prefix+'_pangraph.gfa.blocks.csv '+\
+        plot_blocks = 'Rscript plot-blocks.R '+output_prefix+'_pangraph.json.blocks.csv '+\
                                             gene_block+' '+\
                                             'none '+\
                                             output_prefix+'_pangraph_blocks_plot.pdf'
