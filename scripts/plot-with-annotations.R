@@ -70,6 +70,11 @@ genome_labels <- dendro_data(dendro)$labels$label
 genome.blocks.unique$genome.ordered <- ordered(genome.blocks.unique$genome,
                                                levels=genome_labels)
 
+# Try to use 
+#genome.blocks$genome.ordered <- ordered(genome.blocks$genome,
+#                                               levels=genome_labels)
+
+# Make the lin
 # Make the linear block plot
 p.blocks <- ggplot(genome.blocks.unique, aes(xmin = new.start, xmax = new.end, forward = forward, y = genome.ordered, fill = block.coloured)) +
   geom_gene_arrow(arrow_body_height = unit(2, "mm"),
@@ -114,7 +119,7 @@ p.blocks.numeric = ggplot(genome.blocks.unique, aes(xmin = new.start, xmax = new
   scale_fill_manual(values=block.colours)+
   ylab("")+
   theme(legend.position = "none")+
-  scale_y_discrete(breaks=as.numeric(genome.blocks.unique$genome.ordered), labels=genome.blocks.unique$genome.n)+
+  scale_y_discrete(breaks=as.numeric(genome.blocks.unique$genome.ordered), labels=genome.blocks.unique$genome)+
   ggtitle("Linearized blocks")+
   theme(plot.title=element_text(hjust=0.5))+
   xlab("Position (bp)")
