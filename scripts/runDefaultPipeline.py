@@ -154,6 +154,11 @@ def main():
     print("Command:", plot_dists)
     plot_dists_output = subprocess.call(plot_dists, shell=True)
     print("Return code:", plot_dists_output)
+    print("Use metadata to exclude same country/year comparisons:")
+    plot_dists_metadata = 'Rscript plot-output-dists-use-metadata.R '+output_prefix+'_pangraph.json.output_dists.csv '+output_prefix+'_pangraph.gfa.most_frequent_path_representative.txt '+output_prefix+'_focal_gene.dedup.txt'
+    print("Command:", plot_dists_metadata)
+    plot_dists_metadata_output = subprocess.call(plot_dists_metadata, shell=True)
+    print("Return code:", plot_dists_metadata_output)
 
     # If Bandage
     if args.bandage==True:
