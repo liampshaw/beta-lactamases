@@ -166,6 +166,6 @@ treePlot <- function(deduplicated_prefix){
 
 
 pdf(paste0(args[1], '.flanking-plot-output-', 'all-not-same-country-year.pdf'), width=8, height=4)
-d.omit.same.country.year = d[which(d$country1!=d$country2 & d$year1!=d$year2),]
+d.omit.same.country.year = d[which(d$country1!=d$country2 & d$year1!=d$year2 & d$country1!="missing" & d$country2!="missing" & d$year1!="missing" & d$year2!="missing"),]
 makePlots(d.omit.same.country.year)
 dev.off()
