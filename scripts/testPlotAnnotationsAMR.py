@@ -12,7 +12,7 @@ import subprocess
 
 def get_options():
     parser = argparse.ArgumentParser(description='Plots blocks with annotations: currently AMR annotations.',
-                                     prog='bandagePlot')
+                                     prog='testPlotAnnotationsAMR')
     parser.add_argument('--prefix', help='Prefix of files to use', required=True)
     parser.add_argument('--annotations', help='File of annotations (currently assumed generated with abricate)', required=True)
     parser.add_argument('--width', help='Width of final plot (inches)', required=False, default=6)
