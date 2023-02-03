@@ -87,3 +87,23 @@ do
 done
 
 ```
+
+## Annotations
+
+For looking at annotations, one can use work-in-progress (3 Feb 2023) script:
+
+```
+usage: testPlotAnnotationsAMR [-h] --prefix PREFIX --annotations ANNOTATIONS [--width WIDTH]
+                              [--height HEIGHT] --output OUTPUT
+
+Plots blocks with annotations: currently AMR annotations.
+
+options:
+  -h, --help            show this help message and exit
+  --prefix PREFIX       Prefix of files to use
+  --annotations ANNOTATIONS
+                        File of annotations (currently assumed generated with abricate)
+  --width WIDTH         Width of final plot (inches)
+  --height HEIGHT       Height of final plot (inches)
+  --output OUTPUT       Output pdf
+```
