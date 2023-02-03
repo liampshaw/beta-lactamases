@@ -5,7 +5,16 @@ library(cowplot)
 #entropy.df = read.csv('entropy.txt', sep=' ', header=F, stringsAsFactors = F)
 entropy.df = read.csv('entropy-upstream-downstream.txt', sep=' ', header=F, stringsAsFactors = F)
 
-p = ggplot(entropy.df, aes(V3, V4,group=V2, colour=V2))+
+colnames(entropy.df) = c("gene", "direction", "position", "entropy")
+
+entropy.max = entropy.df %>% group_by(gene) %>%
+  summarise(max=max(entropy))
+new.order.genes = entropy.max$gene[order(entropy.max$max)]
+
+entropy.df <- within(entropy.df, gene <- factor(gene, levels =new.order.genes))
+
+
+p = ggplot(entropy.df, aes(position, entropy,group=direction, colour=direction))+
     geom_line()+
     theme_bw()+
     theme(panel.grid = element_blank())+
@@ -13,9 +22,10 @@ p = ggplot(entropy.df, aes(V3, V4,group=V2, colour=V2))+
     xlab("Position (kb)\nrelative to central gene")+
     theme(panel.border = element_blank())+
     theme(axis.line = element_line())+
-    facet_wrap(~V1, ncol=6)+
+    facet_wrap(~gene, ncol=6)+
   scale_x_continuous(breaks=c(0,1000,2000,3000,4000,5000),
-                     labels=c("0", "1", "2", "3", "4", "5"))
+                     labels=c("0", "1", "2", "3", "4", "5"))+
+  ylim(c(0,1))
 
 
 colnames(entropy.df) = c("gene", "direction", "position", "entropy")
