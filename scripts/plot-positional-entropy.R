@@ -2,20 +2,65 @@ library(ggplot2)
 library(cowplot)
 
 
-entropy.df = read.csv('entropy.txt', sep=' ', header=F, stringsAsFactors = F)
+#entropy.df = read.csv('entropy.txt', sep=' ', header=F, stringsAsFactors = F)
+entropy.df = read.csv('entropy-upstream-downstream.txt', sep=' ', header=F, stringsAsFactors = F)
 
-p = ggplot(entropy.df, aes(V2, V3, group=V1, colour=V1))+
+p = ggplot(entropy.df, aes(V3, V4,group=V2, colour=V2))+
     geom_line()+
     theme_bw()+
     theme(panel.grid = element_blank())+
-    ylab("Block entropy")+
-    xlab("Position (kb)\ncentral gene starts @ 5kb")+
+    ylab("Positional entropy (block diversity)")+
+    xlab("Position (kb)\nrelative to central gene")+
     theme(panel.border = element_blank())+
     theme(axis.line = element_line())+
-    facet_wrap(~V1)+
-  theme(legend.position = "none")+
-  scale_x_continuous(breaks=c(0,2500,5000,7500, 10000),
-                     labels=c("0", "2.5", "5", "7.5", "10"))
+    facet_wrap(~V1, ncol=6)+
+  scale_x_continuous(breaks=c(0,1000,2000,3000,4000,5000),
+                     labels=c("0", "1", "2", "3", "4", "5"))
+
+
+colnames(entropy.df) = c("gene", "direction", "position", "entropy")
+# Plot upstream-downstream at each point
+library(dplyr)
+entropy.df.diff = entropy.df %>% group_by(gene, position) %>%
+  summarise(entropy.diff=entropy[direction=="upstream"]-entropy[direction=="downstream"])
+
+order.genes.by.diff = entropy.df.diff %>% group_by(gene) %>%
+  summarise(n=sum(entropy.diff))
+new.order = order.genes.by.diff$gene[order(order.genes.by.diff$n)]
+entropy.df.diff$gene = ordered(entropy.df.diff$gene,
+                               levels=new.order)
+entropy.df.diff <- within(entropy.df.diff, gene <- factor(gene, levels =new.order))
+
+p.diff = ggplot(entropy.df.diff, aes(position, entropy.diff,group=gene))+
+  geom_hline(yintercept = 0, colour='black')+
+  geom_line()+
+  theme_bw()+
+  theme(panel.grid = element_blank())+
+  ylab("Positional entropy difference (upstream-downstream)")+
+  xlab("Position (kb)\nrelative to central gene")+
+  theme(panel.border = element_blank())+
+  theme(axis.line = element_line())+
+  facet_wrap(~gene, ncol=6)+
+  scale_x_continuous(breaks=c(0,1000,2000,3000,4000,5000),
+                     labels=c("0", "1", "2", "3", "4", "5"))+
+  theme(legend.position = "none")
+
+ggsave(file='../output/plot-positional-entropy-diff.pdf', p.diff)
+
+# and in close proximity?
+p.diff.small = ggplot(entropy.df.diff, aes(position, entropy.diff,group=gene, colour=gene))+
+  geom_hline(yintercept = 0, colour='black')+
+  geom_line()+
+  theme_bw()+
+  theme(panel.grid = element_blank())+
+  ylab("Positional entropy difference (upstream-downstream)")+
+  xlab("Position (kb)\nrelative to central gene")+
+  theme(panel.border = element_blank())+
+  theme(axis.line = element_line())+
+  facet_wrap(~gene, ncol=6)+
+  xlim(c(0,1000))+
+  theme(legend.position = "none")
+
 
 
 p.short = ggplot(entropy.df, aes(V2, V3, group=V1, colour=V1))+

@@ -15,14 +15,19 @@ def get_options():
     parser = argparse.ArgumentParser(description='Calculate positional entropy along a pangraph away from a central gene')
     parser.add_argument('--json', help='Input json file', type=str)
     parser.add_argument('--name', help='Prefix (if concatenating multiple files together)', type=str, required=False, default='')
-    #parser.add_argument('--geneblock', help='Block to centre the analysis on', type=str)
+    parser.add_argument('--geneblock', help='Block to centre the analysis on', type=str, default='', required=False)
+    parser.add_argument('--genelocations', help='file of blast hits for gene in seqs: id start end', default='', required=False)
+    parser.add_argument('--normalise', help='whether to normalise entropy data by log(N)', action='store_true', default=False, required=False)
     return parser.parse_args()
 
-def shannonEntropy(labels, base=None):
+def shannonEntropy(labels, base=None, normalise=False):
   value,counts = np.unique(labels, return_counts=True)
   norm_counts = counts / counts.sum()
   base = e if base is None else base
-  return -(norm_counts * np.log(norm_counts)/np.log(base)).sum()
+  if normalise==True:
+    return -(((norm_counts * np.log(norm_counts)/np.log(base)).sum())/np.log(len(labels)))
+  else:
+    return -(norm_counts * np.log(norm_counts)/np.log(base)).sum()
 
 def main():
     args = get_options()
@@ -36,30 +41,9 @@ def main():
     block_nums = {x['id']:i for i, x in enumerate(pangraph_json['blocks'])}
     block_dict_num = {block_nums[x['id']]:len(x['sequence']) for x in pangraph_json['blocks']}
 
-    #print(block_dict)
-    #print(block_nums)
-    #print(block_dict_num)
-    #print(genome_dict)
-
-    #gene_block_num = block_nums[args.geneblock]
-    #print('gene block is:', gene_block_num)
-
+ 
     possible_paths = [[block_nums[x[0]] for x in genome_dict[y]] for y in genome_dict.keys()]
-    #print(possible_paths)
 
-    # Upstream paths
-    #downstream_paths = [x[x.index(gene_block_num)+1:] for x in possible_paths]
-    #print(downstream_paths)
-    #upstream_paths = [x[:x.index(gene_block_num)] for x in possible_paths]
-    #print(upstream_paths) # could reverse so going away from gene?
-
-    # Now use the consensus lengths of blocks to create vectors (say at 100bp scale) for each genome path
-    #for d in downstream_paths:
-#        print("new genome")
-    #    counter = 0
-    #    for x in d:
-    #        counter += block_dict_num[x]
-    #        print(str(x), counter)
 
     # Use actual positions in genomes
     genomes_as_int = [None]*len(genome_dict.keys())
@@ -69,39 +53,75 @@ def main():
         genome_as_int = [None] * max([p[3] for p in path])
 
         genome_as_int = [item for sublist in [[block_nums[p[0]]]*(p[3]-p[2]) for p in path ] for item in sublist]
-        #for p in path:
-            #print(genome_as_int[p[2]:p[3]])
-            #genome_as_int[p[2]:p[3]] = block_nums[p[0]]*(p[3]-p[2])
-            #print(block_nums[p[0]], p[2], p[3])
-        #print(genome_as_int)
+
         genomes_as_int[genome_i] = genome_as_int
         genome_i += 1
 
+    # If we have the gene block, then we can use this to pin upstream/downstream
+    if args.geneblock!='':
+        gene_block_num = block_nums[args.geneblock]
+        #print('gene block is:', gene_block_num)
+        # use the gene block position to get the starting point in each genome
+        starting_point_upstream = [block[2] for block in genome_dict[g] for g in genome_dict.keys() if block[0]==args.geneblock]
+        starting_point_downstream = [block[3] for block in genome_dict[g] for g in genome_dict.keys() if block[0]==args.geneblock]
 
-    #print(genomes_as_int)
-    # Table of each position
-    for i in range(0, 10000, 100):
-        block_vector = [g[i] for g in genomes_as_int]# this is the vector we want
-        if args.name=='':
-            print(i, shannonEntropy(block_vector))
-        else:
-            print(args.name, i, shannonEntropy(block_vector))
+        #print(starting_point_upstream)
+        #print(starting_point_downstream)
+        for i in range(0, 5000, 50):
+            if starting_point_upstream[0]-i<0:
+                pass
+            else:
+                upstream_block_vector = [g[starting_point_upstream[j]-i] for j, g in enumerate(genomes_as_int)]# this is the vector we want
+                print(args.name, 'upstream', i, shannonEntropy(upstream_block_vector, args.normalise))
+        for i in range(0, 5000, 50):
+            if starting_point_downstream[0]+i>max(len(g) for g in genomes_as_int):
+                pass
+            else:
+                downstream_block_vector = [g[starting_point_downstream[j]+i] for j, g in enumerate(genomes_as_int)]# this is the vector we want
+                print(args.name, 'downstream', i, shannonEntropy(downstream_block_vector, args.normalise))
+            
+    if args.genelocations!='':
+        gene_locations = {}
+        for line in open(args.genelocations, 'r').readlines():
+            line = line.strip().split('\t')
+            gene_locations[line[0]] = [int(line[1]), int(line[2])]
+        #print(len(genome_dict.keys()))
+        #print(len(gene_locations.keys()))
+        #print(gene_locations)
+        #print(gene_locations.keys())
+        #print(genome_dict.keys())
+        #for g in genome_dict.keys():
+            #if g in gene_locations.keys():
+            #    #print(g)
+            #else:
+                #print("error",g)
 
-    # Get upstream and downstream paths
-    # Can use start/end points of blocks as breakpoints
-
-    # Can we convert the blocks to ASCII characters? Perhaps too many...
-    # Or integers is probably best
-
-
-
-
-    # Convert to a table of counts for Shannon entropy
-    # a, b, c, d, e
-
-
-
-
+        #print('gene block is:', gene_block_num)
+        # use the gene block position to get the starting point in each genome
+        starting_point_upstream = [gene_locations[g][0] for  g in genome_dict.keys()]
+        starting_point_downstream = [gene_locations[g][1] for  g in genome_dict.keys()]
+        #print(starting_point_upstream)
+        #print(starting_point_downstream)
+        for i in range(0, 5000, 50):
+            if starting_point_upstream[0]-i<0:
+                pass
+            else:
+                upstream_block_vector = [g[starting_point_upstream[j]-i] for j, g in enumerate(genomes_as_int)]# this is the vector we want
+                print(args.name, 'upstream', i, shannonEntropy(upstream_block_vector, normalise=args.normalise))
+        for i in range(0, 5000, 50):
+            if starting_point_downstream[0]+i>max(len(g) for g in genomes_as_int):
+                pass
+            else:
+                downstream_block_vector = [g[starting_point_downstream[j]+i] for j, g in enumerate(genomes_as_int)]# this is the vector we want
+                print(args.name, 'downstream', i, shannonEntropy(downstream_block_vector, normalise=args.normalise))
+            
+    else: # otherwise, just print absolute positions
+        for i in range(0, 10000, 50):
+            block_vector = [g[i] for g in genomes_as_int]# this is the vector we want
+            if args.name=='':
+                print(i, shannonEntropy(block_vector))
+            else:
+                print(args.name, i, shannonEntropy(block_vector))
 
 
 
