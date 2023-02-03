@@ -15,7 +15,7 @@ def get_options():
     parser = argparse.ArgumentParser(description='Calculate positional entropy along a pangraph away from a central gene')
     parser.add_argument('--json', help='Input json file', type=str)
     parser.add_argument('--name', help='Prefix (if concatenating multiple files together)', type=str, required=False, default='')
-    parser.add_argument('--geneblock', help='Block to centre the analysis on', type=str, default='', required=False)
+    #parser.add_argument('--geneblock', help='Block to centre the analysis on', type=str, default='', required=False)
     parser.add_argument('--genelocations', help='file of blast hits for gene in seqs: id start end', default='', required=False)
     parser.add_argument('--normalise', help='whether to normalise entropy data by log(N)', action='store_true', default=False, required=False)
     return parser.parse_args()
@@ -57,44 +57,35 @@ def main():
         genomes_as_int[genome_i] = genome_as_int
         genome_i += 1
 
-    # If we have the gene block, then we can use this to pin upstream/downstream
-    if args.geneblock!='':
-        gene_block_num = block_nums[args.geneblock]
-        #print('gene block is:', gene_block_num)
-        # use the gene block position to get the starting point in each genome
-        starting_point_upstream = [block[2] for block in genome_dict[g] for g in genome_dict.keys() if block[0]==args.geneblock]
-        starting_point_downstream = [block[3] for block in genome_dict[g] for g in genome_dict.keys() if block[0]==args.geneblock]
+    # # If we have the gene block, then we can use this to pin upstream/downstream
+    # if args.geneblock!='':
+    #     gene_block_num = block_nums[args.geneblock]
+    #     #print('gene block is:', gene_block_num)
+    #     # use the gene block position to get the starting point in each genome
+    #     starting_point_upstream = [block[2] for block in genome_dict[g] for g in genome_dict.keys() if block[0]==args.geneblock]
+    #     starting_point_downstream = [block[3] for block in genome_dict[g] for g in genome_dict.keys() if block[0]==args.geneblock]
 
-        #print(starting_point_upstream)
-        #print(starting_point_downstream)
-        for i in range(0, 5000, 50):
-            if starting_point_upstream[0]-i<0:
-                pass
-            else:
-                upstream_block_vector = [g[starting_point_upstream[j]-i] for j, g in enumerate(genomes_as_int)]# this is the vector we want
-                print(args.name, 'upstream', i, shannonEntropy(upstream_block_vector, args.normalise))
-        for i in range(0, 5000, 50):
-            if starting_point_downstream[0]+i>max(len(g) for g in genomes_as_int):
-                pass
-            else:
-                downstream_block_vector = [g[starting_point_downstream[j]+i] for j, g in enumerate(genomes_as_int)]# this is the vector we want
-                print(args.name, 'downstream', i, shannonEntropy(downstream_block_vector, args.normalise))
+    #     #print(starting_point_upstream)
+    #     #print(starting_point_downstream)
+    #     for i in range(0, 5000, 50):
+    #         if starting_point_upstream[0]-i<0:
+    #             pass
+    #         else:
+    #             upstream_block_vector = [g[starting_point_upstream[j]-i] for j, g in enumerate(genomes_as_int)]# this is the vector we want
+    #             print(args.name, 'upstream', i, shannonEntropy(upstream_block_vector, args.normalise))
+    #     for i in range(0, 5000, 50):
+    #         if starting_point_downstream[0]+i>max(len(g) for g in genomes_as_int):
+    #             pass
+    #         else:
+    #             downstream_block_vector = [g[starting_point_downstream[j]+i] for j, g in enumerate(genomes_as_int)]# this is the vector we want
+    #             print(args.name, 'downstream', i, shannonEntropy(downstream_block_vector, args.normalise))
             
     if args.genelocations!='':
         gene_locations = {}
         for line in open(args.genelocations, 'r').readlines():
             line = line.strip().split('\t')
             gene_locations[line[0]] = [int(line[1]), int(line[2])]
-        #print(len(genome_dict.keys()))
-        #print(len(gene_locations.keys()))
-        #print(gene_locations)
-        #print(gene_locations.keys())
-        #print(genome_dict.keys())
-        #for g in genome_dict.keys():
-            #if g in gene_locations.keys():
-            #    #print(g)
-            #else:
-                #print("error",g)
+    
 
         #print('gene block is:', gene_block_num)
         # use the gene block position to get the starting point in each genome
