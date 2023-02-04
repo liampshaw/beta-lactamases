@@ -129,7 +129,7 @@ p.blocks.numeric = ggplot(genome.blocks.unique, aes(xmin = new.start, xmax = new
 #annotation.hits.threshold.plot$type.offset[annotation.hits.threshold.plot$type.offset==0] = -1
 #annotation.hits.threshold.plot$genome.ordered.numeric = as.numeric(annotation.hits.threshold.plot$genome.ordered)+
 #  (annotation.hits.threshold.plot$type.offset)/8
-pdf(args[4], height=as.numeric(args[5]), width=as.numeric(args[6]))
+pdf(args[4], height=as.numeric(args[6]), width=as.numeric(args[5]))
 p.blocks.numeric+geom_segment(aes( x=new.start, xend=new.end, y=genome.ordered.numeric, yend=genome.ordered.numeric), 
                       inherit.aes = FALSE, 
                       size=0.5,
