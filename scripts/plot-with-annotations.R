@@ -20,7 +20,7 @@ args = commandArgs(trailingOnly=TRUE)
 # 4 - output pdf
 # 5 - output pdf width (inches)
 # 6 - output pdf height (inches)
-
+# 7 - whether to use names of annotations
 
 genome.blocks = read.csv(args[1], header=T, stringsAsFactors = F)
 genome.blocks$forward <- ifelse(genome.blocks$strand=="+", TRUE, FALSE)
@@ -130,12 +130,17 @@ p.blocks.numeric = ggplot(genome.blocks.unique, aes(xmin = new.start, xmax = new
 #annotation.hits.threshold.plot$genome.ordered.numeric = as.numeric(annotation.hits.threshold.plot$genome.ordered)+
 #  (annotation.hits.threshold.plot$type.offset)/8
 pdf(args[4], height=as.numeric(args[6]), width=as.numeric(args[5]))
-p.blocks.numeric+geom_segment(aes( x=new.start, xend=new.end, y=genome.ordered.numeric, yend=genome.ordered.numeric), 
+p = p.blocks.numeric+geom_segment(aes( x=new.start, xend=new.end, y=genome.ordered.numeric, yend=genome.ordered.numeric), 
                       inherit.aes = FALSE, 
                       size=0.5,
                       data=annotation.hits.threshold.plot)+
-  geom_text(aes(label=GENE, x=(new.start+new.end)/2, y=genome.ordered.numeric), nudge_y=0.4, size=2,inherit.aes = FALSE, data=annotation.hits.threshold.plot)+
-  scale_colour_manual(values=c("red", "black"))
+    scale_colour_manual(values=c("red", "black"))
+if (args[7]=="yes"){
+   p+geom_text(aes(label=GENE, x=(new.start+new.end)/2, y=genome.ordered.numeric), nudge_y=0.4, size=2,inherit.aes = FALSE, data=annotation.hits.threshold.plot)
+}
+if (args[7]=="no"){
+p
+}
 dev.off()
 
 

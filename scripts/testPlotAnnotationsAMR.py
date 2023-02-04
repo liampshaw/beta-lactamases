@@ -18,6 +18,7 @@ def get_options():
     parser.add_argument('--width', help='Width of final plot (inches)', required=False, default=6)
     parser.add_argument('--height', help='Height of final plot (inches)', required=False, default=10)
     parser.add_argument('--output', help='Output pdf', required=True)
+    parser.add_argument('--names', help='Whether to include annotation names', action='store_true', default=False, required=False)
     return parser.parse_args()
 
 def main():
@@ -25,12 +26,15 @@ def main():
     blocks_file = str(args.prefix)+'_pangraph.json.blocks.csv'
     with open(args.prefix+'.gene_block.txt', 'r') as f:
         gene_block = f.readline().strip('')
+    names_option = 'no'
+    if args.names==True:
+        names_option='yes'
     plot_command = 'Rscript plot-with-annotations.R '+blocks_file+' '+\
                         gene_block+' '+\
                         args.annotations+' '+\
                         args.output+' '+\
                         str(args.width)+' '+\
-                        str(args.height)
+                        str(args.height)+' '+names_option
     print("Command:", plot_command)
     plot_command_out = subprocess.call(plot_command, shell=True)
     print("Return code:", plot_command_out)
