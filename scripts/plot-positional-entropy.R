@@ -1,5 +1,6 @@
 library(ggplot2)
 library(cowplot)
+library(dplyr)
 
 
 #entropy.df = read.csv('entropy.txt', sep=' ', header=F, stringsAsFactors = F)

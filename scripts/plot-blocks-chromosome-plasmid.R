@@ -88,7 +88,7 @@ p.blocks <- ggplot(genome.blocks.unique, aes(xmin = new.start, xmax = new.end, f
   ggtitle("Linearized blocks")+
   theme(plot.title=element_text(hjust=0.5))+
   xlab("Position (bp)")+
-  facet_wrap(contig~genus, nrow=1)+
+  facet_wrap(~year, nrow=1)+
   theme(strip.text = element_text(colour="black"))
 
 # Include the bandage graph plot
