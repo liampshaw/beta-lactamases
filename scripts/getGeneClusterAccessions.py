@@ -24,14 +24,17 @@ def getNeighbours(family_name, gene_name, distance=10):
     snps = pd.read_csv(DATA_DIR+'/fasta_diffs/'+family_name+'_diffs_aln.tsv', sep='\t', index_col=0)
     #plt.close()
     df = snps
+    # 
+    variant_names = list(snps.index[snps[gene_name]<10])
     # and cluster
-    linkage_mat = hc.linkage(df, method='average')
+    #linkage_mat = hc.linkage(df, method='average')
     # Get clusters
-    maximum_distance = distance
-    clusters = hc.fcluster(linkage_mat, maximum_distance, criterion='distance')
-    cluster_of_gene = clusters[list(df.index).index(gene_name)]
-    names = [list(df.index)[i] for i in [x for x in range(len(clusters)) if clusters[x]==cluster_of_gene]]
-    return(names)
+    #maximum_distance = distance
+    #clusters = hc.fcluster(linkage_mat, maximum_distance, criterion='distance')
+    #cluster_of_gene = clusters[list(df.index).index(gene_name)]
+    #names = [list(df.index)[i] for i in [x for x in range(len(clusters)) if clusters[x]==cluster_of_gene]]
+    #print(names)
+    return(variant_names)
 
 def main():
     args = get_options()
