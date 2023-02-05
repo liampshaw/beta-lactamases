@@ -18,6 +18,7 @@ def get_options():
     #parser.add_argument('--geneblock', help='Block to centre the analysis on', type=str, default='', required=False)
     parser.add_argument('--genelocations', help='file of blast hits for gene in seqs: id start end', default='', required=False)
     parser.add_argument('--normalise', help='whether to normalise entropy data by log(N)', action='store_true', default=False, required=False)
+    parser.add_argument('--subset', help='(optional) file of strains to subset too', type=str, required=False, default='')
     return parser.parse_args()
 
 def shannonEntropy(labels, base=None, normalise=False):
@@ -35,15 +36,22 @@ def main():
     with open(json_file, 'r') as f:
       pangraph_json = json.load(f)
 
-    genome_dict = cp.extractPaths(pangraph_json['paths'])
+    genome_dict_original = cp.extractPaths(pangraph_json['paths'])
     # Don't care about exact lengths of blocks, will just use the consensus (average?) length
     block_dict = {x['id']:len(x['sequence']) for x in pangraph_json['blocks']}
     block_nums = {x['id']:i for i, x in enumerate(pangraph_json['blocks'])}
     block_dict_num = {block_nums[x['id']]:len(x['sequence']) for x in pangraph_json['blocks']}
 
  
-    possible_paths = [[block_nums[x[0]] for x in genome_dict[y]] for y in genome_dict.keys()]
+    possible_paths = [[block_nums[x[0]] for x in genome_dict_original[y]] for y in genome_dict_original.keys()]
 
+    # If we have a subset, use it
+    if args.subset!='':
+        subset_strains = [line.strip('\n') for line in open(args.subset, 'r').readlines()]
+        genome_dict = {k:genome_dict_original[k] for k in subset_strains if k in genome_dict_original.keys()}
+    else:
+        genome_dict = genome_dict_original
+    #print(genome_dict.keys())
 
     # Use actual positions in genomes
     genomes_as_int = [None]*len(genome_dict.keys())
@@ -56,6 +64,8 @@ def main():
 
         genomes_as_int[genome_i] = genome_as_int
         genome_i += 1
+
+
 
     # # If we have the gene block, then we can use this to pin upstream/downstream
     # if args.geneblock!='':
