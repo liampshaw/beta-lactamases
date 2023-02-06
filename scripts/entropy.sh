@@ -1,0 +1,32 @@
+
+# required ./blast.sh to be run first
+# then run plot-positional-entropy-genera.R
+rm ../output/positional-entropies-*.csv
+
+while read f;
+do
+	Rscript split-metadata.R $f "Escherichia"
+	 python positionalEntropy.py --json ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000_pangraph.json --genelocations ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000.blast_hits_gene.txt --name $f",plasmid" --subset tmp."$f".plasmids.txt --normalise >> ../output/positional-entropies-escherichia.csv
+	python positionalEntropy.py --json ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000_pangraph.json --genelocations ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000.blast_hits_gene.txt --name $f",chromosome" --subset tmp."$f".chromosomes.txt --normalise >> ../output/positional-entropies-escherichia.csv
+	Rscript split-metadata.R $f "Klebsiella"
+	 python positionalEntropy.py --json ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000_pangraph.json --genelocations ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000.blast_hits_gene.txt --name $f",plasmid" --subset tmp."$f".plasmids.txt --normalise >> ../output/positional-entropies-klebsiella.csv
+	python positionalEntropy.py --json ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000_pangraph.json --genelocations ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000.blast_hits_gene.txt --name $f",chromosome" --subset tmp."$f".chromosomes.txt --normalise >> ../output/positional-entropies-klebsiella.csv
+		Rscript split-metadata.R $f "Acinetobacter"
+python positionalEntropy.py --json ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000_pangraph.json --genelocations ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000.blast_hits_gene.txt --name $f",plasmid" --subset tmp."$f".plasmids.txt --normalise >> ../output/positional-entropies-acinetobacter.csv
+	python positionalEntropy.py --json ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000_pangraph.json --genelocations ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000.blast_hits_gene.txt --name $f",chromosome" --subset tmp."$f".chromosomes.txt --normalise >> ../output/positional-entropies-acinetobacter.csv
+		Rscript split-metadata.R $f "Pseudomonas"
+python positionalEntropy.py --json ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000_pangraph.json --genelocations ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000.blast_hits_gene.txt --name $f",plasmid" --subset tmp."$f".plasmids.txt --normalise >> ../output/positional-entropies-pseudomonas.csv
+	python positionalEntropy.py --json ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000_pangraph.json --genelocations ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000.blast_hits_gene.txt --name $f",chromosome" --subset tmp."$f".chromosomes.txt --normalise >> ../output/positional-entropies-pseudomonas.csv
+	Rscript split-metadata.R $f "Salmonella"
+python positionalEntropy.py --json ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000_pangraph.json --genelocations ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000.blast_hits_gene.txt --name $f",plasmid" --subset tmp."$f".plasmids.txt --normalise >> ../output/positional-entropies-salmonella.csv
+	python positionalEntropy.py --json ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000_pangraph.json --genelocations ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000.blast_hits_gene.txt --name $f",chromosome" --subset tmp."$f".chromosomes.txt --normalise >> ../output/positional-entropies-salmonella.csv
+		Rscript split-metadata.R $f "Enterobacter"
+python positionalEntropy.py --json ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000_pangraph.json --genelocations ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000.blast_hits_gene.txt --name $f",plasmid" --subset tmp."$f".plasmids.txt --normalise >> ../output/positional-entropies-enterobacter.csv
+	python positionalEntropy.py --json ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000_pangraph.json --genelocations ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000.blast_hits_gene.txt --name $f",chromosome" --subset tmp."$f".chromosomes.txt --normalise >> ../output/positional-entropies-enterobacter.csv
+			Rscript split-metadata.R $f "Campylobacter"
+python positionalEntropy.py --json ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000_pangraph.json --genelocations ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000.blast_hits_gene.txt --name $f",plasmid" --subset tmp."$f".plasmids.txt --normalise >> ../output/positional-entropies-campylobacter.csv
+	python positionalEntropy.py --json ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000_pangraph.json --genelocations ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000.blast_hits_gene.txt --name $f",chromosome" --subset tmp."$f".chromosomes.txt --normalise >> ../output/positional-entropies-campylobacter.csv
+		Rscript split-metadata.R $f "Citrobacter"
+python positionalEntropy.py --json ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000_pangraph.json --genelocations ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000.blast_hits_gene.txt --name $f",plasmid" --subset tmp."$f".plasmids.txt --normalise >> ../output/positional-entropies-citrobacter.csv
+	python positionalEntropy.py --json ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000_pangraph.json --genelocations ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000.blast_hits_gene.txt --name $f",chromosome" --subset tmp."$f".chromosomes.txt --normalise >> ../output/positional-entropies-citrobacter.csv	
+done < ../data/genes.txt
