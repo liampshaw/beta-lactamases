@@ -17,3 +17,18 @@ do
 geneblock=$(cat ../../data/2023-01-18-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000.gene_block.txt); python positionalEntropy.py --json ../../data/2023-01-18-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000_pangraph.json --genelocations ../../data/2023-01-18-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000.blast_hits_gene.txt --name $f --normalise
 done < ../data/genes.txt > entropy-upstream-downstream.txt
 ```
+
+
+# Gene variants
+
+A script `assignGeneVariants.py` computes the enzyme variant for a given enzyme. It uses the translated protein to assign whether it is a known variant (with a name), an unnamed variant, or a truncated protein (i.e. non-functional - either genuinely or because of misassembly). This is useful for plotting a NJ tree of the gene and seeing the variation. 
+
+```
+while read f;
+do
+python assignGeneVariants.py --gene $f --outputprefix ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-variants --inputprefix ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000
+Rscript plot-NJ-tree.R ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-variants.aln ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-variants-NJ-tree.pdf 6 8
+echo $f
+done < ../data/genes.txt
+``
+
