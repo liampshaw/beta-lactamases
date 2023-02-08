@@ -16,6 +16,7 @@ def get_options():
     parser.add_argument('--gene', help='gene', type=str) 
     parser.add_argument('--subset', help='file with subset of strains', type=str, required=False, default='') 
     parser.add_argument('--outputdir', help='outputdir', type=str, required=False, default='./') 
+    parser.add_argument('--outputprefix', help='output prefix', type=str, required=False, default='output')
     return parser.parse_args()
 
 
@@ -56,6 +57,7 @@ def blockStatistics(pair_json):
 	# Other statistics that could be added: 
 	# - location of the breakpoints
 	# - alignment distance within the shared sequence
+	# - upstream/downstream sequence (using midpoint of 5000?)
 
 
 def main():
@@ -65,11 +67,13 @@ def main():
 
 	# If we have a subset pre-defined, then we first marginalize the pangraph 
 	if args.subset!='':
+		print("Marginalizing against subset of strains:")
 		subset_ids = [line.strip('\n') for line in open(args.subset, 'r').readlines()]
 		marginalizePangraph(pangraph_json, 'tmp', subset_ids)
 		pangraph_json = 'tmp.json'
 
 	# Get unique paths 
+	# TODO: check if pangraph json is empty
 	# a) first export pangraph to gfa
 	exportPangraph(pangraph_json, prefix='tmp')
 	# b) then get unique paths using mostFrequentPathGFA.py (bad name for script...)
@@ -93,13 +97,15 @@ def main():
 	# Subset further, just to representatives of unique paths
 	isolates = [line.strip('\n').split('\t')[0].split(',')[0] for line in open(unique_paths_file, 'r').readlines()]
 	# Marginalize to just these unique-path isolates
+	print("Marginalizing to unique path representatives...")
 	marginalizePangraph(pangraph_json, 'test', isolates)
 	# Then marginalize to get all pairwise combinations
 	marginalize_output_dir = 	args.outputdir+'/marginalize'
+	print("Marginalizing all pairwise comparisons of unique paths...")
 	marginalizePangraph('test.json', marginalize_output_dir)
 
 	# Compute the pairwise block statistics for these pairs of isolates
-	with open(args.outputdir+'/'+GENE+'-dists.csv', 'w') as f:
+	with open(args.outputdir+'/'+args.outputprefix+'-dists.csv', 'w') as f:
 		f.write('id1,id2,breakpoints,shared.seq,snps.gene\n')
 		total_files = len(glob.glob(marginalize_output_dir+'/*json'))
 		i = 1
