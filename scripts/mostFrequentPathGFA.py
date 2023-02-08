@@ -10,13 +10,8 @@ def get_options():
         parser.add_argument('--gfa', help='Input gfa', type=str)
         return parser.parse_args()
 
-def main():
-    """Finds the most frequent (full-length) path in the gfa file
-    and returns a random ID of sequence that has that path.
-    Also saves a file with the unique paths and their IDs just in case."""
-    args = get_options()
+def computePaths(gfa_file):
     path_dict = {}
-    gfa_file = args.gfa
     with open(gfa_file, 'r') as gfa:
         i = 1
         for line in gfa.readlines():
@@ -47,6 +42,14 @@ def main():
     representative_most_frequent = unique_path_ids[most_frequent_path][0]
     with open(gfa_file+'.most_frequent_path_representative.txt', 'w') as f:
        f.write(representative_most_frequent)
+
+def main():
+    """Finds the most frequent (full-length) path in the gfa file
+    and returns a random ID of sequence that has that path.
+    Also saves a file with the unique paths and their IDs just in case."""
+    args = get_options()
+    computePaths(args.gfa)
+    
 
 if __name__=="__main__":
     main()
