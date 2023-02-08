@@ -40,3 +40,12 @@ Compute marginalized statistics for pairwise comparisons of unique paths. For ex
  python subsetMetadata.py --genefamily TEM --TaxGenus Salmonella --Contig plasmid > tmp.list.txt
 python marginalizeStatistics.py --pangraph ../../data/2023-02-05-TEM-1-mmseqs2-polish-u5000-d5000/TEM-1-mmseqs2-polish.all_u5000_d5000_pangraph.json  --subset tmp.list.txt --gene TEM-1
 ```
+
+E.g. to look at Escherichia plasmids for all genes
+
+```
+python subsetMetadata.py --TaxGenus Salmonella --Contig plasmid > tmp.salmonella.plasmids.txt
+while read f;
+do
+	python marginalizeStatistics.py --pangraph ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000_pangraph.json  --subset tmp.salmonella.plasmids.txt --gene $f --outputprefix salmonella-$f
+done < ../data/genes.txt
