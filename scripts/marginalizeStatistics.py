@@ -7,6 +7,7 @@ import pandas as pd
 import glob
 import re
 import argparse
+import os
 
 def get_options():
     parser = argparse.ArgumentParser(description='Marginalize statistics on unique paths')
@@ -51,38 +52,35 @@ def blockStatistics(pair_json):
 	breakpoints = len(shared_blocks)+1
 	shared_seq = sum([abs(b[3]-b[2]) for b in paths[pair_member_0] if b[0] in shared_blocks])
 	return([breakpoints, shared_seq])
-
-	#for k, v in paths.items():
-	#	if v in block_dict[k]
-	#	shared_seq += v[3]-v[2] if 
-	#print(total_blocks)
-	# Length of shared sequence	
+	# Other statistics that could be added: 
+	# - location of the breakpoints
+	# - alignment distance within the shared sequence
 
 
 def main():
 	args = get_options()
-#	example_strains = ['NZ_CP081345.1', 'NZ_CP074187.1'] # get from unique paths list
 	GENE  = args.gene
-	#unique_paths_file = '../../data/2023-02-05-'+GENE+'-mmseqs2-polish-u5000-d5000/'+GENE+'-mmseqs2-polish.all_u5000_d5000_pangraph.gfa.unique_paths.txt'
 	pangraph_json = args.pangraph
 
+	# If we have a subset pre-defined, then we first marginalize the pangraph 
 	if args.subset!='':
 		subset_ids = [line.strip('\n') for line in open(args.subset, 'r').readlines()]
 		marginalizePangraph(pangraph_json, 'tmp', subset_ids)
 		pangraph_json = 'tmp.json'
 
 	# Get unique paths 
-	# first export pangraph to gfa
+	# a) first export pangraph to gfa
 	exportPangraph(pangraph_json, prefix='tmp')
-	# then get unique paths
+	# b) then get unique paths using mostFrequentPathGFA.py (bad name for script...)
 	mf.computePaths('tmp.gfa')
-
+	# this give output:
 	unique_paths_file = 'tmp.gfa.unique_paths.txt'
 
 	# Should compute these output distances directly from the fasta file...
+	# we get a matrix of SNP distances between all the genes
 	output_dists = '../../data/2023-02-05-'+GENE+'-mmseqs2-polish-u5000-d5000/'+GENE+'-mmseqs2-polish.all_u5000_d5000_pangraph.json.output_dists.csv' # contains SNPs
 	dist_df = pd.read_csv(output_dists)
-	#print(dist_df)
+	# convert long format to a matrix we can access with strain1,strain2 indices
 	idx = sorted(set(dist_df['seq1']).union(dist_df['seq2']))
 	# reshape into matrix
 	dist_mat = (dist_df.pivot(index='seq1', columns='seq2', values='snps')
@@ -90,16 +88,16 @@ def main():
 	   .fillna(0, downcast='infer')
 	   .pipe(lambda x: x+x.values.T)
 	 )
-	#print(dist_mat)
 
+	# Subset further, just to representatives of unique paths
 	isolates = [line.strip('\n').split('\t')[0].split(',')[0] for line in open(unique_paths_file, 'r').readlines()]
 	# Marginalize to just these unique-path isolates
 	marginalizePangraph(pangraph_json, 'test', isolates)
-	# Then marginalize again to get all of the pairwise combinations
-	#marginalize_output_dir = '../../data/2023-02-05-'+GENE+'-mmseqs2-polish-u5000-d5000/marginalize-output'
+	# Then marginalize to get all pairwise combinations
 	marginalize_output_dir = 	args.outputdir+'/marginalize'
 	marginalizePangraph('test.json', marginalize_output_dir)
 
+	# Compute the pairwise block statistics for these pairs of isolates
 	with open(args.outputdir+'/'+GENE+'-dists.csv', 'w') as f:
 		f.write('id1,id2,breakpoints,shared.seq,snps.gene\n')
 		total_files = len(glob.glob(marginalize_output_dir+'/*json'))
@@ -110,16 +108,12 @@ def main():
 			print(str(i)+'/', total_files)
 			i += 1
 
-#	print(blockStatistics('output/NZ_AP021952.1-NZ_CP074187.1.json'))
-
-#	for a, b in iter.combinations(isolates, 2):
-#		print(a, b)
-	#	marginalizePangraph(pangraph_json, strains, 'test.json')
-	#	exportPangraph('test.json', 'test')
+	# Remove json files
+	for g in glob.glob(marginalize_output_dir+'/*json'):
+		os.remove(g)
 
 
 
-	#marginalizePangraph(pangraph_json, strains, 'test.json')
 	
 
 if __name__=="__main__":
