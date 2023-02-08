@@ -30,5 +30,12 @@ python assignGeneVariants.py --gene $f --outputprefix ../../data/2023-02-05-$f-m
 Rscript plot-NJ-tree.R ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-variants.aln ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-variants-NJ-tree.pdf 6 8
 echo $f
 done < ../data/genes.txt
-``
+```
 
+# Marginalize statistics
+
+Compute marginalized statistics for pairwise comparisons of unique paths. For example, for NDM-1:
+
+```
+python marginalizeStatistics.py --pangraph ../../data/2023-02-05-NDM-1-mmseqs2-polish-u5000-d5000/NDM-1-mmseqs2-polish.all_u5000_d5000_pangraph.json  --subset tmp.NDM-1.plasmids.txt --gene NDM-1
+```
