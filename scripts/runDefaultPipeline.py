@@ -17,6 +17,7 @@ def get_options():
     parser.add_argument('--polish', help='Whether to use pangraph polish (time-intensive; default=False).', required=False, action='store_true', default=False)
     parser.add_argument('--panx', help='Whether to export panX output (time-intensive; default=False).', required=False, action='store_true', default=False)
     parser.add_argument('--aligner', choices=['minimap2', 'mmseqs'],  help='Alignment kernel in pangraph (default=minimap2)', required=False, default='minimap2')
+    parser.add_argument('--blocksize',  help='size of blocks (default=100)', required=False, default=100)
     parser.add_argument('--bandage', help='Whether to run Bandage to get Bandage-visualized graph (default=False)', required=False, action='store_true', default=False)
     parser.add_argument('--prefix', help='Output prefix (default=current date & time)', required=False, default=False)
     return parser.parse_args()
@@ -87,12 +88,12 @@ def main():
     # Build the initial pangraph
     print("## PANGRAPH BUILDING ##")
     if args.polish==True:
-        pangraph_build_polish = 'pangraph build -k '+args.aligner+' '+output_prefix+'.fa | pangraph polish > '+output_prefix+'_pangraph.json'
+        pangraph_build_polish = 'pangraph build -k '+args.aligner+' --len '+args.blocksize+' '+output_prefix+'.fa | pangraph polish > '+output_prefix+'_pangraph.json'
         print("Command:", pangraph_build_polish)
         pangraph_polish_output = subprocess.call(pangraph_build_polish, shell=True)
         print("Return code:", pangraph_polish_output)
     else:
-        pangraph_build = 'pangraph build -k '+args.aligner+' '+output_prefix+'.fa > '+output_prefix+'_pangraph.json'
+        pangraph_build = 'pangraph build -k '+args.aligner+' --len '+args.blocksize+' '+output_prefix+'.fa > '+output_prefix+'_pangraph.json'
         print("Command:", pangraph_build)
         pangraph_build_output = subprocess.call(pangraph_build, shell=True)
         print("Return code:", pangraph_build_output)
