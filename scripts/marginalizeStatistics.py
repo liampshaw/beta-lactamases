@@ -8,6 +8,7 @@ import glob
 import re
 import argparse
 import os
+import subsetMetadata as sm
 
 def get_options():
     parser = argparse.ArgumentParser(description='Marginalize statistics on unique paths')

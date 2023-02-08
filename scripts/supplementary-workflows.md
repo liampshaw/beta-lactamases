@@ -34,8 +34,9 @@ done < ../data/genes.txt
 
 # Marginalize statistics
 
-Compute marginalized statistics for pairwise comparisons of unique paths. For example, for NDM-1:
+Compute marginalized statistics for pairwise comparisons of unique paths. For example, for Salmonella plasmids with TEM-1:
 
 ```
-python marginalizeStatistics.py --pangraph ../../data/2023-02-05-NDM-1-mmseqs2-polish-u5000-d5000/NDM-1-mmseqs2-polish.all_u5000_d5000_pangraph.json  --subset tmp.NDM-1.plasmids.txt --gene NDM-1
+ python subsetMetadata.py --genefamily TEM --TaxGenus Salmonella --Contig plasmid > tmp.list.txt
+python marginalizeStatistics.py --pangraph ../../data/2023-02-05-TEM-1-mmseqs2-polish-u5000-d5000/TEM-1-mmseqs2-polish.all_u5000_d5000_pangraph.json  --subset tmp.list.txt --gene TEM-1
 ```
