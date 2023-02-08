@@ -19,6 +19,7 @@ def get_options():
     parser.add_argument('--genelocations', help='file of blast hits for gene in seqs: id start end', default='', required=False)
     parser.add_argument('--normalise', help='whether to normalise entropy data by log(N)', action='store_true', default=False, required=False)
     parser.add_argument('--subset', help='(optional) file of strains to subset too', type=str, required=False, default='')
+    parser.add_argument('--consensus', help='use consensus lengths of blocks, not real lengths', required=False, default=False, action='store_true')
     return parser.parse_args()
 
 def shannonEntropy(labels, base=None, normalise=False):
@@ -52,19 +53,33 @@ def main():
     else:
         genome_dict = genome_dict_original
     #print(genome_dict.keys())
+    #print(genome_dict)
 
     # Use actual positions in genomes
     genomes_as_int = [None]*len(genome_dict.keys())
-    genome_i = 0
-    for g, path in genome_dict.items():
-        #print(g)
-        genome_as_int = [None] * max([p[3] for p in path])
+    if args.consensus==False:
+        genome_i = 0
+        for g, path in genome_dict.items():
+            #print(g)
+            #genome_as_int = [None] * max([p[3] for p in path])
 
-        genome_as_int = [item for sublist in [[block_nums[p[0]]]*(p[3]-p[2]) for p in path ] for item in sublist]
+            genome_as_int = [item for sublist in [[block_nums[p[0]]]*(p[3]-p[2]) for p in path ] for item in sublist]
 
-        genomes_as_int[genome_i] = genome_as_int
-        genome_i += 1
+            genomes_as_int[genome_i] = genome_as_int
+            genome_i += 1
+    elif args.consensus==True:
+        genome_i = 0
+        for g, path in genome_dict.items():
+            #print(g)
+            #print([p[0] for p in path])
+#            genome_as_int = [None] * max([p[3] for p in path])
+            #genome_as_int = [None] * [block_dict_num[p[0]] for p in path]
 
+            genome_as_int = [item for sublist in [[block_nums[p[0]]]*block_dict[p[0]] for p in path ] for item in sublist]
+
+            genomes_as_int[genome_i] = genome_as_int
+            genome_i += 1
+    #print(genomes_as_int[0])
 
 
     # # If we have the gene block, then we can use this to pin upstream/downstream
@@ -103,14 +118,14 @@ def main():
         starting_point_downstream = [gene_locations[g][1] for  g in genome_dict.keys()]
         #print(starting_point_upstream)
         #print(starting_point_downstream)
-        for i in range(0, 5000, 50):
+        for i in range(0, 5000, 100):
             if starting_point_upstream[0]-i<0:
                 pass
             else:
                 upstream_block_vector = [g[starting_point_upstream[j]-i] for j, g in enumerate(genomes_as_int)]# this is the vector we want
                 output_string = args.name+',upstream,'+str(len(upstream_block_vector))+','+str(i)+','+str(shannonEntropy(upstream_block_vector, normalise=args.normalise))
                 print(output_string)
-        for i in range(0, 5000, 50):
+        for i in range(0, 5000, 100):
             if starting_point_downstream[0]+i>max(len(g) for g in genomes_as_int):
                 pass
             else:
@@ -119,7 +134,7 @@ def main():
                 print(output_string)
             
     else: # otherwise, just print absolute positions
-        for i in range(0, 10000, 50):
+        for i in range(0, 10000, 100):
             block_vector = [g[i] for g in genomes_as_int]# this is the vector we want
             if args.name=='':
                 print(i, shannonEntropy(block_vector))
