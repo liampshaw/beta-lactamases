@@ -61,13 +61,14 @@ makePlots <- function(df){
       xlab("distance from gene (bp)")+
       theme(panel.grid = element_blank())+
       scale_color_manual(values=snps.categorical.colour.palette)+
-      ggtitle("Upstream")+
+      ggtitle("(a)")+
       theme(axis.line.x = element_line(colour = "black"),
         axis.line.y=element_line(colour = "black"),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
-        panel.background = element_blank())+
+        panel.background = element_blank(),
+        title = element_text())+
       xlim(c(-dist.max, 0))+
       theme(plot.title=element_text(hjust=0.5))+
       scale_y_reverse()
@@ -83,7 +84,7 @@ makePlots <- function(df){
       theme(axis.line.y=element_blank(),
             axis.text.y=element_blank(),
             axis.title.y=element_blank())+
-      ggtitle("Downstream")+
+      ggtitle("")+
       theme(axis.line.x = element_line(colour = "black"),
         axis.line.y=element_blank(),
         axis.ticks.y=element_blank(),
@@ -160,9 +161,11 @@ pdf(paste0(args[1],'.flanking-plot-output-', representative, '.pdf'), width=8, h
 makePlots(d.subset)
 dev.off()
 
-deduplicated_prefix = gsub('.txt', '', args[3])
-p.tree <- treePlot(deduplicated_prefix)
-pdf(file=paste0(args[3], '-NJ-gene-tree.pdf'), width=6, height=4)
+source('treePlot.R')
+#treePlot()
+#deduplicated_prefix = 
+p.tree <- treePlot(args[4])
+pdf(file=paste0(args[4], '-NJ-gene-tree.pdf'), width=6, height=4)
 p.tree
 dev.off()
 
@@ -170,7 +173,9 @@ dev.off()
 #pdf(paste0(args[1],'.flanking-plot-output-focal-gene-seq.pdf'), width=10, height=4)
 p.l <- makePlots(d.subset.2)
 #p.r <- ggdraw()+draw_image(magick::image_read_pdf(paste0(args[3], "-NJ-gene-tree.pdf"), density = 300))
-p.combined = cowplot::plot_grid(p.l, p.tree, nrow = 1, rel_widths  = c(1.5, 1), align='hv', axis='t')
+p.combined = cowplot::plot_grid(p.l, p.tree+ggtitle("(b)"), nrow = 1, 
+                                rel_widths  = c(1.5, 1), 
+                                align='v', axis='t')
 pdf(file=paste0(args[1],'.flanking-plot-output-focal-gene-seq.pdf'), width=10, height=4)
 p.combined
 dev.off()
