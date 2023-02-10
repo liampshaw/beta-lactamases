@@ -76,7 +76,9 @@ To make figures for the paper:
 ```
 # Linear block plot
 Rscript plot-blocks-linear.R ../../data/2023-02-05-CMY-2-mmseqs2-polish-u5000-d5000/CMY-2-mmseqs2-polish.all_u5000_d5000_pangraph.json.blocks.csv  --width 10 --height 6   
-# Plot output dists
+# Plot output dists # TODO
+Rscript plot-output-dists.R #
 
-
+# TO ADD: information on using treetime-experiment.py
+# in R: treePlot("test.aln", "tree_refined.tre", "NZ_LR595691.1")+theme_tree2()
 ```
