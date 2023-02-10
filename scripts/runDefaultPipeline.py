@@ -149,11 +149,18 @@ def main():
     compute_distance_output = subprocess.call(compute_distance, shell=True)
     print("Return code:", compute_distance_output)
 
-    # Plot the distances
-    print("## PLOTTING ##")
-    plot_dists = 'Rscript plot-output-dists.R '+output_prefix+'_pangraph.json.output_dists.csv '+output_prefix+'_pangraph.gfa.most_frequent_path_representative.txt '+output_prefix+'_focal_gene.dedup.txt'
-    print("Command:", plot_dists)
-    plot_dists_output = subprocess.call(plot_dists, shell=True)
+
+    gene = re.sub(".fa", "", args.gene)
+assign_variants = 'python assignGeneVariants.py --gene '+gene+' --inputprefix '+output_prefix+' --outputprefix '+output_prefix+'.focal_gene'
+print("Command:", assign_variants)
+assign_variants_output = subprocess.call(assign_variants, shell=True)
+print("Return code:", assign_variants_output)
+
+# Plot the distances
+print("## PLOTTING ##")
+plot_dists = 'Rscript plot-output-dists.R '+output_prefix+'_pangraph.json.output_dists.csv '+output_prefix+'_pangraph.gfa.most_frequent_path_representative.txt '+output_prefix+'_focal_gene.dedup.txt '+output_prefix+'.focal_gene.aln'
+print("Command:", plot_dists)
+plot_dists_output = subprocess.call(plot_dists, shell=True)
     print("Return code:", plot_dists_output)
     print("Use metadata to exclude same country/year comparisons:")
     plot_dists_metadata = 'Rscript plot-output-dists-use-metadata.R '+output_prefix+'_pangraph.json.output_dists.csv '+output_prefix+'_pangraph.gfa.most_frequent_path_representative.txt '+output_prefix+'_focal_gene.dedup.txt'
