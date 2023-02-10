@@ -49,3 +49,34 @@ while read f;
 do
 	python marginalizeStatistics.py --pangraph ../../data/2023-02-05-$f-mmseqs2-polish-u5000-d5000/$f-mmseqs2-polish.all_u5000_d5000_pangraph.json  --subset tmp.salmonella.plasmids.txt --gene $f --outputprefix salmonella-$f
 done < ../data/genes.txt
+```
+
+# Plotting for KPC-2
+
+Example plotting for KPC-2:
+
+```
+# Subset metadata to KPC-containing plasmids only
+strains=$(python subsetMetadata.py --genefamily KPC --Contig plasmid | tr '\n' ',')
+# Marginalize existing graph with pangraph
+pangraph marginalize --strains $strains ../../data/2023-02-05-KPC-2-mmseqs2-polish-u5000-d5000/KPC-2-mmseqs2-polish.all_u5000_d5000_pangraph.json > kpc_plasmids.json
+# Export gfa
+pangraph export kpc_plasmids.json -p kpc_plasmids -o ./
+# Prepare for plotting
+python convertPangraphToBlockList.py --json kpc_plasmids.json --gfa kpc_plasmids.gfa 
+# 
+
+```
+
+
+# Plotting for CMY-2
+
+To make figures for the paper:
+
+```
+# Linear block plot
+Rscript plot-blocks-linear.R ../../data/2023-02-05-CMY-2-mmseqs2-polish-u5000-d5000/CMY-2-mmseqs2-polish.all_u5000_d5000_pangraph.json.blocks.csv  --width 10 --height 6   
+# Plot output dists
+
+
+```
