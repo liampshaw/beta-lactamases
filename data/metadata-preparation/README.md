@@ -14,3 +14,4 @@ Process involves:
 
 That final `v3` file becomes `data/metadata.csv` 
 
+N.B. I've recently discovered [MicroBIGG-E](https://www.ncbi.nlm.nih.gov/pathogens/docs/microbigge_gcp/) which offers a way to download this data using SQL queries through Google BigQuery. I have not yet used this. 
