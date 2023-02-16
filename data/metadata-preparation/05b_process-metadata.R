@@ -51,6 +51,9 @@ metadata.edited$Country_ISO = countrycode(metadata.edited$Country,
 metadata.edited$Region = countrycode(metadata.edited$Country_ISO,
                                      origin="iso3c",
                                      destination="region")
+# If NA, missing
+metadata.edited$Region[is.na(metadata.edited$Region)] = "missing"
+
 
 metadata.edited$Year = metadata.edited$year
 metadata.edited$BioSampleID = metadata.edited$biosample_id
