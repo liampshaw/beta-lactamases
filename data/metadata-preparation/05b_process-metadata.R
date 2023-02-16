@@ -12,11 +12,17 @@ metadata.edited = read.csv("metadata-processed-v2.csv",
                            header=T,
                            stringsAsFactors = F)
 
+# Add the number of gene hits
+metadata.edited$N.betalactamase.hits = sapply(metadata.edited$gene.hits, function(x) length(strsplit(x, ",")[[1]]))
+
+
+
 metadata.edited$TaxSpecies = sapply(metadata.edited$organism, 
                                     function(x) paste( strsplit( x, split =" ")[[1]][1], 
                                                        strsplit( x, split =" ")[[1]][2]))
 
 metadata.edited$TaxGenus = gsub(" .*", "", metadata.edited$TaxSpecies)
+
 
 
 
@@ -62,7 +68,8 @@ metadata.edited$Contig = metadata.edited$type
 
 # Column names I want
 use.names = c("NucCoreID",
-              "BioSampleID",
+              "BioSampleID", 
+              "N.betalactamase.hits",
               "Gene.hits",
               "Country",
               "Region",
