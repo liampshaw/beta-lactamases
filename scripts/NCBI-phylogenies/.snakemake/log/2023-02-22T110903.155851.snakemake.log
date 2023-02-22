@@ -1,0 +1,2 @@
+SyntaxError in file /Users/Liam/Dropbox/_Projects/pangraph/beta-lactamases/scripts/gene-phylogenies/Snakefile, line 37:
+Unexpected keyword tree_in in rule definition (Snakefile, line 37)

@@ -1,0 +1,31 @@
+Building DAG of jobs...
+candidate job all
+    wildcards: 
+candidate job extract_gene
+    wildcards: gene=GES
+selected job extract_gene
+    wildcards: gene=GES
+file fasta/GES.fa:
+    Producer found, hence exceptions are ignored.
+
+candidate job extract_gene
+    wildcards: gene=CTX-M
+selected job extract_gene
+    wildcards: gene=CTX-M
+file fasta/CTX-M.fa:
+    Producer found, hence exceptions are ignored.
+
+candidate job extract_gene
+    wildcards: gene=SHV
+selected job extract_gene
+    wildcards: gene=SHV
+file fasta/SHV.fa:
+    Producer found, hence exceptions are ignored.
+
+selected job all
+    wildcards: 
+file None:
+    Producer found, hence exceptions are ignored.
+
+Nothing to be done (all requested files are present and up to date).
+Complete log: .snakemake/log/2023-02-22T110127.497380.snakemake.log

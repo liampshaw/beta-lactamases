@@ -1,0 +1,60 @@
+Building DAG of jobs...
+candidate job all
+    wildcards: 
+candidate job refine_tree
+    wildcards: gene=GES
+candidate job run_fasttree
+    wildcards: gene=GES
+candidate job align_gene
+    wildcards: gene=GES
+candidate job extract_gene
+    wildcards: gene=GES
+selected job extract_gene
+    wildcards: gene=GES
+file fasta/GES.fa:
+    Producer found, hence exceptions are ignored.
+
+selected job align_gene
+    wildcards: gene=GES
+file fasta/GES.aln:
+    Producer found, hence exceptions are ignored.
+
+selected job run_fasttree
+    wildcards: gene=GES
+file trees/GES.tre:
+    Producer found, hence exceptions are ignored.
+
+candidate job align_gene
+    wildcards: gene=GES
+selected job align_gene
+    wildcards: gene=GES
+file fasta/GES.aln:
+    Producer found, hence exceptions are ignored.
+
+candidate job run_fasttree
+    wildcards: gene=GES.refined
+candidate job align_gene
+    wildcards: gene=GES.refined
+candidate job extract_gene
+    wildcards: gene=GES.refined
+selected job extract_gene
+    wildcards: gene=GES.refined
+file fasta/GES.refined.fa:
+    Producer found, hence exceptions are ignored.
+
+selected job align_gene
+    wildcards: gene=GES.refined
+file fasta/GES.refined.aln:
+    Producer found, hence exceptions are ignored.
+
+AmbiguousRuleException:
+Rules refine_tree and run_fasttree are ambiguous for the file trees/GES.refined.tre.
+Consider starting rule output with a unique prefix, constrain your wildcards, or use the ruleorder directive.
+Wildcards:
+	refine_tree: gene=GES
+	run_fasttree: gene=GES.refined
+Expected input files:
+	refine_tree: trees/GES.tre fasta/GES.aln
+	run_fasttree: fasta/GES.refined.alnExpected output files:
+	refine_tree: trees/GES.refined.tre
+	run_fasttree: trees/GES.refined.tre

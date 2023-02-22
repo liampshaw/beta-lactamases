@@ -1,0 +1,5 @@
+Building DAG of jobs...
+MissingInputException in rule all in file /Users/Liam/Dropbox/_Projects/pangraph/beta-lactamases/scripts/gene-phylogenies/Snakefile, line 3:
+Missing input files for rule all:
+    affected files:
+        plots/output.pdf

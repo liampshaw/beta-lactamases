@@ -1,0 +1,221 @@
+Building DAG of jobs...
+candidate job all
+    wildcards: 
+candidate job refine_tree
+    wildcards: gene=GES
+candidate job run_fasttree
+    wildcards: gene=GES
+candidate job align_gene
+    wildcards: gene=GES
+candidate job extract_gene
+    wildcards: gene=GES
+selected job extract_gene
+    wildcards: gene=GES
+file fasta/GES.fa:
+    Producer found, hence exceptions are ignored.
+
+selected job align_gene
+    wildcards: gene=GES
+file fasta/GES.aln:
+    Producer found, hence exceptions are ignored.
+
+selected job run_fasttree
+    wildcards: gene=GES
+file trees/GES.tre:
+    Producer found, hence exceptions are ignored.
+
+candidate job align_gene
+    wildcards: gene=GES
+selected job align_gene
+    wildcards: gene=GES
+file fasta/GES.aln:
+    Producer found, hence exceptions are ignored.
+
+selected job refine_tree
+    wildcards: gene=GES
+file refined-trees/GES.tre:
+    Producer found, hence exceptions are ignored.
+
+candidate job refine_tree
+    wildcards: gene=CTX-M
+candidate job run_fasttree
+    wildcards: gene=CTX-M
+candidate job align_gene
+    wildcards: gene=CTX-M
+candidate job extract_gene
+    wildcards: gene=CTX-M
+selected job extract_gene
+    wildcards: gene=CTX-M
+file fasta/CTX-M.fa:
+    Producer found, hence exceptions are ignored.
+
+selected job align_gene
+    wildcards: gene=CTX-M
+file fasta/CTX-M.aln:
+    Producer found, hence exceptions are ignored.
+
+selected job run_fasttree
+    wildcards: gene=CTX-M
+file trees/CTX-M.tre:
+    Producer found, hence exceptions are ignored.
+
+candidate job align_gene
+    wildcards: gene=CTX-M
+selected job align_gene
+    wildcards: gene=CTX-M
+file fasta/CTX-M.aln:
+    Producer found, hence exceptions are ignored.
+
+selected job refine_tree
+    wildcards: gene=CTX-M
+file refined-trees/CTX-M.tre:
+    Producer found, hence exceptions are ignored.
+
+candidate job refine_tree
+    wildcards: gene=SHV
+candidate job run_fasttree
+    wildcards: gene=SHV
+candidate job align_gene
+    wildcards: gene=SHV
+candidate job extract_gene
+    wildcards: gene=SHV
+selected job extract_gene
+    wildcards: gene=SHV
+file fasta/SHV.fa:
+    Producer found, hence exceptions are ignored.
+
+selected job align_gene
+    wildcards: gene=SHV
+file fasta/SHV.aln:
+    Producer found, hence exceptions are ignored.
+
+selected job run_fasttree
+    wildcards: gene=SHV
+file trees/SHV.tre:
+    Producer found, hence exceptions are ignored.
+
+candidate job align_gene
+    wildcards: gene=SHV
+selected job align_gene
+    wildcards: gene=SHV
+file fasta/SHV.aln:
+    Producer found, hence exceptions are ignored.
+
+selected job refine_tree
+    wildcards: gene=SHV
+file refined-trees/SHV.tre:
+    Producer found, hence exceptions are ignored.
+
+selected job all
+    wildcards: 
+file None:
+    Producer found, hence exceptions are ignored.
+
+Using shell: /bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job             count    min threads    max threads
+------------  -------  -------------  -------------
+all                 1              1              1
+refine_tree         3              1              1
+run_fasttree        3              1              1
+total               7              1              1
+
+Select jobs to execute...
+
+[Wed Feb 22 11:14:44 2023]
+rule run_fasttree:
+    input: fasta/GES.aln
+    output: trees/GES.tre
+    jobid: 2
+    reason: Missing output files: trees/GES.tre
+    wildcards: gene=GES
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 11:14:46 2023]
+Finished job 2.
+1 of 7 steps (14%) done
+Select jobs to execute...
+
+[Wed Feb 22 11:14:46 2023]
+rule run_fasttree:
+    input: fasta/CTX-M.aln
+    output: trees/CTX-M.tre
+    jobid: 6
+    reason: Missing output files: trees/CTX-M.tre
+    wildcards: gene=CTX-M
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 11:14:53 2023]
+Finished job 6.
+2 of 7 steps (29%) done
+Select jobs to execute...
+
+[Wed Feb 22 11:14:53 2023]
+rule refine_tree:
+    input: trees/CTX-M.tre, fasta/CTX-M.aln
+    output: refined-trees/CTX-M.tre
+    jobid: 5
+    reason: Missing output files: refined-trees/CTX-M.tre; Input files updated by another job: trees/CTX-M.tre
+    wildcards: gene=CTX-M
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 11:14:58 2023]
+Finished job 5.
+3 of 7 steps (43%) done
+Select jobs to execute...
+
+[Wed Feb 22 11:14:58 2023]
+rule refine_tree:
+    input: trees/GES.tre, fasta/GES.aln
+    output: refined-trees/GES.tre
+    jobid: 1
+    reason: Missing output files: refined-trees/GES.tre; Input files updated by another job: trees/GES.tre
+    wildcards: gene=GES
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 11:14:59 2023]
+Finished job 1.
+4 of 7 steps (57%) done
+Select jobs to execute...
+
+[Wed Feb 22 11:14:59 2023]
+rule run_fasttree:
+    input: fasta/SHV.aln
+    output: trees/SHV.tre
+    jobid: 10
+    reason: Missing output files: trees/SHV.tre
+    wildcards: gene=SHV
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 11:15:04 2023]
+Finished job 10.
+5 of 7 steps (71%) done
+Select jobs to execute...
+
+[Wed Feb 22 11:15:04 2023]
+rule refine_tree:
+    input: trees/SHV.tre, fasta/SHV.aln
+    output: refined-trees/SHV.tre
+    jobid: 9
+    reason: Missing output files: refined-trees/SHV.tre; Input files updated by another job: trees/SHV.tre
+    wildcards: gene=SHV
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 11:15:06 2023]
+Finished job 9.
+6 of 7 steps (86%) done
+Select jobs to execute...
+
+[Wed Feb 22 11:15:06 2023]
+localrule all:
+    input: refined-trees/GES.tre, refined-trees/CTX-M.tre, refined-trees/SHV.tre
+    jobid: 0
+    reason: Input files updated by another job: refined-trees/GES.tre, refined-trees/SHV.tre, refined-trees/CTX-M.tre
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 11:15:06 2023]
+Finished job 0.
+7 of 7 steps (100%) done
+Complete log: .snakemake/log/2023-02-22T111443.797235.snakemake.log

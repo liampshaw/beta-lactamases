@@ -1,0 +1,176 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Job stats:
+job          count    min threads    max threads
+---------  -------  -------------  -------------
+all              1              1              1
+plot_tree       11              1              1
+total           12              1              1
+
+Select jobs to execute...
+
+[Wed Feb 22 12:07:38 2023]
+rule plot_tree:
+    input: refined-trees/IMP.nwk
+    output: plots/IMP.pdf
+    jobid: 16
+    reason: Missing output files: plots/IMP.pdf
+    wildcards: gene=IMP
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:07:38 2023]
+rule plot_tree:
+    input: refined-trees/PER.nwk
+    output: plots/PER.pdf
+    jobid: 31
+    reason: Missing output files: plots/PER.pdf
+    wildcards: gene=PER
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:07:40 2023]
+Finished job 31.
+1 of 12 steps (8%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:07:40 2023]
+rule plot_tree:
+    input: refined-trees/VIM.nwk
+    output: plots/VIM.pdf
+    jobid: 51
+    reason: Missing output files: plots/VIM.pdf
+    wildcards: gene=VIM
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:07:40 2023]
+Finished job 16.
+2 of 12 steps (17%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:07:40 2023]
+rule plot_tree:
+    input: refined-trees/CTX-M.nwk
+    output: plots/CTX-M.pdf
+    jobid: 6
+    reason: Missing output files: plots/CTX-M.pdf
+    wildcards: gene=CTX-M
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:07:41 2023]
+Finished job 51.
+3 of 12 steps (25%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:07:41 2023]
+rule plot_tree:
+    input: refined-trees/KPC.nwk
+    output: plots/KPC.pdf
+    jobid: 21
+    reason: Missing output files: plots/KPC.pdf
+    wildcards: gene=KPC
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:07:41 2023]
+Finished job 6.
+4 of 12 steps (33%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:07:41 2023]
+rule plot_tree:
+    input: refined-trees/SHV.nwk
+    output: plots/SHV.pdf
+    jobid: 36
+    reason: Missing output files: plots/SHV.pdf
+    wildcards: gene=SHV
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:07:43 2023]
+Finished job 21.
+5 of 12 steps (42%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:07:43 2023]
+rule plot_tree:
+    input: refined-trees/CMY.nwk
+    output: plots/CMY.pdf
+    jobid: 1
+    reason: Missing output files: plots/CMY.pdf
+    wildcards: gene=CMY
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:07:43 2023]
+Finished job 36.
+6 of 12 steps (50%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:07:43 2023]
+rule plot_tree:
+    input: refined-trees/TEM.nwk
+    output: plots/TEM.pdf
+    jobid: 41
+    reason: Missing output files: plots/TEM.pdf
+    wildcards: gene=TEM
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:07:45 2023]
+Finished job 1.
+7 of 12 steps (58%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:07:45 2023]
+rule plot_tree:
+    input: refined-trees/VEB.nwk
+    output: plots/VEB.pdf
+    jobid: 46
+    reason: Missing output files: plots/VEB.pdf
+    wildcards: gene=VEB
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:07:45 2023]
+Finished job 41.
+8 of 12 steps (67%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:07:45 2023]
+rule plot_tree:
+    input: refined-trees/NDM.nwk
+    output: plots/NDM.pdf
+    jobid: 26
+    reason: Missing output files: plots/NDM.pdf
+    wildcards: gene=NDM
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:07:46 2023]
+Finished job 46.
+9 of 12 steps (75%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:07:46 2023]
+rule plot_tree:
+    input: refined-trees/GES.nwk
+    output: plots/GES.pdf
+    jobid: 11
+    reason: Missing output files: plots/GES.pdf
+    wildcards: gene=GES
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:07:46 2023]
+Finished job 26.
+10 of 12 steps (83%) done
+[Wed Feb 22 12:07:48 2023]
+Finished job 11.
+11 of 12 steps (92%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:07:48 2023]
+localrule all:
+    input: plots/CMY.pdf, plots/CTX-M.pdf, plots/GES.pdf, plots/IMP.pdf, plots/KPC.pdf, plots/NDM.pdf, plots/PER.pdf, plots/SHV.pdf, plots/TEM.pdf, plots/VEB.pdf, plots/VIM.pdf
+    jobid: 0
+    reason: Input files updated by another job: plots/IMP.pdf, plots/GES.pdf, plots/PER.pdf, plots/SHV.pdf, plots/VEB.pdf, plots/CTX-M.pdf, plots/CMY.pdf, plots/KPC.pdf, plots/TEM.pdf, plots/VIM.pdf, plots/NDM.pdf
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:07:48 2023]
+Finished job 0.
+12 of 12 steps (100%) done
+Complete log: .snakemake/log/2023-02-22T120737.936287.snakemake.log

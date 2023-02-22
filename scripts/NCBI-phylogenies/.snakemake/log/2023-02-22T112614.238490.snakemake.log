@@ -1,0 +1,34 @@
+Building DAG of jobs...
+candidate job all
+    wildcards: 
+candidate job plot_tree
+    wildcards: gene=CMY
+candidate job refine_tree
+    wildcards: gene=CMY
+candidate job run_fasttree
+    wildcards: gene=CMY
+candidate job align_gene
+    wildcards: gene=CMY
+candidate job extract_gene
+    wildcards: gene=CMY
+selected job extract_gene
+    wildcards: gene=CMY
+file fasta/CMY.fa:
+    Producer found, hence exceptions are ignored.
+
+selected job align_gene
+    wildcards: gene=CMY
+file alns/CMY.aln:
+    Producer found, hence exceptions are ignored.
+
+selected job run_fasttree
+    wildcards: gene=CMY
+file trees/CMY.tre:
+    Producer found, hence exceptions are ignored.
+
+MissingInputException in rule refine_tree in file /Users/Liam/Dropbox/_Projects/pangraph/beta-lactamases/scripts/gene-phylogenies/Snakefile, line 45:
+Missing input files for rule refine_tree:
+    output: refined-trees/CMY.tre
+    wildcards: gene=CMY
+    affected files:
+        fasta/CMY.aln

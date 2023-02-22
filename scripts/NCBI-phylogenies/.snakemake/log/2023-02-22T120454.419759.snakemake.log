@@ -1,0 +1,50 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Job stats:
+job          count    min threads    max threads
+---------  -------  -------------  -------------
+all              1              1              1
+plot_tree       11              1              1
+total           12              1              1
+
+Select jobs to execute...
+
+[Wed Feb 22 12:04:55 2023]
+rule plot_tree:
+    input: refined-trees/IMP.nwk
+    output: plots/IMP.pdf
+    jobid: 16
+    reason: Missing output files: plots/IMP.pdf
+    wildcards: gene=IMP
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:04:55 2023]
+rule plot_tree:
+    input: refined-trees/PER.nwk
+    output: plots/PER.pdf
+    jobid: 31
+    reason: Missing output files: plots/PER.pdf
+    wildcards: gene=PER
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:04:56 2023]
+[Wed Feb 22 12:04:56 2023]
+Error in rule plot_tree:
+    jobid: 16
+    input: refined-trees/IMP.nwk
+    output: plots/IMP.pdf
+
+Error in rule plot_tree:
+    jobid: 31
+    input: refined-trees/PER.nwk
+    output: plots/PER.pdf
+
+Removing output files of failed job plot_tree since they might be corrupted:
+plots/IMP.pdf
+Removing output files of failed job plot_tree since they might be corrupted:
+plots/PER.pdf
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2023-02-22T120454.419759.snakemake.log
