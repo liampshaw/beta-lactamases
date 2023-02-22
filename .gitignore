@@ -2,7 +2,6 @@ CARD/*
 CARD-prevalence/*
 card-data/*
 scripts/*_within*diffs*txt
-scripts/*/*
 scripts/.Rhistory
 scripts/*fa
 scripts/*aln
