@@ -17,7 +17,7 @@ def get_options():
     parser = argparse.ArgumentParser(description='Extract region around a gene.',
                                      prog='extract_region')
     parser.add_argument('--gene', help='gene to search for', required=True)
-    parser.add_argument('--input', help='input fasta file', required=True)
+    parser.add_argument('--input_fasta', help='input fasta file', required=True)
     parser.add_argument('--output_fasta', help='output fasta', required=True)
     parser.add_argument('--upstream', help='upstream bases', default=2500, required=False)
     parser.add_argument('--downstream', help='downstream bases', default=2500, required=False)
@@ -155,7 +155,7 @@ def store_multiple_hits(sequences, blast_hits, smh_file):
 
 def main():
     args = get_options()
-    input_fasta = args.input
+    input_fasta = args.input_fasta
     input_sequences = read_fasta(input_fasta)
 
     output_fasta = args.output_fasta

@@ -10,10 +10,14 @@ GENES = ["CMY",\
 			"VEB",\
 			"VIM"]
 
+FOCAL_GENES = ["CMY-2","CTX-M-15","CTX-M-65","GES-24","IMP-1","KPC-2","NDM-1","PER-1","SHV-134","TEM-1","VIM-1"]
+
 rule all:
 	input:
 		expand("plots/NCBI-variants/{gene}.pdf", gene=GENES),
-		expand("dists/{gene}.tsv", gene=GENES)
+		expand("dists/{gene}.tsv", gene=GENES),
+		expand("assignments/{focal_gene}.csv", focal_gene=FOCAL_GENES)	
+
 
 rule extract_NCBI_gene:
 	input:
@@ -62,7 +66,43 @@ rule plot_tree_NCBI:
 	input:
 		"refined-trees/{gene}.nwk"
 	output:
-		"plots/{gene}.pdf"
+		"plots/NCBI-variants/{gene}.pdf"
 	script:
-		"scripts/NCBI-variants/plot_tree.R"
+		"scripts/plot_tree.R"
+
+rule run_metadata:
+	input:
+		metadata="data/metadata.csv"
+	script:
+		"scripts/metadata_gene_combinations.py"
+
+rule extract_focal_genes:
+	input:
+		"data/NCBI_bl.fa"
+	params:
+		gene_name="{focal_gene}"
+	output:
+		"focal_genes/{focal_gene}.fa"
+	script:
+		"scripts/extract_focal_genes_from_ncbi.py"
+
+
+rule extract_genes_from_contigs:
+	input:
+		"focal_genes/{focal_gene}.fa"
+	output:
+		"sequences/{focal_gene}.fa"
+	shell:
+		"python scripts/extract_region_around_gene.py --gene {input} --input_fasta test.fa --output_fasta {output} --upstream 0 --downstream 0"
+
+rule name_observed_genes:
+	input:
+		fasta="sequences/{focal_gene}.fa",
+		variants="fasta/{focal_gene}.fa"
+	output:
+		"assignments/{focal_gene}.csv"
+	shell:
+		"python scripts/name_variants.py --variant_fasta {input.variants} --output_file {output} --input_fasta {input.fasta}"
+
+
 
