@@ -1,6 +1,0 @@
-Building DAG of jobs...
-MissingInputException in rule extract_gene in file /Users/Liam/Dropbox/_Projects/pangraph/beta-lactamases/scripts/gene-phylogenies/Snakefile, line 4:
-Missing input files for rule extract_gene:
-    affected files:
-        CTX-M
-        GES

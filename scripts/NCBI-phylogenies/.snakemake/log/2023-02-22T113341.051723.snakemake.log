@@ -1,7 +1,0 @@
-Building DAG of jobs...
-MissingInputException in rule refine_tree in file /Users/Liam/Dropbox/_Projects/pangraph/beta-lactamases/scripts/gene-phylogenies/Snakefile, line 45:
-Missing input files for rule refine_tree:
-    output: refined-trees/CMY.tre
-    wildcards: gene=CMY
-    affected files:
-        fasta/CMY.aln
