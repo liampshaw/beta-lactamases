@@ -1,0 +1,50 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Job stats:
+job             count    min threads    max threads
+------------  -------  -------------  -------------
+align_gene         11              1              1
+all                 1              1              1
+extract_gene       11              1              1
+plot_tree          11              1              1
+refine_tree        11              1              1
+run_fasttree       11              1              1
+total              56              1              1
+
+Select jobs to execute...
+
+[Wed Feb 22 12:28:38 2023]
+rule extract_gene:
+    input: data/NCBI_bl.fa
+    output: fasta/PER.fa
+    jobid: 35
+    reason: Code has changed since last execution
+    wildcards: gene=PER
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:28:38 2023]
+rule extract_gene:
+    input: data/NCBI_bl.fa
+    output: fasta/KPC.fa
+    jobid: 25
+    reason: Code has changed since last execution
+    wildcards: gene=KPC
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:28:39 2023]
+Error in rule extract_gene:
+    jobid: 25
+    input: data/NCBI_bl.fa
+    output: fasta/KPC.fa
+
+[Wed Feb 22 12:28:39 2023]
+Error in rule extract_gene:
+    jobid: 35
+    input: data/NCBI_bl.fa
+    output: fasta/PER.fa
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2023-02-22T122836.038087.snakemake.log

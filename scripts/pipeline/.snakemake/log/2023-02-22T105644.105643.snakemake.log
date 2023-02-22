@@ -1,0 +1,31 @@
+Building DAG of jobs...
+candidate job extract_gene
+    wildcards: gene=GES
+selected job extract_gene
+    wildcards: gene=GES
+file fasta/GES.fa:
+    Producer found, hence exceptions are ignored.
+
+Using shell: /bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job             count    min threads    max threads
+------------  -------  -------------  -------------
+extract_gene        1              1              1
+total               1              1              1
+
+Select jobs to execute...
+
+[Wed Feb 22 10:56:44 2023]
+rule extract_gene:
+    input: data/NCBI_bl.fa
+    output: fasta/GES.fa
+    jobid: 0
+    reason: Missing output files: fasta/GES.fa
+    wildcards: gene=GES
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2023-02-22T105644.105643.snakemake.log

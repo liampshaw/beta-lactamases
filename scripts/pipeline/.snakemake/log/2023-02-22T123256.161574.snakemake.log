@@ -1,0 +1,670 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Job stats:
+job             count    min threads    max threads
+------------  -------  -------------  -------------
+align_gene         11              1              1
+all                 1              1              1
+extract_gene        2              1              1
+plot_tree          11              1              1
+refine_tree        11              1              1
+run_fasttree       11              1              1
+total              47              1              1
+
+Select jobs to execute...
+
+[Wed Feb 22 12:32:56 2023]
+rule extract_gene:
+    input: data/NCBI_bl.fa
+    output: fasta/KPC.fa
+    jobid: 25
+    reason: Missing output files: fasta/KPC.fa
+    wildcards: gene=KPC
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:32:56 2023]
+rule align_gene:
+    input: fasta/NDM.fa
+    output: alns/NDM.aln
+    jobid: 29
+    reason: Missing output files: alns/NDM.aln
+    wildcards: gene=NDM
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:32:57 2023]
+Finished job 25.
+1 of 47 steps (2%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:32:57 2023]
+rule align_gene:
+    input: fasta/VEB.fa
+    output: alns/VEB.aln
+    jobid: 49
+    reason: Missing output files: alns/VEB.aln
+    wildcards: gene=VEB
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:33:02 2023]
+Finished job 49.
+2 of 47 steps (4%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:33:02 2023]
+rule align_gene:
+    input: fasta/CMY.fa
+    output: alns/CMY.aln
+    jobid: 4
+    reason: Missing output files: alns/CMY.aln
+    wildcards: gene=CMY
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:33:04 2023]
+Finished job 29.
+3 of 47 steps (6%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:33:04 2023]
+rule align_gene:
+    input: fasta/IMP.fa
+    output: alns/IMP.aln
+    jobid: 19
+    reason: Missing output files: alns/IMP.aln
+    wildcards: gene=IMP
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:33:10 2023]
+Finished job 4.
+4 of 47 steps (9%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:33:11 2023]
+rule run_fasttree:
+    input: alns/NDM.aln
+    output: trees/NDM.nwk
+    jobid: 28
+    reason: Missing output files: trees/NDM.nwk; Input files updated by another job: alns/NDM.aln
+    wildcards: gene=NDM
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:33:12 2023]
+Finished job 28.
+5 of 47 steps (11%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:33:12 2023]
+rule align_gene:
+    input: fasta/VIM.fa
+    output: alns/VIM.aln
+    jobid: 54
+    reason: Missing output files: alns/VIM.aln
+    wildcards: gene=VIM
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:33:33 2023]
+Finished job 19.
+6 of 47 steps (13%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:33:33 2023]
+rule align_gene:
+    input: fasta/CTX-M.fa
+    output: alns/CTX-M.aln
+    jobid: 9
+    reason: Missing output files: alns/CTX-M.aln
+    wildcards: gene=CTX-M
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:33:34 2023]
+Finished job 54.
+7 of 47 steps (15%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:33:34 2023]
+rule align_gene:
+    input: fasta/KPC.fa
+    output: alns/KPC.aln
+    jobid: 24
+    reason: Missing output files: alns/KPC.aln; Input files updated by another job: fasta/KPC.fa
+    wildcards: gene=KPC
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:33:40 2023]
+Finished job 24.
+8 of 47 steps (17%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:33:40 2023]
+rule run_fasttree:
+    input: alns/KPC.aln
+    output: trees/KPC.nwk
+    jobid: 23
+    reason: Forced execution
+    wildcards: gene=KPC
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:33:46 2023]
+Finished job 23.
+9 of 47 steps (19%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:33:46 2023]
+rule align_gene:
+    input: fasta/SHV.fa
+    output: alns/SHV.aln
+    jobid: 39
+    reason: Missing output files: alns/SHV.aln
+    wildcards: gene=SHV
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:33:46 2023]
+Finished job 9.
+10 of 47 steps (21%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:33:46 2023]
+rule refine_tree:
+    input: trees/KPC.nwk, alns/KPC.aln
+    output: refined-trees/KPC.nwk
+    jobid: 22
+    reason: Missing output files: refined-trees/KPC.nwk; Input files updated by another job: trees/KPC.nwk, alns/KPC.aln
+    wildcards: gene=KPC
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:33:49 2023]
+Finished job 22.
+11 of 47 steps (23%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:33:49 2023]
+rule plot_tree:
+    input: refined-trees/KPC.nwk
+    output: plots/KPC.pdf
+    jobid: 21
+    reason: Missing output files: plots/KPC.pdf; Input files updated by another job: refined-trees/KPC.nwk
+    wildcards: gene=KPC
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:33:51 2023]
+Finished job 21.
+12 of 47 steps (26%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:33:51 2023]
+rule extract_gene:
+    input: data/NCBI_bl.fa
+    output: fasta/PER.fa
+    jobid: 35
+    reason: Missing output files: fasta/PER.fa
+    wildcards: gene=PER
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:33:52 2023]
+Finished job 35.
+13 of 47 steps (28%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:33:52 2023]
+rule align_gene:
+    input: fasta/PER.fa
+    output: alns/PER.aln
+    jobid: 34
+    reason: Missing output files: alns/PER.aln; Input files updated by another job: fasta/PER.fa
+    wildcards: gene=PER
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:33:52 2023]
+Finished job 39.
+14 of 47 steps (30%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:33:52 2023]
+rule run_fasttree:
+    input: alns/SHV.aln
+    output: trees/SHV.nwk
+    jobid: 38
+    reason: Missing output files: trees/SHV.nwk; Input files updated by another job: alns/SHV.aln
+    wildcards: gene=SHV
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:33:54 2023]
+Finished job 34.
+15 of 47 steps (32%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:33:54 2023]
+rule run_fasttree:
+    input: alns/VEB.aln
+    output: trees/VEB.nwk
+    jobid: 48
+    reason: Missing output files: trees/VEB.nwk; Input files updated by another job: alns/VEB.aln
+    wildcards: gene=VEB
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:33:54 2023]
+Finished job 48.
+16 of 47 steps (34%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:33:54 2023]
+rule refine_tree:
+    input: trees/VEB.nwk, alns/VEB.aln
+    output: refined-trees/VEB.nwk
+    jobid: 47
+    reason: Missing output files: refined-trees/VEB.nwk; Input files updated by another job: trees/VEB.nwk, alns/VEB.aln
+    wildcards: gene=VEB
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:33:55 2023]
+Finished job 47.
+17 of 47 steps (36%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:33:55 2023]
+rule plot_tree:
+    input: refined-trees/VEB.nwk
+    output: plots/VEB.pdf
+    jobid: 46
+    reason: Missing output files: plots/VEB.pdf; Input files updated by another job: refined-trees/VEB.nwk
+    wildcards: gene=VEB
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:33:57 2023]
+Finished job 46.
+18 of 47 steps (38%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:33:57 2023]
+rule run_fasttree:
+    input: alns/CMY.aln
+    output: trees/CMY.nwk
+    jobid: 3
+    reason: Missing output files: trees/CMY.nwk; Input files updated by another job: alns/CMY.aln
+    wildcards: gene=CMY
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:33:58 2023]
+Finished job 38.
+19 of 47 steps (40%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:33:58 2023]
+rule refine_tree:
+    input: trees/SHV.nwk, alns/SHV.aln
+    output: refined-trees/SHV.nwk
+    jobid: 37
+    reason: Missing output files: refined-trees/SHV.nwk; Input files updated by another job: alns/SHV.aln, trees/SHV.nwk
+    wildcards: gene=SHV
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:00 2023]
+Finished job 37.
+20 of 47 steps (43%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:00 2023]
+rule plot_tree:
+    input: refined-trees/SHV.nwk
+    output: plots/SHV.pdf
+    jobid: 36
+    reason: Missing output files: plots/SHV.pdf; Input files updated by another job: refined-trees/SHV.nwk
+    wildcards: gene=SHV
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:02 2023]
+Finished job 36.
+21 of 47 steps (45%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:02 2023]
+rule run_fasttree:
+    input: alns/IMP.aln
+    output: trees/IMP.nwk
+    jobid: 18
+    reason: Missing output files: trees/IMP.nwk; Input files updated by another job: alns/IMP.aln
+    wildcards: gene=IMP
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:04 2023]
+Finished job 3.
+22 of 47 steps (47%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:04 2023]
+rule refine_tree:
+    input: trees/CMY.nwk, alns/CMY.aln
+    output: refined-trees/CMY.nwk
+    jobid: 2
+    reason: Missing output files: refined-trees/CMY.nwk; Input files updated by another job: trees/CMY.nwk, alns/CMY.aln
+    wildcards: gene=CMY
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:04 2023]
+Finished job 18.
+23 of 47 steps (49%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:04 2023]
+rule refine_tree:
+    input: trees/IMP.nwk, alns/IMP.aln
+    output: refined-trees/IMP.nwk
+    jobid: 17
+    reason: Missing output files: refined-trees/IMP.nwk; Input files updated by another job: alns/IMP.aln, trees/IMP.nwk
+    wildcards: gene=IMP
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:06 2023]
+Finished job 17.
+24 of 47 steps (51%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:06 2023]
+rule plot_tree:
+    input: refined-trees/IMP.nwk
+    output: plots/IMP.pdf
+    jobid: 16
+    reason: Missing output files: plots/IMP.pdf; Input files updated by another job: refined-trees/IMP.nwk
+    wildcards: gene=IMP
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:07 2023]
+Finished job 2.
+25 of 47 steps (53%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:07 2023]
+rule plot_tree:
+    input: refined-trees/CMY.nwk
+    output: plots/CMY.pdf
+    jobid: 1
+    reason: Missing output files: plots/CMY.pdf; Input files updated by another job: refined-trees/CMY.nwk
+    wildcards: gene=CMY
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:08 2023]
+Finished job 16.
+26 of 47 steps (55%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:08 2023]
+rule run_fasttree:
+    input: alns/PER.aln
+    output: trees/PER.nwk
+    jobid: 33
+    reason: Missing output files: trees/PER.nwk; Input files updated by another job: alns/PER.aln
+    wildcards: gene=PER
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:08 2023]
+Finished job 33.
+27 of 47 steps (57%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:08 2023]
+rule refine_tree:
+    input: trees/PER.nwk, alns/PER.aln
+    output: refined-trees/PER.nwk
+    jobid: 32
+    reason: Missing output files: refined-trees/PER.nwk; Input files updated by another job: trees/PER.nwk, alns/PER.aln
+    wildcards: gene=PER
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:08 2023]
+Finished job 1.
+28 of 47 steps (60%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:08 2023]
+rule align_gene:
+    input: fasta/TEM.fa
+    output: alns/TEM.aln
+    jobid: 44
+    reason: Missing output files: alns/TEM.aln
+    wildcards: gene=TEM
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:09 2023]
+Finished job 32.
+29 of 47 steps (62%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:09 2023]
+rule plot_tree:
+    input: refined-trees/PER.nwk
+    output: plots/PER.pdf
+    jobid: 31
+    reason: Missing output files: plots/PER.pdf; Input files updated by another job: refined-trees/PER.nwk
+    wildcards: gene=PER
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:11 2023]
+Finished job 31.
+30 of 47 steps (64%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:11 2023]
+rule align_gene:
+    input: fasta/GES.fa
+    output: alns/GES.aln
+    jobid: 14
+    reason: Missing output files: alns/GES.aln
+    wildcards: gene=GES
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:15 2023]
+Finished job 44.
+31 of 47 steps (66%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:15 2023]
+rule run_fasttree:
+    input: alns/TEM.aln
+    output: trees/TEM.nwk
+    jobid: 43
+    reason: Missing output files: trees/TEM.nwk; Input files updated by another job: alns/TEM.aln
+    wildcards: gene=TEM
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:20 2023]
+Finished job 43.
+32 of 47 steps (68%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:20 2023]
+rule refine_tree:
+    input: trees/TEM.nwk, alns/TEM.aln
+    output: refined-trees/TEM.nwk
+    jobid: 42
+    reason: Missing output files: refined-trees/TEM.nwk; Input files updated by another job: trees/TEM.nwk, alns/TEM.aln
+    wildcards: gene=TEM
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:23 2023]
+Finished job 42.
+33 of 47 steps (70%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:23 2023]
+rule plot_tree:
+    input: refined-trees/TEM.nwk
+    output: plots/TEM.pdf
+    jobid: 41
+    reason: Missing output files: plots/TEM.pdf; Input files updated by another job: refined-trees/TEM.nwk
+    wildcards: gene=TEM
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:24 2023]
+Finished job 14.
+34 of 47 steps (72%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:24 2023]
+rule run_fasttree:
+    input: alns/GES.aln
+    output: trees/GES.nwk
+    jobid: 13
+    reason: Missing output files: trees/GES.nwk; Input files updated by another job: alns/GES.aln
+    wildcards: gene=GES
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:24 2023]
+Finished job 41.
+35 of 47 steps (74%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:24 2023]
+rule refine_tree:
+    input: trees/NDM.nwk, alns/NDM.aln
+    output: refined-trees/NDM.nwk
+    jobid: 27
+    reason: Missing output files: refined-trees/NDM.nwk; Input files updated by another job: alns/NDM.aln, trees/NDM.nwk
+    wildcards: gene=NDM
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:25 2023]
+Finished job 27.
+36 of 47 steps (77%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:25 2023]
+rule plot_tree:
+    input: refined-trees/NDM.nwk
+    output: plots/NDM.pdf
+    jobid: 26
+    reason: Missing output files: plots/NDM.pdf; Input files updated by another job: refined-trees/NDM.nwk
+    wildcards: gene=NDM
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:26 2023]
+Finished job 13.
+37 of 47 steps (79%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:26 2023]
+rule refine_tree:
+    input: trees/GES.nwk, alns/GES.aln
+    output: refined-trees/GES.nwk
+    jobid: 12
+    reason: Missing output files: refined-trees/GES.nwk; Input files updated by another job: alns/GES.aln, trees/GES.nwk
+    wildcards: gene=GES
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:27 2023]
+Finished job 26.
+38 of 47 steps (81%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:27 2023]
+rule run_fasttree:
+    input: alns/CTX-M.aln
+    output: trees/CTX-M.nwk
+    jobid: 8
+    reason: Forced execution
+    wildcards: gene=CTX-M
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:27 2023]
+Finished job 12.
+39 of 47 steps (83%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:27 2023]
+rule run_fasttree:
+    input: alns/VIM.aln
+    output: trees/VIM.nwk
+    jobid: 53
+    reason: Input files updated by another job: alns/VIM.aln
+    wildcards: gene=VIM
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:29 2023]
+Finished job 53.
+40 of 47 steps (85%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:29 2023]
+rule refine_tree:
+    input: trees/VIM.nwk, alns/VIM.aln
+    output: refined-trees/VIM.nwk
+    jobid: 52
+    reason: Missing output files: refined-trees/VIM.nwk; Input files updated by another job: trees/VIM.nwk, alns/VIM.aln
+    wildcards: gene=VIM
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:31 2023]
+Finished job 52.
+41 of 47 steps (87%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:31 2023]
+rule plot_tree:
+    input: refined-trees/GES.nwk
+    output: plots/GES.pdf
+    jobid: 11
+    reason: Missing output files: plots/GES.pdf; Input files updated by another job: refined-trees/GES.nwk
+    wildcards: gene=GES
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:32 2023]
+Finished job 11.
+42 of 47 steps (89%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:32 2023]
+rule plot_tree:
+    input: refined-trees/VIM.nwk
+    output: plots/VIM.pdf
+    jobid: 51
+    reason: Missing output files: plots/VIM.pdf; Input files updated by another job: refined-trees/VIM.nwk
+    wildcards: gene=VIM
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:34 2023]
+Finished job 51.
+43 of 47 steps (91%) done
+[Wed Feb 22 12:34:35 2023]
+Finished job 8.
+44 of 47 steps (94%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:35 2023]
+rule refine_tree:
+    input: trees/CTX-M.nwk, alns/CTX-M.aln
+    output: refined-trees/CTX-M.nwk
+    jobid: 7
+    reason: Missing output files: refined-trees/CTX-M.nwk; Input files updated by another job: alns/CTX-M.aln, trees/CTX-M.nwk
+    wildcards: gene=CTX-M
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:40 2023]
+Finished job 7.
+45 of 47 steps (96%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:40 2023]
+rule plot_tree:
+    input: refined-trees/CTX-M.nwk
+    output: plots/CTX-M.pdf
+    jobid: 6
+    reason: Missing output files: plots/CTX-M.pdf; Input files updated by another job: refined-trees/CTX-M.nwk
+    wildcards: gene=CTX-M
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:42 2023]
+Finished job 6.
+46 of 47 steps (98%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:42 2023]
+localrule all:
+    input: plots/CMY.pdf, plots/CTX-M.pdf, plots/GES.pdf, plots/IMP.pdf, plots/KPC.pdf, plots/NDM.pdf, plots/PER.pdf, plots/SHV.pdf, plots/TEM.pdf, plots/VEB.pdf, plots/VIM.pdf
+    jobid: 0
+    reason: Input files updated by another job: plots/VEB.pdf, plots/TEM.pdf, plots/VIM.pdf, plots/PER.pdf, plots/IMP.pdf, plots/NDM.pdf, plots/KPC.pdf, plots/CMY.pdf, plots/SHV.pdf, plots/CTX-M.pdf, plots/GES.pdf
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:42 2023]
+Finished job 0.
+47 of 47 steps (100%) done
+Complete log: .snakemake/log/2023-02-22T123256.161574.snakemake.log

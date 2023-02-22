@@ -1,0 +1,177 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Job stats:
+job          count    min threads    max threads
+---------  -------  -------------  -------------
+all              1              1              1
+snp_dists       11              1              1
+total           12              1              1
+
+Select jobs to execute...
+
+[Wed Feb 22 12:34:54 2023]
+rule snp_dists:
+    input: alns/CTX-M.aln
+    output: dists/CTX-M.tsv
+    jobid: 57
+    reason: Missing output files: dists/CTX-M.tsv
+    wildcards: gene=CTX-M
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+
+[Wed Feb 22 12:34:54 2023]
+rule snp_dists:
+    input: alns/IMP.aln
+    output: dists/IMP.tsv
+    jobid: 59
+    reason: Missing output files: dists/IMP.tsv
+    wildcards: gene=IMP
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:54 2023]
+Finished job 59.
+1 of 12 steps (8%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:54 2023]
+rule snp_dists:
+    input: alns/VIM.aln
+    output: dists/VIM.tsv
+    jobid: 66
+    reason: Missing output files: dists/VIM.tsv
+    wildcards: gene=VIM
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:54 2023]
+Finished job 57.
+2 of 12 steps (17%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:54 2023]
+rule snp_dists:
+    input: alns/TEM.aln
+    output: dists/TEM.tsv
+    jobid: 64
+    reason: Missing output files: dists/TEM.tsv
+    wildcards: gene=TEM
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:54 2023]
+Finished job 66.
+3 of 12 steps (25%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:54 2023]
+rule snp_dists:
+    input: alns/PER.aln
+    output: dists/PER.tsv
+    jobid: 62
+    reason: Missing output files: dists/PER.tsv
+    wildcards: gene=PER
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:54 2023]
+Finished job 62.
+4 of 12 steps (33%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:54 2023]
+rule snp_dists:
+    input: alns/KPC.aln
+    output: dists/KPC.tsv
+    jobid: 60
+    reason: Missing output files: dists/KPC.tsv
+    wildcards: gene=KPC
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:54 2023]
+Finished job 64.
+5 of 12 steps (42%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:54 2023]
+rule snp_dists:
+    input: alns/GES.aln
+    output: dists/GES.tsv
+    jobid: 58
+    reason: Missing output files: dists/GES.tsv
+    wildcards: gene=GES
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:54 2023]
+Finished job 60.
+6 of 12 steps (50%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:54 2023]
+rule snp_dists:
+    input: alns/VEB.aln
+    output: dists/VEB.tsv
+    jobid: 65
+    reason: Missing output files: dists/VEB.tsv
+    wildcards: gene=VEB
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:54 2023]
+Finished job 58.
+7 of 12 steps (58%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:54 2023]
+rule snp_dists:
+    input: alns/CMY.aln
+    output: dists/CMY.tsv
+    jobid: 56
+    reason: Updated input files: alns/CMY.aln
+    wildcards: gene=CMY
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:54 2023]
+Finished job 65.
+8 of 12 steps (67%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:54 2023]
+rule snp_dists:
+    input: alns/NDM.aln
+    output: dists/NDM.tsv
+    jobid: 61
+    reason: Missing output files: dists/NDM.tsv
+    wildcards: gene=NDM
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:55 2023]
+Finished job 61.
+9 of 12 steps (75%) done
+[Wed Feb 22 12:34:55 2023]
+Finished job 56.
+10 of 12 steps (83%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:55 2023]
+rule snp_dists:
+    input: alns/SHV.aln
+    output: dists/SHV.tsv
+    jobid: 63
+    reason: Missing output files: dists/SHV.tsv
+    wildcards: gene=SHV
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:55 2023]
+Finished job 63.
+11 of 12 steps (92%) done
+Select jobs to execute...
+
+[Wed Feb 22 12:34:55 2023]
+localrule all:
+    input: plots/CMY.pdf, plots/CTX-M.pdf, plots/GES.pdf, plots/IMP.pdf, plots/KPC.pdf, plots/NDM.pdf, plots/PER.pdf, plots/SHV.pdf, plots/TEM.pdf, plots/VEB.pdf, plots/VIM.pdf, dists/CMY.tsv, dists/CTX-M.tsv, dists/GES.tsv, dists/IMP.tsv, dists/KPC.tsv, dists/NDM.tsv, dists/PER.tsv, dists/SHV.tsv, dists/TEM.tsv, dists/VEB.tsv, dists/VIM.tsv
+    jobid: 0
+    reason: Input files updated by another job: dists/PER.tsv, dists/VIM.tsv, dists/GES.tsv, dists/KPC.tsv, dists/IMP.tsv, dists/VEB.tsv, dists/CTX-M.tsv, dists/CMY.tsv, dists/NDM.tsv, dists/SHV.tsv, dists/TEM.tsv
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:34:55 2023]
+Finished job 0.
+12 of 12 steps (100%) done
+Complete log: .snakemake/log/2023-02-22T123453.682863.snakemake.log

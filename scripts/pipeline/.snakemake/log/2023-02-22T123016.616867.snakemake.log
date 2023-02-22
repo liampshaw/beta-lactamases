@@ -1,0 +1,25 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Job stats:
+job          count    min threads    max threads
+---------  -------  -------------  -------------
+snp_dists        1              1              1
+total            1              1              1
+
+Select jobs to execute...
+
+[Wed Feb 22 12:30:17 2023]
+rule snp_dists:
+    input: alns/CMY.aln
+    output: dists/CMY.tsv
+    jobid: 0
+    reason: Missing output files: dists/CMY.tsv
+    wildcards: gene=CMY
+    resources: tmpdir=/var/folders/0l/xw463hyd355gswf5590vdd6c0000gr/T
+
+[Wed Feb 22 12:30:17 2023]
+Finished job 0.
+1 of 1 steps (100%) done
+Complete log: .snakemake/log/2023-02-22T123016.616867.snakemake.log

@@ -1,0 +1,3 @@
+NameError in file /Users/Liam/Dropbox/_Projects/pangraph/beta-lactamases/scripts/gene-phylogenies/Snakefile, line 13:
+name 'sample' is not defined
+  File "/Users/Liam/Dropbox/_Projects/pangraph/beta-lactamases/scripts/gene-phylogenies/Snakefile", line 13, in <module>
