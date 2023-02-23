@@ -53,8 +53,8 @@ def main():
 		else:
 			seq_counts_dict[seq_nt] = 1
 
-	print(seq_names_dict)
-	print(seq_counts_dict)
+	#print(seq_names_dict)
+	#print(seq_counts_dict)
 
 	with open(args.output_file, "w") as f:
 		for seqid, name in seq_names_dict.items():

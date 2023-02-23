@@ -16,7 +16,7 @@ GENES = ["CMY",\
 
 
 for gene in GENES:
-	with open("data/"+gene+".txt", 'w') as f:
+	with open("analysis/"+gene+"_accessions.txt", 'w') as f:
 		hits = metadata.loc[[(str(gene) in x) for x in list(metadata["Gene.hits"])]].index
 		for h in hits:
 			f.write("%s\n" % h)
