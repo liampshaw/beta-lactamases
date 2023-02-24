@@ -1,16 +1,20 @@
 from Bio import SeqIO
 import sys
-seqs = SeqIO.to_dict(SeqIO.parse(snakemake.input[0], "fasta"))
-db = snakemake.params.db
-gene = snakemake.params.gene_name
+import re
+seqs = SeqIO.to_dict(SeqIO.parse(sys.argv[1], "fasta"))
+gene = sys.argv[2]
+db = sys.argv[3]
 print(gene)
-with open(snakemake.output[0], 'w') as f:
+
+genes_seen = []
+with open(sys.argv[4], 'w') as f:
 	for seqid in seqs:
-		if gene in seqs[seqid].description:
-			if db=="CARD":
-				gene_id = seqs[seqid].description.split("|")[-1].split(" ")[0]
-			elif db=="NCBI":
-				gene_id = seqs[seqid].description.split(",")[0].split(" ")[-1]
-			if gene in gene_id:
+		if db=="CARD":
+			gene_id = seqid.split("|")[-1]
+		elif db=="NCBI":
+			gene_id = re.sub("bla", "", seqid.split("|")[5])
+		if gene+"-" in gene_id:  # addition is for the numbering, to avoid e.g. CMY2 being a match for "CMY" search string 
+			if gene_id not in genes_seen: # Need to check for duplicates - if we have already found a sequence, we don't add another (because of duplicate names)
+				genes_seen.append(gene_id)
 				f.write(">"+gene_id+"\n")
 				f.write(str(seqs[seqid].seq)+"\n")

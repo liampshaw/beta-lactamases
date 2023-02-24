@@ -17,19 +17,34 @@ rule all:
 	input:
 		expand("DB/plots/{db}-variants/{gene}.pdf", gene=GENES, db=DB),
 		expand("DB/dists/{gene}_{db}.tsv", gene=GENES, db=DB),
-		expand("analysis/sequence_assignments/{focal_gene}_{db}.csv", focal_gene=FOCAL_GENES, db=DB)	
+		expand("analysis/sequence_assignments/{focal_gene}_{db}.csv", focal_gene=FOCAL_GENES, db=DB),
+		expand("data/{db}_db.fa", db=DB)	
 
+rule download_NCBI_DB:
+	output:
+		"data/NCBI_db.fa"
+	shell:
+		"wget https://ftp.ncbi.nlm.nih.gov/pathogen/Antimicrobial_resistance/AMRFinderPlus/database/3.11/2022-12-19.1/AMR_CDS -O {output}"
+
+rule download_CARD_DB:
+	output:
+		"data/CARD_db.fa"
+	run:
+		shell("wget https://card.mcmaster.ca/download/0/broadstreet-v3.2.6.tar.bz2")
+		shell("tar -xvf broadstreet-v3.2.6.tar.bz2 nucleotide_fasta_protein_homolog_model.fasta")
+		shell("rm broadstreet-v3.2.6.tar.bz2")
+		shell("mv nucleotide_fasta_protein_homolog_model.fasta {output}")
 
 rule extract_genes_DB:
 	input:
-		"data/{db}_db.fa"
+		fasta="data/{db}_db.fa"
 	params:
 		gene_name="{gene}",
 		db="{db}"
 	output:
 		"DB/fasta/{gene}_{db}.fa"
-	script:
-		"scripts/extract_gene_DB.py"
+	shell:
+		"python scripts/extract_gene_DB.py {input.fasta} {params.gene_name} {params.db} {output}"
 
 rule align_genes_DB:
 	input:
