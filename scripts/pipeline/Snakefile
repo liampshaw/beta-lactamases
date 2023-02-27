@@ -84,8 +84,8 @@ rule plot_tree_DB:
 		"DB/refined-trees/{gene}_{db}.nwk"
 	output:
 		"DB/plots/{db}-variants/{gene}.pdf"
-	script:
-		"scripts/plot_tree.R"
+	shell:
+		"Rscript scripts/plot_tree.R {input} {output}"
 
 rule run_metadata:
 	input:
