@@ -11,7 +11,7 @@ GENES = ["CMY",\
 			"VIM"]
 DB = ["NCBI", "CARD"]
 
-FOCAL_GENES = ["CMY-2", "GES-24"]#,"CTX-M-15","CTX-M-65","GES-24","IMP-1","KPC-2","NDM-1","PER-1","SHV-134","TEM-1","VIM-1"]
+FOCAL_GENES = ["CMY-2"]#,"GES-24","CTX-M-15","CTX-M-65","GES-24","IMP-1","KPC-2","NDM-1","PER-1","SHV-134","TEM-1","VIM-1"]
 
 rule all:
 	input:
