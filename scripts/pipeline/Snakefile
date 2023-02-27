@@ -31,7 +31,7 @@ rule download_CARD_DB:
 		"data/CARD_db.fa"
 	run:
 		shell("wget https://card.mcmaster.ca/download/0/broadstreet-v3.2.6.tar.bz2")
-		shell("tar -xvf broadstreet-v3.2.6.tar.bz2 nucleotide_fasta_protein_homolog_model.fasta")
+		shell("tar -xvf broadstreet-v3.2.6.tar.bz2 ./nucleotide_fasta_protein_homolog_model.fasta")
 		shell("rm broadstreet-v3.2.6.tar.bz2")
 		shell("mv nucleotide_fasta_protein_homolog_model.fasta {output}")
 
@@ -127,7 +127,6 @@ rule name_observed_genes:
 		"analysis/sequence_assignments/{focal_gene}_{db}.csv"
 	shell:
 		"python scripts/name_variants.py --variant_fasta {input.variants} --output_file {output} --input_fasta {input.fasta}"
-
 
 
 
