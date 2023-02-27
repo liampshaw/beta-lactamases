@@ -13,11 +13,12 @@ This means installing pangraph following the instructions on the `pangraph` wiki
 To create a conda environment with the necessary packages for other scripts excluding the pangraph analysis, run:
 
 ```
-conda create -n betalactamases
-conda activate betalactamases 
-conda install scipy pandas snp-dists numpy seaborn biopython ncbi-acc-download ncbi-genome-download fasttree seqkit untangle entrez-direct
+conda env create -f betalactamases.yml 
+#conda create -n betalactamases
+#conda activate betalactamases 
+#conda install scipy pandas snp-dists numpy seaborn biopython ncbi-acc-download ncbi-genome-download fasttree seqkit untangle entrez-direct
 # Optional to use mmseqs version of pipeline:
-conda install -c conda-forge -c bioconda mmseqs2 
+#conda install -c conda-forge -c bioconda mmseqs2 
 ```
 
 To run scripts in `scripts` directory will also require downloading prevalence data files from the helpful Comprehensive Antimicrobial Resistance Database [CARD](https://card.mcmaster.ca) and extracting in the `data` directory. Only three CARD files are needed: see `README.md` in `data` directory for more information.  
