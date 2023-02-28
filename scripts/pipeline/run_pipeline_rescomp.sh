@@ -5,7 +5,7 @@ echo "aat start of script"
 which python
 
 
-
+echo "Running on:"
 echo $MODULE_CPU_TYPE
 echo "at "`date`
 
@@ -26,7 +26,7 @@ which python
 conda activate betalactamases
 echo "after conda activate betalactamases"
 which python
-echo "Running on:"
+
 
 #module load R/4.2.0-foss-2021b 
 #export PYTHONPATH=/well/shaw/users/amu125/miniconda/$MODULE_CPU_TYPE/envs/betalactamases/bin/:${PYTHONPATH}
@@ -38,6 +38,9 @@ echo "Running on:"
 echo $PYTHONPATH
 echo $PATH
 which python
+
+export PATH=/well/shaw/users/amu125/miniconda/$MODULE_CPU_TYPE/envs/betalactamases/bin/:${PATH}
+#export PYTHONPATH=/well/shaw/users/amu125/miniconda/skylake/envs/betalactamases/bin/:$PATH  
 
 # 
 #export PATH=/well/shaw/users/amu125/programs/ncbi-blast-2.13.0+/bin:$PATH
