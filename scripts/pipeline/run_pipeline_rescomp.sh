@@ -39,8 +39,10 @@ echo $PYTHONPATH
 echo $PATH
 which python
 
+# Crucial: add the correct python path
 export PATH=/well/shaw/users/amu125/miniconda/$MODULE_CPU_TYPE/envs/betalactamases/bin/:${PATH}
 which python
+# Crucial: add the location of the 'betalacatamases' site packages to the PYTHONPATH
 export PYTHONPATH=/well/shaw/users/amu125/miniconda/$MODULE_CPU_TYPE/envs/betalactamases/lib/python3.11/site-packages/:$PATH  
 
 # 
