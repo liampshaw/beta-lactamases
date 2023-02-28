@@ -52,7 +52,7 @@ rule align_genes_DB:
 	output:
 		"DB/alns/{gene}_{db}.aln"
 	shell:
-		"mafft --auto {input} > {output}"
+		"mafft --quiet --auto {input} > {output}"
 
 rule snp_dists_DB:
 	input:
