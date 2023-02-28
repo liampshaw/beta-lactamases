@@ -13,12 +13,15 @@ DB = ["NCBI", "CARD"]
 
 FOCAL_GENES = ["CMY-2"]#,"GES-24","CTX-M-15","CTX-M-65","GES-24","IMP-1","KPC-2","NDM-1","PER-1","SHV-134","TEM-1","VIM-1"]
 
+FOCAL_GENE_DICT = {"CMY-2": "CMY"}
+
 rule all:
 	input:
 		expand("DB/plots/{db}-variants/{gene}.pdf", gene=GENES, db=DB),
 		expand("DB/dists/{gene}_{db}.tsv", gene=GENES, db=DB),
 		expand("analysis/sequence_assignments/{focal_gene}_{db}.csv", focal_gene=FOCAL_GENES, db=DB),
 		expand("data/{db}_db.fa", db=DB)	
+		#expand("DB/variant_fasta/{focal_gene}_{db}.fa", focal_gene=FOCAL_GENES, db=DB)
 
 rule download_NCBI_DB:
 	output:
@@ -42,38 +45,38 @@ rule extract_genes_DB:
 		gene_name="{gene}",
 		db="{db}"
 	output:
-		"DB/fasta/{gene}_{db}.fa"
+		"DB/gene_fasta/{gene}_{db}.fa"
 	shell:
 		"python scripts/extract_gene_DB.py {input.fasta} {params.gene_name} {params.db} {output}"
 
 rule align_genes_DB:
 	input:
-		"DB/fasta/{gene}_{db}.fa"
+		"DB/gene_fasta/{gene}_{db}.fa"
 	output:
-		"DB/alns/{gene}_{db}.aln"
+		"DB/gene_alns/{gene}_{db}.aln"
 	shell:
 		"mafft --quiet --auto {input} > {output}"
 
 rule snp_dists_DB:
 	input:
-		"DB/alns/{gene}_{db}.aln"
+		"DB/gene_alns/{gene}_{db}.aln"
 	output:
-		"DB/dists/{gene}_{db}.tsv"
+		"DB/gene_dists/{gene}_{db}.tsv"
 	shell:
 		"snp-dists -a -b {input} > {output}"
 
 rule run_fasttree_DB:
 	input:
-		"DB/alns/{gene}_{db}.aln"
+		"DB/gene_alns/{gene}_{db}.aln"
 	output:
-		"DB/trees/{gene}_{db}.nwk"
+		"DB/gene_trees/{gene}_{db}.nwk"
 	shell:
 		"FastTree -quiet -nt -gtr {input} > {output}"
 
 rule refine_fasttree_DB:
 	input:
-		tree= "DB/trees/{gene}_{db}.nwk",
-		aln= "DB/alns/{gene}_{db}.aln"
+		tree= "DB/gene_trees/{gene}_{db}.nwk",
+		aln= "DB/gene_alns/{gene}_{db}.aln"
 	output:
 		"DB/refined-trees/{gene}_{db}.nwk"
 	shell:
@@ -81,9 +84,9 @@ rule refine_fasttree_DB:
 
 rule plot_tree_DB:
 	input:
-		"DB/refined-trees/{gene}_{db}.nwk"
+		"DB/genes_refined-trees/{gene}_{db}.nwk"
 	output:
-		"DB/plots/{db}-variants/{gene}.pdf"
+		"DB/genes_plots/{db}-variants/{gene}.pdf"
 	shell:
 		"Rscript scripts/plot_tree.R {input} {output}"
 
@@ -119,10 +122,18 @@ rule extract_genes_from_contigs:
 #Would be good to compute the actual SNP distances to the focal gene, so that can be used for 
 #selecting those for further analysis
 
+rule copy_variant_fasta: # highly inelegant - copies files so is wasteful
+    input:
+        lambda wildcards: f"DB/gene_fasta/{FOCAL_GENE_DICT[wildcards.focal_gene]}"+"_{db}.fa"
+    output:
+        "DB/variant_fasta/{focal_gene}_{db}.fa"
+    shell:
+        "cp {input} {output}"
+
 rule name_observed_genes:
 	input:
 		fasta="analysis/sequence/{focal_gene}.fa",
-		variants="DB/fasta/{focal_gene}_{db}.fa"
+		variants="DB/variant_fasta/{focal_gene}_{db}.fa"
 	output:
 		"analysis/sequence_assignments/{focal_gene}_{db}.csv"
 	shell:
