@@ -36,16 +36,16 @@ fi
 
 
 # 
-export PATH=/well/shaw/users/amu125/programs/ncbi-blast-2.13.0+/bin:$PATH
-echo "after add blast to path"
-which python
+#export PATH=/well/shaw/users/amu125/programs/ncbi-blast-2.13.0+/bin:$PATH
+#echo "after add blast to path"
+#which python
 
 # Julia path
-export PATH=$HOME/bin:/usr/local/bin:/well/shaw/users/amu125/programs/julia-1.7.2/bin:/well/shaw/users/amu125/programs/pangraph/bin:$PATH
-export JULIA_DEPOT_PATH="/well/shaw/users/amu125/programs/julia-1.7.2/depot:$JULIA_DEPOT_PATH"
+#export PATH=$HOME/bin:/usr/local/bin:/well/shaw/users/amu125/programs/julia-1.7.2/bin:/well/shaw/users/amu125/programs/pangraph/bin:$PATH
+#export JULIA_DEPOT_PATH="/well/shaw/users/amu125/programs/julia-1.7.2/depot:$JULIA_DEPOT_PATH"
 
-echo "after julia paths"
-which python
+#echo "after julia paths"
+#which python
 
 #snakemake -R --until download_CARD_DB --cores 1 --rerun-incomplete
 #snakemake -R --until download_CARD_DB --cores 1 --rerun-incomplete
