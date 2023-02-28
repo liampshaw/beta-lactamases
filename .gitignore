@@ -20,3 +20,4 @@ test/
 .DS_Store
 scripts/pipeline/.snakemake/*
 scripts/pipeline/data/*fa
+**/slurm*.out
