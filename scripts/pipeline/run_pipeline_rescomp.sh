@@ -33,7 +33,9 @@ fi
 #module load Anaconda3/2020.11
 #eval "$(conda shell.bash hook)"
 
-
+echo $PYTHONPATH
+echo $PATH
+which python
 
 # 
 #export PATH=/well/shaw/users/amu125/programs/ncbi-blast-2.13.0+/bin:$PATH
