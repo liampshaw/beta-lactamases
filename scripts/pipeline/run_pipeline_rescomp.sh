@@ -23,6 +23,8 @@ fi
 #which python
 #module load Anaconda3/2020.11
 #eval "$(conda shell.bash hook)"
+which python
+
 
 # 
 export PATH=/well/shaw/users/amu125/programs/ncbi-blast-2.13.0+/bin:$PATH
