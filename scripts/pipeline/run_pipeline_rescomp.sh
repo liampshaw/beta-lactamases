@@ -40,6 +40,7 @@ echo $PATH
 which python
 
 export PATH=/well/shaw/users/amu125/miniconda/$MODULE_CPU_TYPE/envs/betalactamases/bin/:${PATH}
+which python
 #export PYTHONPATH=/well/shaw/users/amu125/miniconda/skylake/envs/betalactamases/bin/:$PATH  
 
 # 
