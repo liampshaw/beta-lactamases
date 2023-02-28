@@ -10,19 +10,19 @@ echo $MODULE_CPU_TYPE
 echo "at "`date`
 
 if [ $MODULE_CPU_TYPE == "skylake" ]; then
-	module load R/4.2.0-foss-2021b
+        module load R/4.2.0-foss-2021b
 fi
 
 if [ $MODULE_CPU_TYPE == "ivybridge" ]; then
-	module load R/4.2.1-foss-2022a
+        module load R/4.2.1-foss-2022a
 fi
 
-module load R/4.2.0-foss-2021b 
+#module load R/4.2.0-foss-2021b 
 #export PYTHONPATH=/well/shaw/users/amu125/miniconda/$MODULE_CPU_TYPE/envs/betalactamases/bin/:${PYTHONPATH}
 #export PATH=/well/shaw/users/amu125/miniconda/$MODULE_CPU_TYPE/envs/betalactamases/bin/:${PATH}
-which python
+#which python
 #module load Anaconda3/2020.11
-eval "$(conda shell.bash hook)"
+#eval "$(conda shell.bash hook)"
 
 # 
 export PATH=/well/shaw/users/amu125/programs/ncbi-blast-2.13.0+/bin:$PATH
