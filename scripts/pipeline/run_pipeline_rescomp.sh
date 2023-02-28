@@ -4,16 +4,7 @@
 echo "aat start of script"
 which python
 
-module load Anaconda3/2020.11
-eval "$(conda shell.bash hook)"
-conda deactivate
-echo "after conda deactivate"
-which python
 
-conda activate betalactamases
-echo "after conda activate betalactamases"
-which python
-echo "Running on:"
 
 echo $MODULE_CPU_TYPE
 echo "at "`date`
@@ -25,6 +16,17 @@ fi
 if [ $MODULE_CPU_TYPE == "ivybridge" ]; then
         module load R/4.2.1-foss-2022a
 fi
+
+module load Anaconda3/2020.11
+eval "$(conda shell.bash hook)"
+conda deactivate
+echo "after conda deactivate"
+which python
+
+conda activate betalactamases
+echo "after conda activate betalactamases"
+which python
+echo "Running on:"
 
 #module load R/4.2.0-foss-2021b 
 #export PYTHONPATH=/well/shaw/users/amu125/miniconda/$MODULE_CPU_TYPE/envs/betalactamases/bin/:${PYTHONPATH}
