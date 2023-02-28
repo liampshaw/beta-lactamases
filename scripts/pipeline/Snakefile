@@ -68,7 +68,7 @@ rule run_fasttree_DB:
 	output:
 		"DB/trees/{gene}_{db}.nwk"
 	shell:
-		"FastTree -nt -gtr {input} > {output}"
+		"FastTree -quiet -nt -gtr {input} > {output}"
 
 rule refine_fasttree_DB:
 	input:
