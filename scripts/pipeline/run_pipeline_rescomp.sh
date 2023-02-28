@@ -3,6 +3,7 @@
 #module load R/4.2.0-foss-2021b 
 module load Anaconda3/2020.11
 eval "$(conda shell.bash hook)"
+conda deactivate
 conda activate betalactamases
 
 echo "Running on:"
