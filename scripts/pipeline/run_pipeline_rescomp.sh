@@ -41,7 +41,7 @@ which python
 
 export PATH=/well/shaw/users/amu125/miniconda/$MODULE_CPU_TYPE/envs/betalactamases/bin/:${PATH}
 which python
-#export PYTHONPATH=/well/shaw/users/amu125/miniconda/skylake/envs/betalactamases/bin/:$PATH  
+export PYTHONPATH=/well/shaw/users/amu125/miniconda/$MODULE_CPU_TYPE/envs/betalactamases/lib/python3.11/site-packages/:$PATH  
 
 # 
 #export PATH=/well/shaw/users/amu125/programs/ncbi-blast-2.13.0+/bin:$PATH
