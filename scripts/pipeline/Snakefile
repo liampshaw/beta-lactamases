@@ -25,7 +25,12 @@ rule all:
 		expand("DB/dists/{gene}_{db}.tsv", gene=GENES, db=DB),
 		expand("analysis/{gene}_accessions.txt", gene=GENES),
 		expand("analysis/sequence_assignments/{focal_gene}_{db}.csv", focal_gene=FOCAL_GENES, db=DB),
-		expand("data/{db}_db.fa", db=DB)	
+		expand("data/{db}_db.fa", db=DB),	
+		expand("contigs/{gene}_combined_contigs.fa", gene=GENES),
+		expand("analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa", focal_gene=FOCAL_GENES),
+		#expand("contigs/{focal_gene}/{focal_gene}_extracted.fa", focal_gene=FOCAL_GENES)
+		expand("contigs/{focal_gene}/{focal_gene}_pangraph.json", focal_gene=FOCAL_GENES)
+
 		#expand("DB/variant_fasta/{focal_gene}_{db}.fa", focal_gene=FOCAL_GENES, db=DB)
 
 #############################
@@ -109,6 +114,15 @@ rule run_metadata:
 	script:
 		"scripts/metadata_gene_combinations.py"
 
+
+rule copy_variant_fasta: # highly inelegant - copies files so is wasteful. But I don't understand symbolic links in snakemake
+    input:
+        lambda wildcards: f"DB/gene_fasta/{FOCAL_GENE_DICT[wildcards.focal_gene]}"+"_{db}.fa"
+    output:
+        "DB/variant_fasta/{focal_gene}_{db}.fa"
+    shell:
+        "cp {input} {output}"
+
 # rule combine_fasta_files:
 # 	input:
 
@@ -123,29 +137,38 @@ rule run_metadata:
 # 		"python scripts/split_fasta.py --fasta {input} --outdir data/focal_genes/"
 
 
+#############################
+# GETTING CONTIG DATA READY #
+#############################
+rule combine_fastas_containing_gene:
+	input:
+		"analysis/{gene}_accessions.txt"
+	output:
+		"contigs/{gene}_combined_contigs.fa"
+	run:
+		shell("while read f; do cat "f"{FASTA_DIR}""/$f.fa >> {output}; done < {input}")
+
+
+# rule extract_genes_from_contigs:
+# 	input:
+# 		gene_fasta="data/focal_genes/{focal_gene}.fa",
+# 		input_fasta="test_{focal_gene}.fa"
+# 	output:
+# 		"analysis/sequence/{focal_gene}.fa"
+# 	shell:
+# 		"python scripts/extract_region_around_gene.py --gene {input.gene_fasta} --input_fasta {input.input_fasta} --output_fasta {output} --upstream 0 --downstream 0"
 rule extract_genes_from_contigs:
 	input:
 		gene_fasta="data/focal_genes/{focal_gene}.fa",
-		input_fasta="test_{focal_gene}.fa"
+		input_fasta= lambda wildcards:f"contigs/{FOCAL_GENE_DICT[wildcards.focal_gene]}"+"_combined_contigs.fa"
 	output:
-		"analysis/sequence/{focal_gene}.fa"
+		"analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa"
 	shell:
 		"python scripts/extract_region_around_gene.py --gene {input.gene_fasta} --input_fasta {input.input_fasta} --output_fasta {output} --upstream 0 --downstream 0"
 
-#Would be good to compute the actual SNP distances to the focal gene, so that can be used for 
-#selecting those for further analysis
-
-rule copy_variant_fasta: # highly inelegant - copies files so is wasteful
-    input:
-        lambda wildcards: f"DB/gene_fasta/{FOCAL_GENE_DICT[wildcards.focal_gene]}"+"_{db}.fa"
-    output:
-        "DB/variant_fasta/{focal_gene}_{db}.fa"
-    shell:
-        "cp {input} {output}"
-
 rule name_observed_genes:
 	input:
-		fasta="analysis/sequence/{focal_gene}.fa",
+		fasta="analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa",
 		variants="DB/variant_fasta/{focal_gene}_{db}.fa"
 	output:
 		"analysis/sequence_assignments/{focal_gene}_{db}.csv"
@@ -155,24 +178,29 @@ rule name_observed_genes:
 #############################
 # RUNNING PANGRAPH PIPELINE #
 #############################
-# rule combine_fastas_containing_gene:
-# 	input:
-# 		gene={gene}
 
-# rule extract_region_around_gene:
-# 	input:
-# 		gene={gene},
-# 		input={}
+rule extract_region_around_focal_gene:
+	input:
+		input_fasta=lambda wildcards:f"contigs/{FOCAL_GENE_DICT[wildcards.focal_gene]}"+"_combined_contigs.fa"
+	params:
+		focal_gene="data/focal_genes/{focal_gene}.fa",
+		prefix="contigs/{focal_gene}/{focal_gene}_extracted"
+	output:
+		"contigs/{focal_gene}/{focal_gene}_extracted.fa"#,
+		#"contigs/{focal_gene}/{focal_gene}_extracted.focal_gene.fa"
+	shell: # to do: replace with extract_region_around_gene.py (I refactored slightly)
+		"python scripts/extract_region_around_gene.py --gene {params.focal_gene} --input {input.input_fasta} --upstream 5000 --downstream 5000 --complete --output_fasta {params.prefix}.fa"
 
-#     extract_region_command = ['python', 'extractRegion.py',
-#                                         '--gene', args.gene,
-#                                         '--input', args.fasta,
-#                                         '--upstream', str(args.upstream),
-#                                         '--downstream', str(args.downstream),
-#                                         '--complete',
-#                                         '--output', output_prefix]
-#     print(" ".join(extract_region_command))
-#     print("Output:", run_command(extract_region_command))
+
+
+rule build_pangraph:
+	input:
+		"contigs/{focal_gene}/{focal_gene}_extracted.fa"
+	output:
+		"contigs/{focal_gene}/{focal_gene}_pangraph.json"
+	shell:
+		"pangraph build -k minimap2 --len 100 {input} > {output}"
+
 
 
 
