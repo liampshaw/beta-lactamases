@@ -15,13 +15,22 @@ FOCAL_GENES = ["CMY-2"]#,"GES-24","CTX-M-15","CTX-M-65","GES-24","IMP-1","KPC-2"
 
 FOCAL_GENE_DICT = {"CMY-2": "CMY"}
 
+# directory with fasta files containing genes of interest
+FASTA_DIR = "/Users/Liam/Downloads/betalactamase-contigs"
+
+
 rule all:
 	input:
 		expand("DB/plots/{db}-variants/{gene}.pdf", gene=GENES, db=DB),
 		expand("DB/dists/{gene}_{db}.tsv", gene=GENES, db=DB),
+		expand("analysis/{gene}_accessions.txt", gene=GENES),
 		expand("analysis/sequence_assignments/{focal_gene}_{db}.csv", focal_gene=FOCAL_GENES, db=DB),
 		expand("data/{db}_db.fa", db=DB)	
 		#expand("DB/variant_fasta/{focal_gene}_{db}.fa", focal_gene=FOCAL_GENES, db=DB)
+
+#############################
+### SETTING UP DATABASES ####
+#############################
 
 rule download_NCBI_DB:
 	output:
@@ -93,6 +102,10 @@ rule plot_tree_DB:
 rule run_metadata:
 	input:
 		metadata="data/metadata.csv"
+	params:
+		gene="{gene}"
+	output:
+		"analysis/{gene}_accessions.txt"
 	script:
 		"scripts/metadata_gene_combinations.py"
 
@@ -138,6 +151,30 @@ rule name_observed_genes:
 		"analysis/sequence_assignments/{focal_gene}_{db}.csv"
 	shell:
 		"python scripts/name_variants.py --variant_fasta {input.variants} --output_file {output} --input_fasta {input.fasta}"
+
+#############################
+# RUNNING PANGRAPH PIPELINE #
+#############################
+# rule combine_fastas_containing_gene:
+# 	input:
+# 		gene={gene}
+
+# rule extract_region_around_gene:
+# 	input:
+# 		gene={gene},
+# 		input={}
+
+#     extract_region_command = ['python', 'extractRegion.py',
+#                                         '--gene', args.gene,
+#                                         '--input', args.fasta,
+#                                         '--upstream', str(args.upstream),
+#                                         '--downstream', str(args.downstream),
+#                                         '--complete',
+#                                         '--output', output_prefix]
+#     print(" ".join(extract_region_command))
+#     print("Output:", run_command(extract_region_command))
+
+
 
 
 
