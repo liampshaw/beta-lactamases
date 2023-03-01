@@ -11,9 +11,11 @@ GENES = ["CMY",\
 			"VIM"]
 DB = ["NCBI", "CARD"]
 
-FOCAL_GENES = ["CMY-2"]#,"GES-24","CTX-M-15","CTX-M-65","GES-24","IMP-1","KPC-2","NDM-1","PER-1","SHV-134","TEM-1","VIM-1"]
+FOCAL_GENES = ["CMY-2", "GES-24", "CTX-M-15"]#,"GES-24","CTX-M-15","CTX-M-65","GES-24","IMP-1","KPC-2","NDM-1","PER-1","SHV-134","TEM-1","VIM-1"]
 
-FOCAL_GENE_DICT = {"CMY-2": "CMY"}
+FOCAL_GENE_DICT = {"CMY-2": "CMY",
+					"GES-24": "GES",
+					"CTX-M-15": "CTX-M"}
 
 # directory with fasta files containing genes of interest
 FASTA_DIR = "/Users/Liam/Downloads/betalactamase-contigs"
