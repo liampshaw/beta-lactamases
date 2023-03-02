@@ -1,4 +1,5 @@
 fastadir : "/well/shaw/users/amu125/data/CARD/betalactamases/fasta/"
+panx_export : True
 region_upstream : "5000"
 region_downstream : "5000"
 pangraph_polish : True
