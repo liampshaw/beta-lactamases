@@ -1,5 +1,7 @@
 # directory with fasta files containing genes of interest
 fastadir : "/Users/Liam/Downloads/betalactamase-contigs"
-polish : False
-pangraph_minlength : "100"
-
+region_upstream : "1000"
+region_downstream : "1000"
+pangraph_polish : False
+pangraph_aligner : "minimap2"
+pangraph_minblocklength : "500"

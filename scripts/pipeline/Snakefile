@@ -185,22 +185,29 @@ rule extract_region_around_focal_gene:
 		input_fasta=lambda wildcards:f"contigs/{FOCAL_GENE_DICT[wildcards.focal_gene]}"+"_combined_contigs.fa"
 	params:
 		focal_gene="data/focal_genes/{focal_gene}.fa",
-		prefix="contigs/{focal_gene}/{focal_gene}_extracted"
+		prefix="contigs/{focal_gene}/{focal_gene}_extracted",
+		upstream=config["region_upstream"],
+		downstream=config["region_downstream"],
+
 	output:
 		"contigs/{focal_gene}/{focal_gene}_extracted.fa"#,
-		#"contigs/{focal_gene}/{focal_gene}_extracted.focal_gene.fa"
-	shell: # to do: replace with extract_region_around_gene.py (I refactored slightly)
-		"python scripts/extract_region_around_gene.py --gene {params.focal_gene} --input {input.input_fasta} --upstream 5000 --downstream 5000 --complete --output_fasta {params.prefix}.fa"
+	shell: 
+		"python scripts/extract_region_around_gene.py --gene {params.focal_gene} --input {input.input_fasta} \
+		--upstream {params.upstream} --downstream {params.upstream} --complete --output_fasta {params.prefix}.fa"
 
 
 
 rule build_pangraph:
 	input:
 		"contigs/{focal_gene}/{focal_gene}_extracted.fa"
+	params:
+		aligner=config["pangraph_aligner"],
+		minlength=config["pangraph_minblocklength"]
 	output:
 		"contigs/{focal_gene}/{focal_gene}_pangraph.json"
 	shell:
-		"pangraph build -k minimap2 --len 100 {input} > {output}" if config["polish"]==False else "pangraph build -k minimap2 --len 100 {input} | pangraph polish > {output}"
+		"pangraph build -k {params.aligner} --len {params.minlength} {input} > {output}" if config["pangraph_polish"]==False 
+		else "pangraph build -k {params.aligner} --len {params.minlength} {input} | pangraph polish > {output}"
 
 
 rule export_pangraph:
