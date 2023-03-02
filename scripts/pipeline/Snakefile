@@ -17,8 +17,7 @@ FOCAL_GENE_DICT = {"CMY-2": "CMY",
 					"GES-24": "GES",
 					"CTX-M-15": "CTX-M"}
 
-# directory with fasta files containing genes of interest
-FASTA_DIR = "/Users/Liam/Downloads/betalactamase-contigs"
+print(config['fastadir'])
 
 
 rule all:
@@ -148,7 +147,7 @@ rule combine_fastas_containing_gene:
 	output:
 		"contigs/{gene}_combined_contigs.fa"
 	run:
-		shell("while read f; do cat "f"{FASTA_DIR}""/$f.fa >> {output}; done < {input}")
+		shell("while read f; do cat "+f"{config['fastadir']}"+"/$f.fa >> {output}; done < {input}")
 
 
 # rule extract_genes_from_contigs:
