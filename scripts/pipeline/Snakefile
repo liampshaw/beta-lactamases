@@ -11,11 +11,11 @@ GENES = ["CMY",\
 			"VIM"]
 DB = ["NCBI", "CARD"]
 
-FOCAL_GENES = ["CMY-2", "GES-24", "CTX-M-15"]#,"GES-24","CTX-M-15","CTX-M-65","GES-24","IMP-1","KPC-2","NDM-1","PER-1","SHV-134","TEM-1","VIM-1"]
+FOCAL_GENES = ["CMY-2", "GES-24"]#, "CTX-M-15"]#,"GES-24","CTX-M-15","CTX-M-65","GES-24","IMP-1","KPC-2","NDM-1","PER-1","SHV-134","TEM-1","VIM-1"]
 
 FOCAL_GENE_DICT = {"CMY-2": "CMY",
-					"GES-24": "GES",
-					"CTX-M-15": "CTX-M"}
+					"GES-24": "GES"}#,
+					#"CTX-M-15": "CTX-M"}
 
 print(config['fastadir'])
 
@@ -30,7 +30,7 @@ rule all:
 		expand("contigs/{gene}_combined_contigs.fa", gene=GENES),
 		expand("analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa", focal_gene=FOCAL_GENES),
 		#expand("contigs/{focal_gene}/{focal_gene}_extracted.fa", focal_gene=FOCAL_GENES)
-		expand("contigs/{focal_gene}/{focal_gene}_pangraph.json", focal_gene=FOCAL_GENES)
+		expand("contigs/{focal_gene}/{focal_gene}_pangraph.gfa", focal_gene=FOCAL_GENES)
 
 		#expand("DB/variant_fasta/{focal_gene}_{db}.fa", focal_gene=FOCAL_GENES, db=DB)
 
@@ -200,8 +200,19 @@ rule build_pangraph:
 	output:
 		"contigs/{focal_gene}/{focal_gene}_pangraph.json"
 	shell:
-		"pangraph build -k minimap2 --len 100 {input} > {output}"
+		"pangraph build -k minimap2 --len 100 {input} > {output}" if config["polish"]==False else "pangraph build -k minimap2 --len 100 {input} | pangraph polish > {output}"
 
+
+rule export_pangraph:
+	input:
+		"contigs/{focal_gene}/{focal_gene}_pangraph.json"
+	params:
+		prefix="{focal_gene}_pangraph",
+		outdir="contigs/{focal_gene}/"
+	output:
+		"contigs/{focal_gene}/{focal_gene}_pangraph.gfa"
+	shell:
+		"pangraph export --edge-minimum-length 0 {input} -p {params.prefix} -o {params.outdir}"
 
 
 
