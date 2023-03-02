@@ -200,7 +200,7 @@ def main():
                     N_seqs_written += 1
                     #print("...writing to file.")
                 elif v is not None and v['seq'] is not None:
-                    print(v['seq'])
+                    #print(v['seq'])
                     if len(v['seq'])>(int(args.upstream)+gene_length+int(args.downstream)-1):
                         if "n" not in v['seq'] and "N" not in v['seq']: # check for ambiguous characters
                             #print("...writing to file.")
