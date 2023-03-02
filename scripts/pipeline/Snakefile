@@ -30,7 +30,8 @@ rule all:
 		expand("contigs/{gene}_combined_contigs.fa", gene=GENES),
 		expand("analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa", focal_gene=FOCAL_GENES),
 		#expand("contigs/{focal_gene}/{focal_gene}_extracted.fa", focal_gene=FOCAL_GENES)
-		expand("contigs/{focal_gene}/{focal_gene}_pangraph.gfa", focal_gene=FOCAL_GENES)
+		expand("contigs/{focal_gene}/{focal_gene}_pangraph.gfa", focal_gene=FOCAL_GENES),
+		#expand("contigs/{focal_gene}/{focal_gene}_pangraph.gfa", focal_gene=FOCAL_GENES) if config["panx_export"]==True else expand("DB/plots/{db}-variants/{gene}.pdf", gene=GENES, db=DB)
 
 		#expand("DB/variant_fasta/{focal_gene}_{db}.fa", focal_gene=FOCAL_GENES, db=DB)
 
@@ -215,11 +216,14 @@ rule export_pangraph:
 		"contigs/{focal_gene}/{focal_gene}_pangraph.json"
 	params:
 		prefix="{focal_gene}_pangraph",
-		outdir="contigs/{focal_gene}/"
+		outdir="contigs/{focal_gene}/",
+		edgeminlength=config["pangraph_edgeminlength"]
 	output:
 		"contigs/{focal_gene}/{focal_gene}_pangraph.gfa"
 	shell:
-		"pangraph export --edge-minimum-length 0 {input} -p {params.prefix} -o {params.outdir}"
+		"pangraph export --edge-minimum-length {params.edgeminlength} {input} -p {params.prefix} -o {params.outdir}" if config["panx_export"]==False else
+		"pangraph export --edge-minimum-length {params.edgeminlength} {input} -p {params.prefix} -o {params.outdir} --export-panX"
+
 
 
 
