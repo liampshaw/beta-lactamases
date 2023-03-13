@@ -125,29 +125,47 @@ def extract_regions(sequences, blast_hits, gene_length, length_threshold=0.99, i
                 if len(contig_seq)<(upstream_bases+downstream_bases+gene_length):
                     print('WARNING: Contig '+seq_id+' is shorter than flanking region requested!')
                     if hit['start']<hit['end']:
-                        extracted_seqs[seq_id] = {'seq':contig_seq, 'diffs':diffs_aln}
+                        extracted_seqs[seq_id] = {'seq':contig_seq, 
+                                                    'diffs':diffs_aln,
+                                                    'region':[hit['start'], hit['end']],
+                                                    'strand':'positive'}
                     elif hit['start']>hit['end']:
-                        extracted_seqs[seq_id] = {'seq':reverse_complement(contig_seq), 'diffs':diffs_aln}
+                        extracted_seqs[seq_id] = {'seq':reverse_complement(contig_seq), 
+                                                'diffs':diffs_aln,
+                                                'region':[hit['start'], hit['end']],
+                                                'strand':'negative'}
                 else:
                     #print(seq_id)
                     triplicate_seq = contig_seq+contig_seq+contig_seq
                     if hit['start']<hit['end']: # positive strand
                         if not is_circular:
                             limits = [max(0, hit['start']-1-upstream_bases), min(hit['end']+downstream_bases, len(contig_seq))]
-                            extracted_seqs[seq_id] = {'seq':contig_seq[limits[0]:limits[1]], 'diffs':diffs_aln}
+                            extracted_seqs[seq_id] = {'seq':contig_seq[limits[0]:limits[1]], 
+                                                        'diffs':diffs_aln,
+                                                        'region':limits,
+                                                        'strand':'positive'}
                             #print(limits, limits[1]-limits[0])
                         elif is_circular:
                             limits = [max(hit['end'], hit['start']-1-upstream_bases+len(contig_seq)), min(hit['start']+2*len(contig_seq), hit['end']+downstream_bases+len(contig_seq))]
-                            extracted_seqs[seq_id] = {'seq':triplicate_seq[limits[0]:limits[1]], 'diffs':diffs_aln}
+                            extracted_seqs[seq_id] = {'seq':triplicate_seq[limits[0]:limits[1]], 
+                                                        'diffs':diffs_aln,
+                                                        'region':limits,
+                                                        'strand': 'positive'}
                             #print(limits, limits[1]-limits[0])
                     elif hit['start']>hit['end']: # negative strand
                         if not is_circular: # also put in a max thing here
                             limits = [max(0, hit['end']-1-downstream_bases), min(hit['start']+upstream_bases, len(contig_seq))]
-                            extracted_seqs[seq_id] = {'seq':reverse_complement(contig_seq[limits[0]:limits[1]]), 'diffs':diffs_aln}
+                            extracted_seqs[seq_id] = {'seq':reverse_complement(contig_seq[limits[0]:limits[1]]), 
+                                                    'diffs':diffs_aln,
+                                                    'region':limits,
+                                                    'strand': 'reverse'}
                             #print(limits, limits[1]-limits[0])
                         elif is_circular:
                             limits = [max(hit['start'], hit['end']-1-downstream_bases+len(contig_seq)), min(hit['end']+2*len(contig_seq), hit['start']+upstream_bases+len(contig_seq))]
-                            extracted_seqs[seq_id] = {'seq':reverse_complement(triplicate_seq[limits[0]:limits[1]]), 'diffs':diffs_aln}
+                            extracted_seqs[seq_id] = {'seq':reverse_complement(triplicate_seq[limits[0]:limits[1]]), 
+                                                    'diffs':diffs_aln,
+                                                    'region':limits,
+                                                    'strand': 'reverse'}
                             #print(limits, limits[1]-limits[0])
     return extracted_seqs
 
@@ -193,18 +211,21 @@ def main():
         seqs_written = []
         with open(output_fasta, 'w') as output_file:
             for k, v in extractions.items():
-                #print(k+',', len(v)-gene_length, 'bases extracted around gene', '('+str(len(v))+' total)')
-                if args.complete==False:
-                    output_file.write('>%s %sbp %d diffs\n%s\n' % (k, str(len(v['seq'])), v['diffs'], v['seq']))
-                    seqs_written.append(k)
-                    N_seqs_written += 1
-                    #print("...writing to file.")
-                elif v is not None and v['seq'] is not None:
-                    #print(v['seq'])
-                    if len(v['seq'])>(int(args.upstream)+gene_length+int(args.downstream)-1):
+                if v is not None and v['seq'] is not None:
+                    #print(k+',', len(v)-gene_length, 'bases extracted around gene', '('+str(len(v))+' total)')
+                    region_string = str(v["region"][0])+"-"+str(v["region"][1])
+                    if v['strand']=='negative':
+                        region_string = "complement("+region_string+")"
+                    if args.complete==False:
+                        output_file.write('>%s %sbp %s %d diffs\n%s\n' % (k, str(len(v['seq'])), region_string, v['diffs'], v['seq']))
+                        seqs_written.append(k)
+                        N_seqs_written += 1
+                        #print("...writing to file.")
+                        #print(v['seq'])
+                    elif len(v['seq'])>(int(args.upstream)+gene_length+int(args.downstream)-1):
                         if "n" not in v['seq'] and "N" not in v['seq']: # check for ambiguous characters
                             #print("...writing to file.")
-                            output_file.write('>%s %sbp %d diffs\n%s\n' % (k, str(len(v['seq'])), v['diffs'], v['seq']))
+                            output_file.write('>%s %sbp %s %d diffs\n%s\n' % (k, str(len(v['seq'])), region_string, v['diffs'], v['seq']))
                             seqs_written.append(k)
                             N_seqs_written += 1
         # Write multiple hits if requested
