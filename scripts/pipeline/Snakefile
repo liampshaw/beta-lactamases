@@ -44,7 +44,8 @@ rule all:
 		#expand("contigs/{focal_gene}/{focal_gene}_pangraph.gfa", focal_gene=FOCAL_GENES) if config["panx_export"]==True else expand("DB/plots/{db}-variants/{gene}.pdf", gene=GENES, db=DB)
 		expand("pangraph/{focal_gene}/plots/{focal_gene}_pangraph.bandage_plot.png", focal_gene=FOCAL_GENES),
 		expand("pangraph/{focal_gene}/plots/linear_blocks.pdf", focal_gene=FOCAL_GENES),
-		expand("pangraph/{focal_gene}/plots/{focal_gene}_bandage_and_linear.pdf", focal_gene=FOCAL_GENES)
+		expand("pangraph/{focal_gene}/plots/{focal_gene}_bandage_and_linear.pdf", focal_gene=FOCAL_GENES),
+		expand("pangraph/{focal_gene}/positional_entropies.csv", focal_gene=FOCAL_GENES)
 		#expand("DB/variant_fasta/{focal_gene}_{db}.fa", focal_gene=FOCAL_GENES, db=DB)
 
 #############################
@@ -282,6 +283,15 @@ rule compute_distances:
 											--snps {input.snps}\
 											--output {output}"
 
+
+rule positional_entropies:
+	input:
+		json="pangraph/{focal_gene}/{focal_gene}_pangraph.json"
+	output:
+		"pangraph/{focal_gene}/positional_entropies.csv"
+	shell:
+		"python scripts/positional_entropy.py --json {input.json} --normalise > {output}"
+
 #############################
 ##### PLOTTING OUTPUTS  #####
 #############################
@@ -327,5 +337,7 @@ rule combine_linear_and_bandage:
 	shell:
 		"Rscript scripts/combine_two_plots.R {input.linear} {input.bandage} --output_pdf {output}"
 #rule plot_NJ_tree_central_gene
+
+
 
 
