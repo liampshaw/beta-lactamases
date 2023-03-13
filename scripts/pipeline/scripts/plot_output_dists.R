@@ -11,7 +11,7 @@ Options:
 
 ' -> doc
 
-library(docopt, quietly = TRUE)
+require(docopt, quietly = TRUE)
 require(ggplot2, quietly=TRUE)
 require(ggridges, quietly=TRUE)
 require(cowplot, quietly=TRUE)
@@ -63,7 +63,6 @@ makePlots <- function(df){
     # Add number of comparisons for each SNP distance
     snp.comparison.table = data.frame(SNPs=names(table(df$snps.categorical)),
                                     N.pairs=as.numeric(table(df$snps.categorical)))
-    print(snp.comparison.table)
     table.theme <- gridExtra::ttheme_default(
     core = list(fg_params=list(cex = 0.5)),
     colhead = list(fg_params=list(cex = 0.5)),
@@ -114,10 +113,6 @@ makePlots <- function(df){
         panel.background = element_blank())+
         theme(plot.title=element_text(hjust=0.5))+
       scale_y_reverse()
-
-
-
-
 
     p = cowplot::plot_grid(p.upstream, p.downstream, rel_widths = c(0.8, 1))
 
