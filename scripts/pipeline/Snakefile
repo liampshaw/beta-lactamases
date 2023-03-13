@@ -11,10 +11,12 @@ GENES = ["CMY",\
 			"VIM"]
 DB = ["NCBI", "CARD"]
 
-FOCAL_GENES = ["CMY-2", "GES-24"]#, "CTX-M-15"]#,"GES-24","CTX-M-15","CTX-M-65","GES-24","IMP-1","KPC-2","NDM-1","PER-1","SHV-134","TEM-1","VIM-1"]
-
-FOCAL_GENE_DICT = {"CMY-2": "CMY",
-					"GES-24": "GES"}#,
+#FOCAL_GENES = ["CMY-2", "GES-24"]#, "CTX-M-15"]#,"GES-24","CTX-M-15","CTX-M-65","GES-24","IMP-1","KPC-2","NDM-1","PER-1","SHV-134","TEM-1","VIM-1"]
+FOCAL_GENES = ["GES-24", "CMY-2"]
+FOCAL_GENE_DICT = {"GES-24": "GES",
+					"CMY-2": "CMY"}
+#FOCAL_GENE_DICT = {"CMY-2": "CMY",
+#					"GES-24": "GES"}#,
 					#"CTX-M-15": "CTX-M"}
 
 print(config['fastadir'])
@@ -26,11 +28,19 @@ rule all:
 		expand("DB/dists/{gene}_{db}.tsv", gene=GENES, db=DB),
 		expand("analysis/{gene}_accessions.txt", gene=GENES),
 		expand("analysis/sequence_assignments/{focal_gene}_{db}.csv", focal_gene=FOCAL_GENES, db=DB),
+		expand("analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.snps.tsv", focal_gene=FOCAL_GENES),
 		expand("data/{db}_db.fa", db=DB),	
 		expand("contigs/{gene}_combined_contigs.fa", gene=GENES),
 		expand("analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa", focal_gene=FOCAL_GENES),
-		#expand("contigs/{focal_gene}/{focal_gene}_extracted.fa", focal_gene=FOCAL_GENES)
-		expand("contigs/{focal_gene}/{focal_gene}_pangraph.gfa", focal_gene=FOCAL_GENES),
+		expand("analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa.dedup.aln", focal_gene=FOCAL_GENES),
+		expand("pangraph/{focal_gene}/{focal_gene}_pangraph.fa", focal_gene=FOCAL_GENES),
+		expand("pangraph/{focal_gene}/{focal_gene}_extracted.fa", focal_gene=FOCAL_GENES),
+		expand("pangraph/{focal_gene}/{focal_gene}_pangraph.gfa.coloured.gfa", focal_gene=FOCAL_GENES),
+		expand("pangraph/{focal_gene}/{focal_gene}_{db}.output_dists.csv", focal_gene=FOCAL_GENES, db=DB),
+		expand("pangraph/{focal_gene}/{focal_gene}_pangraph.json", focal_gene=FOCAL_GENES),
+		expand("pangraph/{focal_gene}/{focal_gene}.gene_block.txt", focal_gene=FOCAL_GENES),
+		expand("analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa.dedup.aln.refined.tre", focal_gene=FOCAL_GENES),
+		expand("pangraph/{focal_gene}/{db}_plot_breakpoint_distances-all.pdf", focal_gene=FOCAL_GENES, db=DB)
 		#expand("contigs/{focal_gene}/{focal_gene}_pangraph.gfa", focal_gene=FOCAL_GENES) if config["panx_export"]==True else expand("DB/plots/{db}-variants/{gene}.pdf", gene=GENES, db=DB)
 
 		#expand("DB/variant_fasta/{focal_gene}_{db}.fa", focal_gene=FOCAL_GENES, db=DB)
@@ -77,7 +87,7 @@ rule snp_dists_DB:
 	input:
 		"DB/gene_alns/{gene}_{db}.aln"
 	output:
-		"DB/gene_dists/{gene}_{db}.tsv"
+		"DB/gene_alns/{gene}_{db}.tsv"
 	shell:
 		"snp-dists -a -b {input} > {output}"
 
@@ -125,19 +135,6 @@ rule copy_variant_fasta: # highly inelegant - copies files so is wasteful. But I
     shell:
         "cp {input} {output}"
 
-# rule combine_fasta_files:
-# 	input:
-
-# rule split_focal_genes:
-# 	input:
-# 		"data/focal_genes.fasta"
-# 	# params:
-# 	# 	gene_name="{focal_gene}"
-# 	# output:
-# 	# 	"data/focal_genes/{focal_gene}.fa"
-# 	shell:
-# 		"python scripts/split_fasta.py --fasta {input} --outdir data/focal_genes/"
-
 
 #############################
 # GETTING CONTIG DATA READY #
@@ -150,23 +147,21 @@ rule combine_fastas_containing_gene:
 	run:
 		shell("while read f; do cat "+f"{config['fastadir']}"+"/$f.fa >> {output}; done < {input}")
 
-
-# rule extract_genes_from_contigs:
-# 	input:
-# 		gene_fasta="data/focal_genes/{focal_gene}.fa",
-# 		input_fasta="test_{focal_gene}.fa"
-# 	output:
-# 		"analysis/sequence/{focal_gene}.fa"
-# 	shell:
-# 		"python scripts/extract_region_around_gene.py --gene {input.gene_fasta} --input_fasta {input.input_fasta} --output_fasta {output} --upstream 0 --downstream 0"
 rule extract_genes_from_contigs:
 	input:
 		gene_fasta="data/focal_genes/{focal_gene}.fa",
 		input_fasta= lambda wildcards:f"contigs/{FOCAL_GENE_DICT[wildcards.focal_gene]}"+"_combined_contigs.fa"
+	params:
+		snp_threshold=int(config["snp_threshold"])
 	output:
 		"analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa"
 	shell:
-		"python scripts/extract_region_around_gene.py --gene {input.gene_fasta} --input_fasta {input.input_fasta} --output_fasta {output} --upstream 0 --downstream 0"
+		"python scripts/extract_region_around_gene.py --gene {input.gene_fasta} \
+												--input_fasta {input.input_fasta} \
+												--output_fasta {output} \
+												--upstream 0 \
+												--downstream 0 \
+												--threshold {params.snp_threshold}"
 
 rule name_observed_genes:
 	input:
@@ -186,26 +181,47 @@ rule extract_region_around_focal_gene:
 		input_fasta=lambda wildcards:f"contigs/{FOCAL_GENE_DICT[wildcards.focal_gene]}"+"_combined_contigs.fa"
 	params:
 		focal_gene="data/focal_genes/{focal_gene}.fa",
-		prefix="contigs/{focal_gene}/{focal_gene}_extracted",
+		prefix="pangraph/{focal_gene}/{focal_gene}_extracted",
 		upstream=config["region_upstream"],
 		downstream=config["region_downstream"],
-
+		threshold=int(config["snp_threshold"])
 	output:
-		"contigs/{focal_gene}/{focal_gene}_extracted.fa"#,
+		"pangraph/{focal_gene}/{focal_gene}_extracted.fa"#,
 	shell: 
 		"python scripts/extract_region_around_gene.py --gene {params.focal_gene} --input {input.input_fasta} \
-		--upstream {params.upstream} --downstream {params.upstream} --complete --output_fasta {params.prefix}.fa"
+		--upstream {params.upstream} --downstream {params.upstream} --complete --output_fasta {params.prefix}.fa\
+		--threshold {params.threshold}"
 
+rule calculate_snp_dists_extracted_seqs:
+	input:
+		"analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa"
+	output:
+		"analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.snps.tsv",
+		"analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa.dedup.aln",
+		"analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa.dedup.txt"
+	run:
+		shell("mafft --auto {input} > {input}.aln"),
+		shell("snp-dists -q -m {input}.aln > {output}")
+		shell("seqkit rmdup -s < {input}.aln > {input}.dedup.aln -D {input}.dedup.txt")
+
+rule tree_for_focal_gene:
+	input:
+		"analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa.dedup.aln"
+	output:
+		"analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa.dedup.aln.refined.tre"
+	run:
+		shell("FastTree -nt -gtr {input} > {input}.tre")
+		shell("python scripts/refine_tree.py --aln {input} --tree_in {input}.tre --tree_out {output}")
 
 
 rule build_pangraph:
 	input:
-		"contigs/{focal_gene}/{focal_gene}_extracted.fa"
+		"pangraph/{focal_gene}/{focal_gene}_extracted.fa"
 	params:
 		aligner=config["pangraph_aligner"],
 		minlength=config["pangraph_minblocklength"]
 	output:
-		"contigs/{focal_gene}/{focal_gene}_pangraph.json"
+		"pangraph/{focal_gene}/{focal_gene}_pangraph.json"
 	shell:
 		"pangraph build -k {params.aligner} --len {params.minlength} {input} > {output}" if config["pangraph_polish"]==False 
 		else "pangraph build -k {params.aligner} --len {params.minlength} {input} | pangraph polish > {output}"
@@ -213,19 +229,70 @@ rule build_pangraph:
 
 rule export_pangraph:
 	input:
-		"contigs/{focal_gene}/{focal_gene}_pangraph.json"
+		"pangraph/{focal_gene}/{focal_gene}_pangraph.json"
 	params:
 		prefix="{focal_gene}_pangraph",
-		outdir="contigs/{focal_gene}/",
+		outdir="pangraph/{focal_gene}/",
 		edgeminlength=config["pangraph_edgeminlength"]
 	output:
-		"contigs/{focal_gene}/{focal_gene}_pangraph.gfa"
+		"pangraph/{focal_gene}/{focal_gene}_pangraph.gfa",
+		"pangraph/{focal_gene}/{focal_gene}_pangraph.fa"
 	shell:
-		"pangraph export --edge-minimum-length {params.edgeminlength} {input} -p {params.prefix} -o {params.outdir}" if config["panx_export"]==False else
-		"pangraph export --edge-minimum-length {params.edgeminlength} {input} -p {params.prefix} -o {params.outdir} --export-panX"
+		"pangraph export --edge-minimum-length {params.edgeminlength} {input} \
+							-p {params.prefix} \
+							-o {params.outdir}" if config["panx_export"]==False else
+		"pangraph export --edge-minimum-length {params.edgeminlength} {input} \
+							-p {params.prefix} \
+							-o {params.outdir} \
+							--export-panX"
 
 
+rule convert_pangraph_to_block_list:
+	input:
+		json="pangraph/{focal_gene}/{focal_gene}_pangraph.json",
+		gfa="pangraph/{focal_gene}/{focal_gene}_pangraph.gfa"
+	output:
+		"pangraph/{focal_gene}/{focal_gene}_pangraph.gfa.coloured.gfa",
+		"pangraph/{focal_gene}/{focal_gene}_pangraph.json.blocks.csv"
+	shell:
+		"python scripts/convert_pangraph_to_block_list.py --json {input.json} --gfa {input.gfa}"
+
+rule find_focal_gene_block:
+	input:
+		focal_gene="data/focal_genes/{focal_gene}.fa",
+		pangraph_fasta="pangraph/{focal_gene}/{focal_gene}_pangraph.fa"
+	output:
+		"pangraph/{focal_gene}/{focal_gene}.gene_block.txt"
+	run:
+		shell("makeblastdb -in {input.pangraph_fasta} -dbtype 'nucl'"),
+		shell("blastn -query {input.focal_gene} -db {input.pangraph_fasta} -outfmt 6 | cut -f 2 > {output}")
+
+rule compute_distances:
+	input:
+		block_csv="pangraph/{focal_gene}/{focal_gene}_pangraph.json.blocks.csv",
+		gene_block="pangraph/{focal_gene}/{focal_gene}.gene_block.txt",
+		snps="analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.snps.tsv"
+	output:
+		"pangraph/{focal_gene}/{focal_gene}_{db}.output_dists.csv"
+	shell:
+		"python scripts/compute_distances.py --block_csv {input.block_csv} \
+											--gene_block_file {input.gene_block} \
+											--snps {input.snps}\
+											--output {output}"
 
 
-
+rule plot_breakpoint_distances:
+	input:
+		dists="pangraph/{focal_gene}/{focal_gene}_{db}.output_dists.csv",
+		deduplicated_focal_gene="analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa.dedup.txt",
+		variant_assignments="analysis/sequence_assignments/{focal_gene}_{db}.csv"
+	params:
+		focal_gene="{focal_gene}",
+		output_pdf_prefix="pangraph/{focal_gene}/{db}_plot_breakpoint_distances"
+	output:
+		"pangraph/{focal_gene}/{db}_plot_breakpoint_distances-all.pdf",
+	shell:
+		"Rscript scripts/plot_output_dists.R {input.dists} {input.deduplicated_focal_gene} {input.variant_assignments}\
+						--output_pdf_prefix {params.output_pdf_prefix} \
+						--focal_gene {params.focal_gene}"
 
