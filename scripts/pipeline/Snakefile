@@ -42,7 +42,9 @@ rule all:
 		expand("analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa.dedup.aln.refined.tre", focal_gene=FOCAL_GENES),
 		expand("pangraph/{focal_gene}/{db}_plot_breakpoint_distances-all.pdf", focal_gene=FOCAL_GENES, db=DB),
 		#expand("contigs/{focal_gene}/{focal_gene}_pangraph.gfa", focal_gene=FOCAL_GENES) if config["panx_export"]==True else expand("DB/plots/{db}-variants/{gene}.pdf", gene=GENES, db=DB)
-		expand("pangraph/{focal_gene}/plots/{focal_gene}_pangraph.bandage_plot.png", focal_gene=FOCAL_GENES)
+		expand("pangraph/{focal_gene}/plots/{focal_gene}_pangraph.bandage_plot.png", focal_gene=FOCAL_GENES),
+		expand("pangraph/{focal_gene}/plots/linear_blocks.pdf", focal_gene=FOCAL_GENES),
+		expand("pangraph/{focal_gene}/plots/{focal_gene}_bandage_and_linear.pdf", focal_gene=FOCAL_GENES)
 		#expand("DB/variant_fasta/{focal_gene}_{db}.fa", focal_gene=FOCAL_GENES, db=DB)
 
 #############################
@@ -307,4 +309,23 @@ rule plot_bandage:
 		"pangraph/{focal_gene}/plots/{focal_gene}_pangraph.bandage_plot.png"
 	shell:
 		"Bandage image {input} {output} --height 4000 --width 7000 --colour custom"
+
+rule plot_linear_blocks:
+	input:
+		"pangraph/{focal_gene}/{focal_gene}_pangraph.json.blocks.csv"
+	output:
+		"pangraph/{focal_gene}/plots/linear_blocks.pdf"
+	shell:
+		"Rscript scripts/plot_blocks_linear.R {input} --output_pdf {output}"
+
+rule combine_linear_and_bandage:
+	input:
+		linear="pangraph/{focal_gene}/plots/linear_blocks.pdf",
+		bandage="pangraph/{focal_gene}/plots/{focal_gene}_pangraph.bandage_plot.png"
+	output:
+		"pangraph/{focal_gene}/plots/{focal_gene}_bandage_and_linear.pdf"
+	shell:
+		"Rscript scripts/combine_two_plots.R {input.linear} {input.bandage} --output_pdf {output}"
+#rule plot_NJ_tree_central_gene
+
 
