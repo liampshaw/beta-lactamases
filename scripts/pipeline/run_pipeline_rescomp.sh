@@ -42,4 +42,4 @@ export PYTHONPATH=/well/shaw/users/amu125/miniconda/$MODULE_CPU_TYPE/envs/betala
 
 #snakemake -R --until download_CARD_DB --cores 1 --rerun-incomplete
 #snakemake -R --until download_CARD_DB --cores 1 --rerun-incomplete
-snakemake --cores 2 --rerun-incomplete --configfile cluster_config.yaml
+snakemake --cores 2 --rerun-incomplete --configfile configs/cluster_config.yaml
