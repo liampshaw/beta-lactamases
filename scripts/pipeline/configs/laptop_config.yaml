@@ -1,6 +1,7 @@
 # directory with fasta files containing genes of interest
 fastadir : "/Users/Liam/Downloads/betalactamase-contigs"
 panx_export : False
+snp_threshold : "25"
 region_upstream : "1000"
 region_downstream : "1000"
 pangraph_polish : False

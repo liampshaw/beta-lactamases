@@ -23,6 +23,7 @@ def get_options():
     parser.add_argument('--downstream', help='downstream bases', default=2500, required=False)
     parser.add_argument('--complete', help='only keep contigs with all requested region', action='store_true')
     parser.add_argument('--circular', help='whether input contigs are circular', action='store_true')
+    parser.add_argument('--threshold', help='maximum number of allowed SNPs/diffs in central gene', required=False, default=25)
     parser.add_argument('--smh', help='extract contigs with multiple hits into separate file', type=str, required=False, default='')
     return parser.parse_args()
 
@@ -212,22 +213,23 @@ def main():
         with open(output_fasta, 'w') as output_file:
             for k, v in extractions.items():
                 if v is not None and v['seq'] is not None:
-                    #print(k+',', len(v)-gene_length, 'bases extracted around gene', '('+str(len(v))+' total)')
-                    region_string = str(v["region"][0])+"-"+str(v["region"][1])
-                    if v['strand']=='negative':
-                        region_string = "complement("+region_string+")"
-                    if args.complete==False:
-                        output_file.write('>%s %sbp %s %d diffs\n%s\n' % (k, str(len(v['seq'])), region_string, v['diffs'], v['seq']))
-                        seqs_written.append(k)
-                        N_seqs_written += 1
-                        #print("...writing to file.")
-                        #print(v['seq'])
-                    elif len(v['seq'])>(int(args.upstream)+gene_length+int(args.downstream)-1):
-                        if "n" not in v['seq'] and "N" not in v['seq']: # check for ambiguous characters
-                            #print("...writing to file.")
+                    if int(v['diffs'])<int(args.threshold):
+                        #print(k+',', len(v)-gene_length, 'bases extracted around gene', '('+str(len(v))+' total)')
+                        region_string = str(v["region"][0])+"-"+str(v["region"][1])
+                        if v['strand']=='negative':
+                            region_string = "complement("+region_string+")"
+                        if args.complete==False:
                             output_file.write('>%s %sbp %s %d diffs\n%s\n' % (k, str(len(v['seq'])), region_string, v['diffs'], v['seq']))
                             seqs_written.append(k)
                             N_seqs_written += 1
+                            #print("...writing to file.")
+                            #print(v['seq'])
+                        elif len(v['seq'])>(int(args.upstream)+gene_length+int(args.downstream)-1):
+                            if "n" not in v['seq'] and "N" not in v['seq']: # check for ambiguous characters
+                                #print("...writing to file.")
+                                output_file.write('>%s %sbp %s %d diffs\n%s\n' % (k, str(len(v['seq'])), region_string, v['diffs'], v['seq']))
+                                seqs_written.append(k)
+                                N_seqs_written += 1
         # Write multiple hits if requested
         if args.smh!='':
             N_multiple_hits = store_multiple_hits(input_sequences, results, args.smh)
