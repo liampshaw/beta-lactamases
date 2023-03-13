@@ -40,9 +40,9 @@ rule all:
 		expand("pangraph/{focal_gene}/{focal_gene}_pangraph.json", focal_gene=FOCAL_GENES),
 		expand("pangraph/{focal_gene}/{focal_gene}.gene_block.txt", focal_gene=FOCAL_GENES),
 		expand("analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa.dedup.aln.refined.tre", focal_gene=FOCAL_GENES),
-		expand("pangraph/{focal_gene}/{db}_plot_breakpoint_distances-all.pdf", focal_gene=FOCAL_GENES, db=DB)
+		expand("pangraph/{focal_gene}/{db}_plot_breakpoint_distances-all.pdf", focal_gene=FOCAL_GENES, db=DB),
 		#expand("contigs/{focal_gene}/{focal_gene}_pangraph.gfa", focal_gene=FOCAL_GENES) if config["panx_export"]==True else expand("DB/plots/{db}-variants/{gene}.pdf", gene=GENES, db=DB)
-
+		expand("pangraph/{focal_gene}/plots/{focal_gene}_pangraph.bandage_plot.png", focal_gene=FOCAL_GENES)
 		#expand("DB/variant_fasta/{focal_gene}_{db}.fa", focal_gene=FOCAL_GENES, db=DB)
 
 #############################
@@ -280,6 +280,10 @@ rule compute_distances:
 											--snps {input.snps}\
 											--output {output}"
 
+#############################
+##### PLOTTING OUTPUTS  #####
+#############################
+
 
 rule plot_breakpoint_distances:
 	input:
@@ -295,4 +299,12 @@ rule plot_breakpoint_distances:
 		"Rscript scripts/plot_output_dists.R {input.dists} {input.deduplicated_focal_gene} {input.variant_assignments}\
 						--output_pdf_prefix {params.output_pdf_prefix} \
 						--focal_gene {params.focal_gene}"
+
+rule plot_bandage:
+	input:
+		"pangraph/{focal_gene}/{focal_gene}_pangraph.gfa.coloured.gfa"
+	output:
+		"pangraph/{focal_gene}/plots/{focal_gene}_pangraph.bandage_plot.png"
+	shell:
+		"Bandage image {input} {output} --height 4000 --width 7000 --colour custom"
 
