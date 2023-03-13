@@ -137,9 +137,9 @@ def main():
         for i in range(0, 10000, 100):
             block_vector = [g[i] for g in genomes_as_int]# this is the vector we want
             if args.name=='':
-                print(i, shannonEntropy(block_vector))
+                print(i, shannonEntropy(block_vector, normalise=args.normalise))
             else:
-                print(args.name, i, shannonEntropy(block_vector))
+                print(args.name, i, shannonEntropy(block_vector, normalise=args.normalise))
 
 
 
