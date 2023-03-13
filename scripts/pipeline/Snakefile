@@ -12,9 +12,11 @@ GENES = ["CMY",\
 DB = ["NCBI", "CARD"]
 
 #FOCAL_GENES = ["CMY-2", "GES-24"]#, "CTX-M-15"]#,"GES-24","CTX-M-15","CTX-M-65","GES-24","IMP-1","KPC-2","NDM-1","PER-1","SHV-134","TEM-1","VIM-1"]
-FOCAL_GENES = ["GES-24", "CMY-2"]
+FOCAL_GENES = ["GES-24", "CMY-2", "CTX-M-15","KPC-2"]
 FOCAL_GENE_DICT = {"GES-24": "GES",
-					"CMY-2": "CMY"}
+					"CMY-2": "CMY",
+					"CTX-M-15": "CTX-M",
+					"KPC-2": "KPC"}
 #FOCAL_GENE_DICT = {"CMY-2": "CMY",
 #					"GES-24": "GES"}#,
 					#"CTX-M-15": "CTX-M"}
@@ -40,13 +42,14 @@ rule all:
 		expand("pangraph/{focal_gene}/{focal_gene}_pangraph.json", focal_gene=FOCAL_GENES),
 		expand("pangraph/{focal_gene}/{focal_gene}.gene_block.txt", focal_gene=FOCAL_GENES),
 		expand("analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa.dedup.aln.refined.tre", focal_gene=FOCAL_GENES),
-		expand("pangraph/{focal_gene}/{db}_plot_breakpoint_distances-all.pdf", focal_gene=FOCAL_GENES, db=DB),
+		expand("pangraph/{focal_gene}/plots/{db}_plot_breakpoint_distances-all.pdf", focal_gene=FOCAL_GENES, db=DB),
 		#expand("contigs/{focal_gene}/{focal_gene}_pangraph.gfa", focal_gene=FOCAL_GENES) if config["panx_export"]==True else expand("DB/plots/{db}-variants/{gene}.pdf", gene=GENES, db=DB)
 		expand("pangraph/{focal_gene}/plots/{focal_gene}_pangraph.bandage_plot.png", focal_gene=FOCAL_GENES),
 		expand("pangraph/{focal_gene}/plots/linear_blocks.pdf", focal_gene=FOCAL_GENES),
 		expand("pangraph/{focal_gene}/plots/{focal_gene}_bandage_and_linear.pdf", focal_gene=FOCAL_GENES),
-		expand("pangraph/{focal_gene}/positional_entropies.csv", focal_gene=FOCAL_GENES)
-		#expand("DB/variant_fasta/{focal_gene}_{db}.fa", focal_gene=FOCAL_GENES, db=DB)
+		expand("pangraph/{focal_gene}/positional_entropies.txt", focal_gene=FOCAL_GENES),
+		expand("pangraph/{focal_gene}/plots/positional_entropies.pdf", focal_gene=FOCAL_GENES),
+		expand("pangraph/{focal_gene}/plots/{db}_NJ_tree_central_gene.pdf", focal_gene=FOCAL_GENES, db=DB)
 
 #############################
 ### SETTING UP DATABASES ####
@@ -288,7 +291,7 @@ rule positional_entropies:
 	input:
 		json="pangraph/{focal_gene}/{focal_gene}_pangraph.json"
 	output:
-		"pangraph/{focal_gene}/positional_entropies.csv"
+		"pangraph/{focal_gene}/positional_entropies.txt"
 	shell:
 		"python scripts/positional_entropy.py --json {input.json} --normalise > {output}"
 
@@ -296,6 +299,13 @@ rule positional_entropies:
 ##### PLOTTING OUTPUTS  #####
 #############################
 
+rule plot_positional_entropies:
+	input:
+		"pangraph/{focal_gene}/positional_entropies.txt"
+	output:
+		"pangraph/{focal_gene}/plots/positional_entropies.pdf"
+	shell:
+		"Rscript scripts/plot_entropies.R {input} --output_pdf {output}"
 
 rule plot_breakpoint_distances:
 	input:
@@ -304,9 +314,9 @@ rule plot_breakpoint_distances:
 		variant_assignments="analysis/sequence_assignments/{focal_gene}_{db}.csv"
 	params:
 		focal_gene="{focal_gene}",
-		output_pdf_prefix="pangraph/{focal_gene}/{db}_plot_breakpoint_distances"
+		output_pdf_prefix="pangraph/{focal_gene}/plots/{db}_plot_breakpoint_distances"
 	output:
-		"pangraph/{focal_gene}/{db}_plot_breakpoint_distances-all.pdf",
+		"pangraph/{focal_gene}/plots/{db}_plot_breakpoint_distances-all.pdf",
 	shell:
 		"Rscript scripts/plot_output_dists.R {input.dists} {input.deduplicated_focal_gene} {input.variant_assignments}\
 						--output_pdf_prefix {params.output_pdf_prefix} \
@@ -336,7 +346,19 @@ rule combine_linear_and_bandage:
 		"pangraph/{focal_gene}/plots/{focal_gene}_bandage_and_linear.pdf"
 	shell:
 		"Rscript scripts/combine_two_plots.R {input.linear} {input.bandage} --output_pdf {output}"
-#rule plot_NJ_tree_central_gene
+
+rule plot_NJ_tree_central_gene:
+	input:
+		tree="analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa.dedup.aln.refined.tre",
+		aln="analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa.dedup.aln",
+		variant_assignments="analysis/sequence_assignments/{focal_gene}_{db}.csv",
+		dedup_names="analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa.dedup.txt"
+	output:
+		"pangraph/{focal_gene}/plots/{db}_NJ_tree_central_gene.pdf"
+	shell:
+		"Rscript scripts/plot_tree_variants.R {input.aln} {input.tree} \
+		{input.variant_assignments} {input.dedup_names} {output}"
+
 
 
 
