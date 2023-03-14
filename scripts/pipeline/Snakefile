@@ -333,7 +333,7 @@ rule plot_linear_blocks:
 	run:
 		shell("Rscript scripts/plot_blocks_linear.R {input.block_csv} --focal_block {input.focal_block_file} --output_pdf {output}")
 
-rule plot_bandage:
+rule plot_bandage_and_combine:
 	input:
 		"output/pangraph/{focal_gene}/{focal_gene}_pangraph.gfa.coloured.gfa"
 	params:
@@ -348,13 +348,13 @@ rule plot_bandage:
 rule combine_linear_and_bandage:
 	input:
 		linear="output/pangraph/{focal_gene}/plots/linear_blocks.pdf",
-		bandage="output/pangraph/{focal_gene}/plots/{focal_gene}_pangraph.bandage_plot.png"
 	params:
 		output_pdf = "output/pangraph/{focal_gene}/plots/{focal_gene}_bandage_and_linear.pdf"
+		bandage="output/pangraph/{focal_gene}/plots/{focal_gene}_pangraph.bandage_plot.png"
 	output:
 		"output/pangraph/{focal_gene}/plots/{focal_gene}_bandage_and_linear.logfile"
 	shell:
-		"Rscript scripts/combine_two_plots.R {input.linear} {input.bandage} --output_pdf {params.output_pdf} > {output}" if config["bandage"]==True else
+		"Rscript scripts/combine_two_plots.R {input.linear} {params.bandage} --output_pdf {params.output_pdf} > {output}" if config["bandage"]==True else
 		"echo 'Bandage not run' > {output}"
 
 rule plot_NJ_tree_central_gene:
