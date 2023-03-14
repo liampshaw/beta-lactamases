@@ -21,3 +21,5 @@ test/
 scripts/pipeline/.snakemake/*
 scripts/pipeline/data/*fa
 **/slurm*.out
+scripts/pipeline/output/*
+scripts/pipeline/DB/*
