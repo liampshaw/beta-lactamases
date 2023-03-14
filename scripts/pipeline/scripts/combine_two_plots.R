@@ -19,10 +19,26 @@ library(cowplot)
 
 args <- docopt(doc, version = 'Combine_two_plots v1.0')
 
-p.left <- cowplot::ggdraw() + cowplot::draw_image(magick::image_read_pdf(args$plot_one, density = 600))
-# assumes that plot_one is a pdf
-p.right <- cowplot::ggdraw()+cowplot::draw_image(args$plot_two)
+# Get file types (extensions)
+file_type_one = gsub(".*\\.", "", args$plot_one)
+file_type_two = gsub(".*\\.", "", args$plot_two)
 
+
+if (file_type_one=="pdf"){
+  p.left <- cowplot::ggdraw() + cowplot::draw_image(magick::image_read_pdf(args$plot_one, density = 600))
+}
+if (file_type_one=="png"){
+    p.left <- cowplot::ggdraw() + cowplot::draw_image(args$plot_one)
+}
+
+if (file_type_two=="pdf"){
+  p.right <- cowplot::ggdraw() + cowplot::draw_image(magick::image_read_pdf(args$plot_two, density = 600))
+}
+if (file_type_two=="png"){
+    p.right <- cowplot::ggdraw() + cowplot::draw_image(args$plot_two)
+}
+
+# Combine
 p.final = cowplot::plot_grid(p.left, p.right, 
   nrow=1, align='h',
   rel_widths=as.numeric(args$rel_width))
