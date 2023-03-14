@@ -17,7 +17,7 @@ require(ggridges, quietly=TRUE)
 require(cowplot, quietly=TRUE)
 require(RColorBrewer, quietly=TRUE)
 require(ape, quietly=TRUE)
-require(ggtree, quietly=TRUE)
+suppressMessages(require(ggtree, quietly=TRUE))
 require(gridExtra, quietly=TRUE)
 #require(magick)
 
