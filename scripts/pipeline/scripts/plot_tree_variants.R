@@ -1,83 +1,87 @@
-library(ape)
-library(ggplot2)
-library(ggtree)
+'Plot a tree of beta-lactamase variants in a dataset. 
+
+Usage:
+  plot_tree_variants.R --aln=<aln> --tree=<tree> --variants=<variants> --dup_names=<dup_names> [--output_pdf=<pdf>] [--width=<w>] [--height=<h>] 
+
+Options:
+  -h --help          Show this screen.
+  --version          Show version.
+  <aln>              Alignment file of the variants (DNA).
+  <tree>             Newick tree file to be plotted (produced from alignment file).
+  <variants>         Assignments of isolates to named protein variants.
+  <dup_names>        File with names of duplicated sequences (produced from seqkit rmdup).
+  --output_pdf=<pdf> Name of output pdf. [default: plot_output.pdf]
+  --width=<w>        Width of output pdf. [default: 8]
+  --height=<h>       Height of output pdf. [default: 8]
+
+' -> doc
+
+library(docopt, quietly = TRUE)
+library(ape, quietly=TRUE)
+library(ggplot2, quietly=TRUE)
+suppressMessages(library(ggtree, quietly=TRUE))
+options(warn=-1)
+
+args <- docopt(doc, version = 'Plot entropies v1.0')
 
 
-args = commandArgs(trailingOnly=TRUE)
-
-
-variant.names = read.csv(args[3], header=F, stringsAsFactors=F)
-print(variant.names)
-
-dedup.names = read.csv(args[4], header=F, stringsAsFactors=F, sep='\t')
-print(dedup.names)
-dedup.names$rep = gsub(",.*", "", dedup.names$V2)
-rownames(dedup.names) = dedup.names$rep
-
-
-variant_alignment_file = args[1]
-tree_file = args[2]
-
+variant_alignment_file = args$aln
+tree_file = args$tree
+tree = read.tree(tree_file)
 root=NULL
 
-variants = read.csv(args[3], header=F, stringsAsFactors = F, row.names = 1)
 
-  if (!is.null(root)){
-    tree = root(tree, outgroup=root)
-  }
-  
-  #labels(dna)
-   dna <- read.dna(args[], format='fasta')
-  isolates = gsub(" .*", "",labels(dna))
-
-  variant.names = variants[isolates, "V2"]
-  n.values = dedup.names[isolates,"V1"]
-  n.values[is.na(n.values)] = 1 # if they only have one rep, not in dedup.txt file
-    metadata = data.frame(isolate=isolates, 
-                        variant=variant.names,
-                        n=n.values)
-
-  #tree$tip.label = gsub(" \\|.*", "", tree$tip.label)
-  rownames(metadata) <- metadata$isolate
-  
-  #metadata$focal <- as.factor(c(1, rep(0, nrow(metadata)-1)))# just store whether focal gene or not
-  # Add SNPs compared to focal gene
-  #dist.mat <- as.matrix(dist.obj)
-  #rownames(dist.mat) = gsub(" \\|.*", "", rownames(dist.mat))
-  #colnames(dist.mat) = rownames(dist.mat)
-  #metadata$SNPs <- dist.mat[metadata$isolate[1],metadata$isolate]
-  #metadata$SNPS.categorical <- sapply(metadata$SNPs, function(x)
-  #  ifelse(x<8, x, ">7"))
-  #metadata$categoricalSNPs <- ordered(metadata$SNPS.categorical,
-  #                                    levels=c(seq(0,7), ">7"))
-  #snps.categorical.colour.palette <- RColorBrewer::brewer.pal(name="RdYlBu", n=9)
-  # 
-  #metadata$n.label <- sapply(metadata$n, 
-  #                           function(x) ifelse(x==1, "", x))
-  metadata$variant[which(metadata$variant=="unnamed")] = ""
-  metadata$variant[which(metadata$variant=="truncated")] = "*"
-  
-  metadata$isolate2 = metadata$isolate
-  metadata$n = as.numeric(as.character(metadata$n))
-
-  
-  p <- ggtree(tree, layout = 'rectangular')
-  
-  p <- p %<+% metadata+
-    geom_tippoint(aes(size=n), shape=21, colour="black", fill="white")+
-    geom_tiplab(aes(label=variant), size=2, offset = 0.2)+
-    scale_size_continuous(range=c(2, 10), breaks=c(1, 10, 50, 100), name="No. sequences")+
-    scale_fill_manual(values=snps.categorical.colour.palette)+
-    theme(legend.title= element_text(size=8), 
-          legend.text = element_text(size=6))+
-    scale_size_continuous(range=c(2, 10), breaks=c(1, 10, 50, 100), name="No. sequences")+
-    geom_treescale(width = 1, offset = 0.1, linesize = 1)+
-    guides(fill="none")
+dup.names = read.csv(args$dup_names, header=F, stringsAsFactors=F, sep='\t')
+dup.names$rep = gsub(",.*", "", dup.names$V2)
+rownames(dup.names) = dup.names$rep
 
 
 
+variants = read.csv(args$variants, header=F, stringsAsFactors = F, row.names = 1)
 
-pdf(args[5], width=8, height=8)
+if (!is.null(root)){
+  tree = root(tree, outgroup=root)
+}
+
+dna <- read.dna(variant_alignment_file, format='fasta')
+isolates = gsub(" .*", "",labels(dna))
+
+variant.names = variants[isolates, "V2"]
+n.values = dup.names[isolates,"V1"]
+n.values[is.na(n.values)] = 1 # if they only have one rep, not in dedup.txt file, so must be added
+  metadata = data.frame(isolate=isolates, 
+                      variant=variant.names,
+                      n=n.values)
+
+rownames(metadata) <- metadata$isolate
+
+gene.family = unique(gsub("-.*$", "", variant.names[grep("-", variant.names)]))
+
+metadata$variant[which(metadata$variant=="unnamed")] = paste0(gene.family, "-?")
+metadata$variant[which(metadata$variant=="truncated")] = "*"
+
+metadata$isolate2 = metadata$isolate
+metadata$n = as.numeric(as.character(metadata$n))
+
+metadata$tip.label = paste0(metadata$variant, " (n=", metadata$n, ")")
+
+p <- ggtree(tree, layout = 'rectangular')
+
+p <- p %<+% metadata+
+  geom_tippoint(aes(size=n), shape=21, colour="black", fill="black")+
+  geom_tiplab(aes(label=tip.label), size=3, offset = 0.2)+
+  theme(legend.title= element_text(size=8), 
+        legend.text = element_text(size=6))+
+  scale_size_continuous(range=c(2, 10), breaks=c(1, 10, 50, 100), name="No. sequences")+
+  geom_treescale(width = 1, offset = 0.1, linesize = 1)+
+  guides(fill="none")
+expanded.range = as.numeric(layer_scales(p)$x$range$range[2]*1.1)
+print(expanded.range)
+p = p +xlim(c(0, expanded.range)) # expand plot so as to not obscure labels
+
+
+
+pdf(args$output_pdf, width=8, height=8)
 p
 dev.off()
 
