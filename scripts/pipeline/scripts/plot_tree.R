@@ -1,6 +1,6 @@
-library(ape)
-library(ggtree)
-library(ggplot2)
+library(ape, quietly=TRUE)
+suppressMessages(library(ggtree, quietly=TRUE))
+library(ggplot2, quietly=TRUE)
 
 FUNCTIONAL.CATEGORIES = c("Betalactamase", "Broad-spectrum","Carbapenemase","ESBL")
 FUNCTIONAL.COLOURS = c("#a6cee3","#1f78b4","#b2df8a","#33a02c")
