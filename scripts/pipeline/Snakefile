@@ -352,12 +352,15 @@ rule plot_NJ_tree_central_gene:
 		tree="analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa.dedup.aln.refined.tre",
 		aln="analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa.dedup.aln",
 		variant_assignments="analysis/sequence_assignments/{focal_gene}_{db}.csv",
-		dedup_names="analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa.dedup.txt"
+		dup_names="analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa.dedup.txt"
 	output:
 		"pangraph/{focal_gene}/plots/{db}_NJ_tree_central_gene.pdf"
 	shell:
-		"Rscript scripts/plot_tree_variants.R {input.aln} {input.tree} \
-		{input.variant_assignments} {input.dedup_names} {output}"
+		"Rscript scripts/plot_tree_variants.R --aln {input.aln} \
+											--tree {input.tree} \
+											--variants {input.variant_assignments}\
+											--dup_names {input.dup_names} \
+											--output_pdf {output}"
 
 
 
