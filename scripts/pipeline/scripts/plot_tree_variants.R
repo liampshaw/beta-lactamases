@@ -20,6 +20,7 @@ library(docopt, quietly = TRUE)
 library(ape, quietly=TRUE)
 library(ggplot2, quietly=TRUE)
 suppressMessages(library(ggtree, quietly=TRUE))
+library(RColorBrewer, quietly=TRUE)
 options(warn=-1)
 
 args <- docopt(doc, version = 'Plot entropies v1.0')
@@ -45,13 +46,17 @@ if (!is.null(root)){
 
 dna <- read.dna(variant_alignment_file, format='fasta')
 isolates = gsub(" .*", "",labels(dna))
+snps = as.numeric(sapply(labels(dna), function(x) strsplit(x, " ", fixed=TRUE)[[1]][4]))
+
+
 
 variant.names = variants[isolates, "V2"]
 n.values = dup.names[isolates,"V1"]
 n.values[is.na(n.values)] = 1 # if they only have one rep, not in dedup.txt file, so must be added
   metadata = data.frame(isolate=isolates, 
                       variant=variant.names,
-                      n=n.values)
+                      n=n.values,
+                      snps=snps)
 
 rownames(metadata) <- metadata$isolate
 
@@ -67,16 +72,21 @@ metadata$tip.label = paste0(metadata$variant, " (n=", metadata$n, ")")
 
 p <- ggtree(tree, layout = 'rectangular')
 
+# Add colors
+snps.categorical.colour.palette <- RColorBrewer::brewer.pal(name="RdYlBu", n=9)
+metadata$snps.categorical = sapply(metadata$snps, function(x) ifelse(x<8, x, ">7"))
+metadata$snps.categorical = ordered(metadata$snps.categorical, levels=c(seq(0,7), ">7"))
+
 p <- p %<+% metadata+
-  geom_tippoint(aes(size=n), shape=21, colour="black", fill="black")+
+  geom_tippoint(aes(size=n, fill=snps.categorical), shape=21, colour="black")+
   geom_tiplab(aes(label=tip.label), size=3, offset = 0.2)+
   theme(legend.title= element_text(size=8), 
         legend.text = element_text(size=6))+
   scale_size_continuous(range=c(2, 10), breaks=c(1, 10, 50, 100), name="No. sequences")+
   geom_treescale(width = 1, offset = 0.1, linesize = 1)+
-  guides(fill="none")
+  guides(fill="none")+
+  scale_fill_manual(values=snps.categorical.colour.palette)
 expanded.range = as.numeric(layer_scales(p)$x$range$range[2]*1.1)
-print(expanded.range)
 p = p +xlim(c(0, expanded.range)) # expand plot so as to not obscure labels
 
 
