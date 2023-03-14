@@ -33,7 +33,7 @@ rule all:
 		expand("output/analysis/sequence_assignments/{focal_gene}_{db}.csv", focal_gene=FOCAL_GENES, db=DB),
 		expand("output/analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.snps.tsv", focal_gene=FOCAL_GENES),
 		expand("data/{db}_db.fa", db=DB),	
-		expand("contigs/{gene}_combined_contigs.fa", gene=GENES),
+		expand("output/contigs/{gene}_combined_contigs.fa", gene=GENES),
 		expand("output/analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa", focal_gene=FOCAL_GENES),
 		expand("output/analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa.dedup.aln", focal_gene=FOCAL_GENES),
 		expand("output/pangraph/{focal_gene}/{focal_gene}_pangraph.fa", focal_gene=FOCAL_GENES),
@@ -44,7 +44,7 @@ rule all:
 		expand("output/pangraph/{focal_gene}/{focal_gene}.gene_block.txt", focal_gene=FOCAL_GENES),
 		expand("output/analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.fa.dedup.aln.refined.tre", focal_gene=FOCAL_GENES),
 		expand("output/pangraph/{focal_gene}/plots/{db}_plot_breakpoint_distances-all.pdf", focal_gene=FOCAL_GENES, db=DB),
-		#expand("contigs/{focal_gene}/{focal_gene}_pangraph.gfa", focal_gene=FOCAL_GENES) if config["panx_export"]==True else expand("DB/plots/{db}-variants/{gene}.pdf", gene=GENES, db=DB)
+		#expand("output/contigs/{focal_gene}/{focal_gene}_pangraph.gfa", focal_gene=FOCAL_GENES) if config["panx_export"]==True else expand("DB/plots/{db}-variants/{gene}.pdf", gene=GENES, db=DB)
 		expand("output/pangraph/{focal_gene}/plots/{focal_gene}_pangraph.bandage_plot.png", focal_gene=FOCAL_GENES),
 		expand("output/pangraph/{focal_gene}/plots/linear_blocks.pdf", focal_gene=FOCAL_GENES),
 		expand("output/pangraph/{focal_gene}/plots/{focal_gene}_bandage_and_linear.pdf", focal_gene=FOCAL_GENES),
@@ -151,14 +151,14 @@ rule combine_fastas_containing_gene:
 	input:
 		"output/analysis/{gene}_accessions.txt"
 	output:
-		"contigs/{gene}_combined_contigs.fa"
+		"output/contigs/{gene}_combined_contigs.fa"
 	run:
 		shell("while read f; do cat "+f"{config['fastadir']}"+"/$f.fa >> {output}; done < {input}")
 
 rule extract_genes_from_contigs:
 	input:
 		gene_fasta="data/focal_genes/{focal_gene}.fa",
-		input_fasta= lambda wildcards:f"contigs/{FOCAL_GENE_DICT[wildcards.focal_gene]}"+"_combined_contigs.fa"
+		input_fasta= lambda wildcards:f"output/contigs/{FOCAL_GENE_DICT[wildcards.focal_gene]}"+"_combined_contigs.fa"
 	params:
 		snp_threshold=int(config["snp_threshold"])
 	output:
@@ -186,7 +186,7 @@ rule name_observed_genes:
 
 rule extract_region_around_focal_gene:
 	input:
-		input_fasta=lambda wildcards:f"contigs/{FOCAL_GENE_DICT[wildcards.focal_gene]}"+"_combined_contigs.fa"
+		input_fasta=lambda wildcards:f"output/contigs/{FOCAL_GENE_DICT[wildcards.focal_gene]}"+"_combined_contigs.fa"
 	params:
 		focal_gene="data/focal_genes/{focal_gene}.fa",
 		prefix="output/pangraph/{focal_gene}/{focal_gene}_extracted",
