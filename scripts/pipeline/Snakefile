@@ -384,7 +384,7 @@ rule combine_breakpoint_and_NJ:
 	shell:
 		"Rscript scripts/combine_two_plots.R {input.breakpoint_pdf} {input.NJ_tree} \
 			--output_pdf {params.output_pdf} --rel_width 1.8 --width 10 --height 4 > {output}" if config["version"]=="default" else
-		"echo 'Bandage not run' > {output}"
+		"echo 'Not run due to on cluster (no pdftools)' > {output}"
 
 
 
