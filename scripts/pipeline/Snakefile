@@ -112,7 +112,7 @@ rule refine_fasttree_DB:
 		tree= "DB/gene_trees/{gene}_{db}.nwk",
 		aln= "DB/gene_alns/{gene}_{db}.aln"
 	output:
-		"DB/refined-trees/{gene}_{db}.nwk"
+		"DB/genes_refined-trees/{gene}_{db}.nwk"
 	shell:
 		"python scripts/refine_tree.py --tree_in {input.tree} --aln {input.aln} --tree_out {output}"
 
