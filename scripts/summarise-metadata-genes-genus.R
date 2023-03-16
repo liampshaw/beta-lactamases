@@ -64,7 +64,7 @@ p.genes.genus = ggplot(gene.hits.by.genus.chrom, aes(TaxGenus.simple, pseudo.n, 
         strip.background = element_blank(),
         strip.text = element_text(size=10))
 
-ggsave(file="../output/fig-metadata-genes-by-genus.pdf",
+ggsave(file="../output/fig-genes-by-genus.pdf",
        p.genes.genus,
        width=8, height=4)
 
