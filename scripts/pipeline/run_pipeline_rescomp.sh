@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #module load R/4.2.0-foss-2021b 
-echo "at start of script, python is"
+#echo "at start of script, python is"
 #which python
 
 
@@ -21,11 +21,11 @@ fi
 module load Anaconda3/2020.11
 eval "$(conda shell.bash hook)"
 conda deactivate
-echo "after conda deactivate"
+#echo "after conda deactivate"
 #which python
 
 conda activate betalactamases
-echo "after conda activate betalactamases"
+#echo "after conda activate betalactamases"
 #which python
 
 #echo $PYTHONPATH
