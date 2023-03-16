@@ -27,8 +27,8 @@ print(config['fastadir'])
 
 rule all:
 	input:
-		expand("DB/plots/{db}-variants/{gene}.pdf", gene=GENES, db=DB),
-		expand("DB/dists/{gene}_{db}.tsv", gene=GENES, db=DB),
+		expand("DB/genes_plots/{db}-variants/{gene}.pdf", gene=GENES, db=DB),
+		expand("DB/gene_alns/{gene}_{db}.tsv", gene=GENES, db=DB),
 		expand("output/analysis/{gene}_accessions.txt", gene=GENES),
 		expand("output/analysis/sequence_assignments/{focal_gene}_{db}.csv", focal_gene=FOCAL_GENES, db=DB),
 		expand("output/analysis/sequence/{focal_gene}_seqs_extracted_from_contigs.snps.tsv", focal_gene=FOCAL_GENES),
