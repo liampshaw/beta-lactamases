@@ -1,3 +1,4 @@
+version: "cluster"
 fastadir : "/well/shaw/users/amu125/data/CARD/betalactamases/fasta/"
 panx_export : False
 bandage : False
