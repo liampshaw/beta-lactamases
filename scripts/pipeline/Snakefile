@@ -8,12 +8,14 @@ GENES = ["CMY",\
 			"SHV",\
 			"TEM",\
 			"VEB",\
-			"VIM"]
+			"VIM",
+			"IMP",
+			"OXA"]
 DB = ["NCBI", "CARD"]
 
 FOCAL_GENES = ['CMY-2', 'CTX-M-15', 
 			'CTX-M-65', 'GES-24', 
-			'IMP-1', 'KPC-2', 
+			'IMP-4', 'KPC-2', 
 			'NDM-1', 'PER-1', 
 			'SHV-134', 'TEM-1', 
 			'VIM-1', 'OXA-48']
@@ -21,7 +23,7 @@ FOCAL_GENE_DICT = {"CMY-2": "CMY",
 					"CTX-M-15": "CTX-M",
 					"CTX-M-65":"CTX-M",
 					"GES-24":"GES",
-					"IMP-1":"IMP",
+					"IMP-4":"IMP",
 					"KPC-2": "KPC",
 					"NDM-1":"NDM",
 					"PER-1":"PER",
