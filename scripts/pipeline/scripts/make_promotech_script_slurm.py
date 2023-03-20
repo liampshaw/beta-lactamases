@@ -16,8 +16,8 @@ def main():
 	print('outdir=tmp-$SLURM_ARRAY_TASK_ID')
 	print('fasta=$(sed "${SLURM_ARRAY_TASK_ID}q;d" '+args.fasta_list)
 	print('echo $name')
-	print('time python promotech.py -pg -m RF-HOT -f $fasta -o $outdir')
-	print('time python promotech.py -g -t 0.6 -i $outdir -o $outdir')
+	print('time python /well/shaw/users/amu125/programs/PromoTech/promotech.py -pg -m RF-HOT -f $fasta -o $outdir')
+	print('time python /well/shaw/users/amu125/programs/PromoTech/promotech.py -g -t 0.6 -i $outdir -o $outdir')
 	print('rm $outdir/*data')
 	print('mv $outdir/genome_predictions.csv $outdir/"$accession"-promoter_predictions.tsv')
 	
