@@ -159,14 +159,14 @@ def extract_regions(sequences, blast_hits, gene_length, length_threshold=0.99, i
                             extracted_seqs[seq_id] = {'seq':reverse_complement(contig_seq[limits[0]:limits[1]]), 
                                                     'diffs':diffs_aln,
                                                     'region':limits,
-                                                    'strand': 'reverse'}
+                                                    'strand': 'negative'}
                             #print(limits, limits[1]-limits[0])
                         elif is_circular:
                             limits = [max(hit['start'], hit['end']-1-downstream_bases+len(contig_seq)), min(hit['end']+2*len(contig_seq), hit['start']+upstream_bases+len(contig_seq))]
                             extracted_seqs[seq_id] = {'seq':reverse_complement(triplicate_seq[limits[0]:limits[1]]), 
                                                     'diffs':diffs_aln,
                                                     'region':limits,
-                                                    'strand': 'reverse'}
+                                                    'strand': 'negative'}
                             #print(limits, limits[1]-limits[0])
     return extracted_seqs
 
