@@ -361,6 +361,7 @@ rule plot_bandage:
 rule combine_linear_and_bandage:
 	input:
 		linear="output/pangraph/{focal_gene}/plots/linear_blocks.pdf",
+		bandage_logfile="output/pangraph/{focal_gene}/plots/bandage.log_file"
 	params:
 		output_pdf = "output/pangraph/{focal_gene}/plots/{focal_gene}_bandage_and_linear.pdf",
 		bandage="output/pangraph/{focal_gene}/plots/{focal_gene}_pangraph.bandage_plot.png"
