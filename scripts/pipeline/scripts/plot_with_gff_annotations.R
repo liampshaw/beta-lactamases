@@ -24,7 +24,6 @@ options(warn=-1)
 
 
 args <- docopt(doc, version = 'Plot with gff annotations v1.0')
-print(args)
 GENE = args$focal_gene
 GFF.FILE = args$gff_file
 
