@@ -1,4 +1,4 @@
-version: "cluster"
+version: "default"
 fastadir : "/Users/Liam/Downloads/betalactamase-contigs"
 panx_export : False
 bandage : True
