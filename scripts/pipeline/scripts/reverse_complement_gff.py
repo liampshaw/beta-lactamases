@@ -34,7 +34,6 @@ def read_gff_to_list(input_gff):
             if line.startswith("##FASTA"): # Don't read in fasta components
                     break
             else:
-                print(line)
                 line = line.strip("\n").split("\t")
                 if len(line)==9:
                     gff_list += [line]
@@ -45,8 +44,10 @@ def main():
     gff_list = read_gff_to_list(args.input_gff)
     print(gff_list)
     rev_gff_list = reverse_complement_gff(gff_list)
-    for e in rev_gff_list:
-        print(e)
+    with open(args.output_gff, "w") as f:
+        f.write("##gff-version 3\n")
+        for e in rev_gff_list:
+            f.write("\t".join([str(x) for x in e])+"\n")
 
 
 if __name__=="__main__":
