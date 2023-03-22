@@ -140,10 +140,12 @@ annotation.hits = convertAnnotations(annotation.hits, GENE)
 #genome.blocks = genome.blocks[which(genome.blocks$genome.ordered %in% GENOMES),]
 #genome.blocks$genome.ordered =ordered(genome.blocks$genome.ordered, )
 
+limits = c(min(c(genome.blocks$new.start,genome.blocks$new.end)),
+       max(c(genome.blocks$new.start,genome.blocks$new.end)))
 
 annotation.hits$genome.ordered = ordered(annotation.hits$V1,
                                          levels=levels(genome.blocks$genome.ordered))
-annotation.hits = annotation.hits[which(annotation.hits$new.start>-6000 & annotation.hits$new.end<6000),]
+annotation.hits = annotation.hits[which(annotation.hits$new.start>limits[1]*1.1 & annotation.hits$new.end<limits[2]*1.1),]
 
 # Genome plot
 
@@ -153,12 +155,12 @@ p.genome = ggplot(genome.blocks[which(genome.blocks$genome.ordered %in% GENOMES)
   geom_gene_arrow(arrow_body_height = unit(6, "mm"),
                   arrowhead_height = unit(0, "mm"),
                   arrowhead_width = unit(0, "mm"),
-                  alpha=0.5)+
+                  alpha=1)+
   theme_genes()+
   scale_fill_manual(values=block.colours)+
   ylab("")+
   theme(legend.position = "none")+
-  scale_y_discrete(breaks=as.numeric(genome.blocks$genome.ordered), labels=genome.blocks$genome)+
+  scale_y_discrete(breaks=levels(genome.blocks$genome.ordered), labels=levels(genome.blocks$genome.ordered))+
   theme(plot.title=element_text(hjust=0.5))+
   xlab("Position (bp)")
 
