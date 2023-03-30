@@ -18,7 +18,7 @@ FOCAL_GENES = ['CMY-2', 'CTX-M-15',
 			'IMP-4', 'KPC-2', 
 			'NDM-1', 'PER-1', 
 			'SHV-134', 'TEM-1', 
-			'VIM-1', 'OXA-48']
+			'VIM-1',"OXA-10", 'OXA-48']
 FOCAL_GENE_DICT = {"CMY-2": "CMY", 
 					"CTX-M-15": "CTX-M",
 					"CTX-M-65":"CTX-M",
@@ -30,6 +30,7 @@ FOCAL_GENE_DICT = {"CMY-2": "CMY",
 					"SHV-134":"SHV",
 					"TEM-1":"TEM",
 					"VIM-1":"VIM",
+					"OXA-10": "OXA",
 					"OXA-48":"OXA"}
 #FOCAL_GENE_DICT = {"CMY-2": "CMY",
 #					"GES-24": "GES"}#,
