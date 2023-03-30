@@ -1,5 +1,8 @@
 import argparse
 
+# NOTE: not entirely consistent with the modified script I actually use,
+# run_promotech_slurm.sh
+# but pretty close (just haven't made consistent)
 
 def get_options():
     parser = argparse.ArgumentParser(description='Creates slurm cluster jobs for running PromoTech on multifasta file.')
@@ -8,7 +11,6 @@ def get_options():
 
 def main():
 	args = get_options()
-	print(args)
 	print("#!/bin/bash")
 	print("module load Anaconda3/2020.11")
 	print('eval "$(conda shell.bash hook)"')
