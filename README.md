@@ -1,10 +1,10 @@
 # Beta-lactamase gene evolution
 
-Repository of scripts and data for analysis of the genomic contexts of clinically important beta-lactamases genes from twelve major enzyme families. 
+**WARNING: This repo is a work-in-progress and is not set-up with wider use in mind. Use with caution.**
+
+Repository of scripts and data for analysis of the genomic contexts of clinically important beta-lactamases genes.
 
 ## Preparation
-
-*Warning.* This repo is a work-in-progress and not currently set-up with wider use in mind.   
 
 Using CARD prevalence data, we obtain sequences containing beta-lactamases from twelve clinically important beta-lactamase families (`beta-lactamases.txt`) and analyse the surrounding regions of genes using [pangraph](https://github.com/neherlab/pangraph/).  
 
@@ -22,4 +22,3 @@ conda env create -f betalactamases.yml
 ```
 
 To run scripts in `scripts` directory will also require downloading prevalence data files from the helpful Comprehensive Antimicrobial Resistance Database [CARD](https://card.mcmaster.ca) and extracting in the `data` directory. Only three CARD files are needed: see `README.md` in `data` directory for more information.  
-
